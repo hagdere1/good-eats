@@ -1,44 +1,52 @@
-# Phase 3: Notebooks and Tags (2 days)
+# Phase 3: Lists, Groups, Recommendations, and Categories/Likes/Ratings/Comments (3 days)
 
 ## Rails
 ### Models
-* Notebook
-* Tag
-* Tagging
+* List
+* Category
+* Categorization
+* Like
+* Rating
+* Review
 
 ### Controllers
-* Api::NotebooksController (create, destroy, index, show, update)
+* Api::ListsController (create, destroy, index, show, update)
 
 ### Views
-* notebooks/index.json.jbuilder
-* notebooks/show.json.jbuilder
-* tags/show.json.jbuilder
+* lists/index.json.jbuilder
+* lists/show.json.jbuilder
+* groups/index.json.jbuilder
+* groups/show.json.jbuilder
+* recommendations/index.json.jbuilder
+* categories/show.json.jbuilder
 
 ## Flux
 ### Views (React Components)
-* NotebooksIndex
-  - NotebookIndexItem
-* NotebookForm
+* ListsIndex
+  - ListIndexItem
+* ListForm
 * SearchIndex
 
 ### Stores
-* Notebook
+* List
+* Category
+* Recommendation
 
 ### Actions
-* ApiActions.receiveAllNotebooks -> triggered by ApiUtil
-* ApiActions.receiveSingleNotebook
-* ApiActions.deleteNotebook
-* NotebookActions.fetchAllNotebooks -> triggers ApiUtil
-* NotebookActions.fetchSingleNotebook
-* NotebookActions.createNotebook
-* NotebookActions.editNotebook
-* NotebookActions.destroyNotebook
+* ApiActions.receiveAllLists -> triggered by ApiUtil
+* ApiActions.receiveSingleList
+* ApiActions.deleteList
+* ListActions.fetchAllLists -> triggers ApiUtil
+* ListActions.fetchSingleList
+* ListActions.createList
+* ListActions.editList
+* ListActions.destroyList
 
 ### ApiUtil
-* ApiUtil.fetchAllNotebooks
-* ApiUtil.fetchSingleNotebook
-* ApiUtil.createNotebook
-* ApiUtil.editNotebook
-* ApiUtil.destroyNotebook
+* ApiUtil.fetchAllLists
+* ApiUtil.fetchSingleList
+* ApiUtil.createList
+* ApiUtil.editList
+* ApiUtil.destroyList
 
 ## Gems/Libraries

@@ -1,20 +1,20 @@
-# Phase 1: User Authentication, Note Model and JSON API
+# Phase 1: User Authentication, Edible Model and JSON API
 
 ## Rails
 ### Models
 * User
-* Note
+* Edible
 
 ### Controllers
 * UsersController (create, new)
 * SessionsController (create, new, destroy)
-* Api::NotesController (create, destroy, index, show, update)
+* Api::EdiblesController (create, destroy, index, show, update)
 
 ### Views
 * users/new.html.erb
 * session/new.html.erb
-* notes/index.json.jbuilder
-* notes/show.json.jbuilder
+* edibles/index.json.jbuilder
+* edibles/show.json.jbuilder
 
 ## Flux
 ### Views (React Components)

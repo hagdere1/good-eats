@@ -1,4 +1,4 @@
-# Phase 2: Flux Architecture and Note CRUD (2 days)
+# Phase 2: Flux Architecture and Edible CRUD (2 days)
 
 ## Rails
 ### Models
@@ -9,29 +9,29 @@
 
 ## Flux
 ### Views (React Components)
-* NotesIndex
-  - NotesIndexItem
-* NoteForm
+* ListIndex
+  - ListIndexItem
+* EdibleForm
 
 ### Stores
-* Note
+* Edible
 
 ### Actions
-* ApiActions.receiveAllNotes -> triggered by ApiUtil
-* ApiActions.receiveSingleNote
-* ApiActions.deleteNote
-* NoteActions.fetchAllNotes -> triggers ApiUtil
-* NoteActions.fetchSingleNote 
-* NoteActions.createNote
-* NoteActions.editNote 
-* NoteActions.destroyNote
+* ApiActions.receiveAllEdibles -> triggered by ApiUtil
+* ApiActions.receiveSingleEdible
+* ApiActions.deleteEdible
+* EdibleActions.fetchAllEdibles -> triggers ApiUtil
+* EdibleActions.fetchSingleEdible 
+* EdibleActions.createEdible
+* EdibleActions.editEdible
+* EdibleActions.destroyEdible
 
 ### ApiUtil
-* ApiUtil.fetchAllNotes
-* ApiUtil.fetchSingleNote
-* ApiUtil.createNote
-* ApiUtil.editNote
-* ApiUtil.destroyNote
+* ApiUtil.fetchAllEdibles
+* ApiUtil.fetchSingleEdible
+* ApiUtil.createEdible
+* ApiUtil.editEdible
+* ApiUtil.destroyEdible
 
 ## Gems/Libraries
 * Flux Dispatcher (npm)
