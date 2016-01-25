@@ -1,26 +1,44 @@
 # View Wireframes
 
-## New User
-![new-user]
-
-## New Session
+## New User/Session
 ![new-session]
 
-## NotesIndex / NoteIndexItem / NoteForm
-![notes]
+## NewfeedIndex
+![edibles]
 
-## NotebooksIndex / NotebookIndexItem
-![notebooks]
+## ListsIndex / ListIndexItem
+![lists]
+![edible]
 
-## NoteBookForm
-![notebook-form]
+## GroupsIndex / GroupIndexItem
+![groups]
+![group]
+
+## RecommendationsIndex
+![recommendations]
+
+## CategoriesIndex
+![categories]
+
+## FriendsIndex / FriendsIndexItem (profile)
+![friends]
+![profile]
+
+## SearchIndex
+![recommendations]
 
 ## Component Heirarchy
 ![component-heirarchy]
 
-[new-user]: ./wireframes/new_user.png
-[new-session]: ./wireframes/new_session.png
-[notes]: ./wireframes/root_notes.png
-[notebooks]: ./wireframes/root_notebooks.png
-[notebook-form]: ./wireframes/notebook_form.png
-[component-heirarchy]: ./wireframes/component_heirarchy.png
+[new-user]: ./wireframes/new_session.pdf
+[edibles]: ./wireframes/newsfeed_index.jpg
+[lists]: ./wireframes/lists_index.jpg
+[edible]: ./wireframes/list_index_item.jpg
+[group]: ./wireframes/groups_index_item.jpg
+[groups]: ./wireframes/groups_index.jpg
+[categories]: ./wireframes/categories_index.jpg
+[recommendations]: ./wireframes/recommendations_index.jpg
+[friends]: ./wireframes/friends_index.jpg
+[profile]: ./wireframes/profile_friends_index_item.jpg
+[search-index]: ./wireframes/search_index.jpg
+[component-heirarchy]: ./wireframes/component_heirarchy.jpg
