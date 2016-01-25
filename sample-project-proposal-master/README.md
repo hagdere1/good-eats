@@ -59,10 +59,12 @@ styling.
 
 Phase 3 adds organization to the edibles. Edibles belong to a list, which has
 its own `Index` view. Create JSON API for lists. Users can join a group, which
-can be found on the groups `Index` view and which has its `IndexItem` view
-Edibles can also now be tagged with multiple categories. Users can bring up edibles 
-in a separate `SearchIndex` view by searching for their category tags. Once the tag search 
-is implemented, I will extend this to a fuzzy search through every edible's content.
+can be found on the groups `Index` view and which has its `GroupIndexItem` view.
+Edibles can also now be tagged with multiple categories, liked, rated, and 
+commented on. Users can bring up edibles in a separate `SearchIndex` view by 
+searching for their category tags and have a recommendations `Index` view of 
+edibles based on their preferences. Once the tag  search is implemented, I will 
+extend the search to a fuzzy search through every edible's content.
 
 [Details][phase-three]
 
@@ -75,9 +77,9 @@ edibles.
 
 ### Phase 5: Reminders (1 day)
 
-Phase 5 introduces two new features. First, users can set reminders on edibles
-which will at the time they are set for prompt the user to review and edit the
-given edible.
+Phase 5 introduces a feature in which users can set reminders on edibles which 
+will at the time they are set for prompt the user to review and edit the given 
+edible.
 
 [Details][phase-five]
 
