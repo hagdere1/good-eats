@@ -1,0 +1,138 @@
+// Place all the styles related to the Sessions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+html, body, header, nav, h1, h5, a, ul, li, p, button, main, section, form, img, input, fieldset, footer {
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  text-align: inherit;
+  color: inherit;
+  font: inherit;
+
+  background-color: transparent;
+}
+
+body {
+  background-color: #FFF8DC;
+}
+
+ul {
+  list-style: none;
+}
+
+.group:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.header {
+
+}
+
+.header-nav {
+
+}
+
+.header-logo {
+  font-size: 32px;
+  text-decoration: none;
+  float: left;
+  margin-left: 20px;
+}
+
+.header-logo a {
+  text-decoration: none;
+}
+
+.header-list {
+  float: right;
+}
+
+.header-list li {
+  float: left;
+}
+
+.header-list h5 {
+  font-size: 12px;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+
+.header-button {
+  border: 1px solid #8B4513;
+  padding: 7px 16px 7px 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #FFF8DC;
+  margin-right: 20px;
+  margin-top: 15px;
+}
+
+.form {
+  margin: auto;
+  margin-bottom: 50px;
+  background-color: white;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  border-radius: 4px;
+  width: 580px;
+  padding: 30px;
+}
+
+.form-description {
+  font-size: 18px;
+  margin-bottom: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: center;
+
+}
+
+.form-fieldset {
+  margin: auto;
+}
+
+.form label {
+  font-size: 14px;
+}
+
+.form input {
+  border: 1px solid #ccc;
+  display: block;
+  width: 340px;
+  padding: 10px 5px 10px 5px;
+  margin-bottom: 7px;
+}
+
+.form-button {
+  margin-top: 20px;
+  border: 1px solid #8B4513;
+  padding: 10px 20px 10px 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #FFF8DC;
+}
+
+.form-agreement {
+  font-size: 14px;
+  margin-top: 35px;
+}
+
+.footer {
+
+}
+
+.footer-copy {
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.footer-banner {
+  width: 100%;
+  height: 60px;
+}
