@@ -1,0 +1,36 @@
+{
+  "name": "good-eats",
+  "version": "1.0.0",
+  "description": "== README",
+  "main": "webpack.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
+    "babel-preset-react": "^6.3.13",
+    "flux": "^2.1.1",
+    "history": "1.13.x",
+    "react": "^0.14.2",
+    "react-addons-linked-state-mixin": "^0.14.2",
+    "react-dom": "^0.14.2",
+    "react-router": "1.0.2",
+    "webpack": "^1.12.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "./node_modules/.bin/webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hagdere1/good-eats.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hagdere1/good-eats/issues"
+  },
+  "homepage": "https://github.com/hagdere1/good-eats#readme"
+}
