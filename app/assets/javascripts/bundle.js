@@ -48,10 +48,11 @@
 	var ReactDOM = __webpack_require__(158);
 	var Edible = __webpack_require__(159);
 	var EdibleStore = __webpack_require__(160);
-	var ApiUtil = __webpack_require__(182);
+	var ApiUtil = __webpack_require__(183);
+	var EdiblesIndex = __webpack_require__(159);
 
 	document.addEventListener("DOMContentLoaded", function () {
-	  ReactDOM.render(React.createElement(EdiblesIndex, null), document.getElementById('content'));
+	  ReactDOM.render(React.createElement(EdiblesIndex, null), document.getElementById('root'));
 	});
 
 /***/ },
@@ -19651,9 +19652,49 @@
 
 /***/ },
 /* 159 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	var React = __webpack_require__(1);
+	var EdibleStore = __webpack_require__(160);
+
+	var EdiblesIndex = React.createClass({
+	  displayName: 'EdiblesIndex',
+
+	  getInitialState: function () {
+	    return { edibles: EdibleStore.all() };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edibles: EdibleStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    ApiUtil.fetchAllEdibles();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.edibleListener.remove();
+	  },
+
+	  render: function () {
+	    var edibles = EdibleStore.all();
+	    return React.createElement(
+	      'ul',
+	      null,
+	      this.state.edibles.map(function (edible) {
+	        return React.createElement(
+	          'li',
+	          { key: edible.id },
+	          edible.name,
+	          edible.description
+	        );
+	      })
+	    );
+	  }
+	});
+
+	module.exports = EdiblesIndex;
 
 /***/ },
 /* 160 */
@@ -19662,9 +19703,10 @@
 	var Store = __webpack_require__(161).Store;
 	var AppDispatcher = __webpack_require__(179);
 	var EdibleStore = new Store(AppDispatcher);
-	var EdibleConstants = __webpack_require__(183);
+	var EdibleConstants = __webpack_require__(182);
 
 	var _edibles = [];
+	// var CHANGE_EVENT = "change";
 
 	EdibleStore.all = function () {
 	  return _edibles.slice(0);
@@ -19682,6 +19724,18 @@
 	      break;
 	  }
 	};
+
+	// EdibleStore.__emitChange = function () {
+	//   this.emit(CHANGE_EVENT);
+	// };
+	//
+	// EdibleStore.addChangeListener = function (callback) {
+	//   this.on(CHANGE_EVENT, callback);
+	// };
+	//
+	// EdibleStore.removeChangeListener = function (callback) {
+	//   this.removeListener(CHANGE_EVENT, callback);
+	// };
 
 	window.EdibleStore = EdibleStore;
 	module.exports = EdibleStore;
@@ -26451,6 +26505,16 @@
 
 /***/ },
 /* 182 */
+/***/ function(module, exports) {
+
+	EdibleConstants = {
+	  EDIBLES_RECEIVED: "EDIBLES_RECEIVED"
+	};
+
+	module.exports = EdibleConstants;
+
+/***/ },
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(184);
@@ -26471,21 +26535,11 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 183 */
-/***/ function(module, exports) {
-
-	EdibleConstants = {
-	  EDIBLES_RECEIVED: "EDIBLES_RECEIVED"
-	};
-
-	module.exports = EdibleConstants;
-
-/***/ },
 /* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(179);
-	var EdibleConstants = __webpack_require__(183);
+	var EdibleConstants = __webpack_require__(182);
 
 	var ApiActions = {
 	  receiveAllEdibles: function (edibles) {
