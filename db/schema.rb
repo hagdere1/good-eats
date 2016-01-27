@@ -19,12 +19,9 @@ ActiveRecord::Schema.define(version: 20160127023256) do
   create_table "edibles", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description", null: false
-    t.integer  "list_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
-
-  add_index "edibles", ["list_id"], name: "index_edibles_on_list_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",           null: false

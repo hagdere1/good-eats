@@ -6,13 +6,21 @@ column name | data type | details
 id          | integer   | not null, primary key
 name        | string    | not null
 description | text      | not null
-list_id     | integer   | foreign key (references lists), indexed
+
+## list_items
+column name | data type | details
+------------|-----------|-----------------------
+id          | integer   | not null, primary key
+edible_id   | integer   | not null, foreign key (references edibles), indexed
+rating      | integer   | not null
 
 ## lists
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
 user_id     | integer   | not null, foreign key (references users), indexed
+edible_id   | integer   | not null, foreign key (references edibles), indexed
+
 title       | string    | not null
 
 ## favorites
