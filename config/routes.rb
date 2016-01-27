@@ -4,6 +4,6 @@ Rails.application.routes.draw do
   resources :static_pages, only: :index
 
   namespace :api, defaults: {format: :json} do
-    resources :edibles
+    resources :edibles, only: [:show, :index]
   end
 end
