@@ -10,7 +10,7 @@
 
 pizza = Edible.create!({name: "Pizza", description: "Bread covered with mozarella cheese and tomato sauce."})
 burger = Edible.create!({name: "Cheeseburger", description: "God's gift to the world between two buns."})
-fois_gras = Edible.create!({name: "Fois Gras", description: "A duck's deliver. Rich and creamy."})
+fois_gras = Edible.create!({name: "Fois Gras", description: "A duck's liver. Rich and creamy."})
 pad_thai = Edible.create!({name: "Pad Thai", description: "Thai noodles with peanuts and other good shit."})
 turtle_soup = Edible.create!({name: "Turtle Soup", description: "Once a staple in United States, this forgotten dish fuels the body and warms the soul."})
 pumpkin_pie = Edible.create!({name: "Pumpkin Pie", description: "Pumpkins aren't just for jackolanterns."})
