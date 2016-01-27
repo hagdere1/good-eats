@@ -1,34 +1,34 @@
 # View Wireframes
 
 ## New User/Session
-![new-session]
+[new-session]
 
 ## NewfeedIndex
-![edibles]
+[edibles]
 
 ## ListsIndex / ListIndexItem
-![lists]
-![edible]
+[lists]
+[edible]
 
 ## GroupsIndex / GroupIndexItem
-![groups]
-![group]
+[groups]
+[group]
 
 ## RecommendationsIndex
-![recommendations]
+[recommendations]
 
 ## CategoriesIndex
-![categories]
+[categories]
 
 ## FriendsIndex / FriendsIndexItem (profile)
-![friends]
-![profile]
+[friends]
+[profile]
 
 ## SearchIndex
-![recommendations]
+[recommendations]
 
 ## Component Heirarchy
-![component-heirarchy]
+[component-heirarchy]
 
 [new-user]: ./wireframes/new_session.pdf
 [edibles]: ./wireframes/newsfeed_index.jpg
