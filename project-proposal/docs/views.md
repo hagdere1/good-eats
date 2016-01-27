@@ -1,44 +1,31 @@
 # View Wireframes
 
 ## New User/Session
-[new-session]
+![new-session](/wireframes/new_session.pdf)
 
 ## NewfeedIndex
-[edibles]
+[edibles](/wireframes/newsfeed_index.jpg)
 
 ## ListsIndex / ListIndexItem
-[lists]
-[edible]
+[lists](/wireframes/lists_index.jpg)
+[edible](/wireframes/list_index_item.jpg)
 
 ## GroupsIndex / GroupIndexItem
-[groups]
-[group]
+[groups](/wireframes/groups_index.jpg)
+[group](/wireframes/groups_index_item.jpg)
 
 ## RecommendationsIndex
-[recommendations]
+[recommendations](/wireframes/recommendations_index.jpg)
 
 ## CategoriesIndex
-[categories]
+[categories](/wireframes/categories_index.jpg)
 
 ## FriendsIndex / FriendsIndexItem (profile)
-[friends]
-[profile]
+[friends](/wireframes/friends_index.jpg)
+[profile](/wireframes/profile_friends_index_item.jpg)
 
 ## SearchIndex
-[recommendations]
+[recommendations](/wireframes/search_index.jpg)
 
 ## Component Heirarchy
-[component-heirarchy]
-
-[new-user]: ./wireframes/new_session.pdf
-[edibles]: ./wireframes/newsfeed_index.jpg
-[lists]: ./wireframes/lists_index.jpg
-[edible]: ./wireframes/list_index_item.jpg
-[group]: ./wireframes/groups_index_item.jpg
-[groups]: ./wireframes/groups_index.jpg
-[categories]: ./wireframes/categories_index.jpg
-[recommendations]: ./wireframes/recommendations_index.jpg
-[friends]: ./wireframes/friends_index.jpg
-[profile]: ./wireframes/profile_friends_index_item.jpg
-[search-index]: ./wireframes/search_index.jpg
-[component-heirarchy]: ./wireframes/component_heirarchy.jpg
+![component-heirarchy](/wireframes/component_heirarchy.jpg)
