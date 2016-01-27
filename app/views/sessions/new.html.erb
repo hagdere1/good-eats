@@ -1,22 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Sign In</title>
+  </head>
 
-<section>
-  <h5>Not a member?</h5>
-  <%= button_to "Sign up", new_user_url, method: :get %>
-<section>
+  <header class="header">
+    <nav class="header-nav group">
 
+      <h1 class="header-logo">
+        <a href="#">goodeats</a>
+      </h1>
 
-<form action="<%= session_url %>" method="POST">
+      <ul class="header-list group">
+        <li>
+          <h5>Not a member?</h5>
+        </li>
+        <li>
+          <a href="../sessions/new.html.erb">
+            <!-- <button class="header-button">Sign in</button> -->
+            <%= button_to "Sign up", new_user_url, method: :get %>
+          </a>
+        </li>
 
-  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      </ul>
 
-  <label>Email Address
-    <input type="text" name="user[email]" placeholder="you@yours.com" value="">
-  </label>
+    </nav>
+  </header>
 
-  <label>Password
-    <input type="password" name="user[password]" value="">
-  </label>
+  <body>
+    <section class="form">
+      <form action="<%= session_url %>" method="POST">
 
-  <button>Sign in</button>
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-</form>
+        <fieldset class="form-fieldset">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+          <label>Email Address
+            <input type="text" name="user[email]" placeholder="you@yours.com" value="">
+          </label>
+
+          <label>Password
+            <input type="password" name="user[password]" value="">
+          </label>
+
+          <button class="form-button">Sign in</button>
+        </fieldset>
+
+      </form>
+    </section>
+
+    <footer class="footer">
+      <p class="footer-copy">© 2016 Goodeats Inc</p>
+      <img class="footer-banner"
+           src="http://www.calabriamillbury.com/images/italian.jpg"/>
+    </footer>
+
+  </body>
+  </html>
