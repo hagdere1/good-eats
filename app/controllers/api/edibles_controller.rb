@@ -1,25 +1,13 @@
 class Api::EdiblesController < ApplicationController
-  def new
-  end
-
-  def create
-  end
-
   def index
-  end
-
-  def edit
-  end
-
-  def update
+    @edibles = Edible.all
   end
 
   def show
-  end
-
-  def destroy
+    @edible = Edible.find(params[:id])
   end
 
   def edible_params
+    params.require(:edible).permit(:name, :description)
   end
 end
