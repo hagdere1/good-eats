@@ -21,7 +21,6 @@ column name | data type | details
 id          | integer   | not null, primary key
 user_id     | integer   | not null, foreign key (references users), indexed
 edible_id   | integer   | not null, foreign key (references edibles), indexed
-
 title       | string    | not null
 
 ## ratings
@@ -109,8 +108,7 @@ friend_id       | integer   | not null, foreign key (references users), indexed
 column name     | data type | details
 ----------------|-----------|-----------------------
 id              | integer   | not null, primary key
-fname           | string    | not null
-lname           | string    | not null
-username        | string    | not null, indexed, unique
+name            | string    | not null
+email           | string    | not null, indexed, unique
 password_digest | string    | not null
 session_token   | string    | not null, indexed, unique
