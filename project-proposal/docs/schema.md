@@ -12,6 +12,7 @@ column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
 edible_id   | integer   | not null, foreign key (references edibles), indexed
+list_id     | integer   | not null, foreign key (references edibles), indexed
 rating      | integer   | not null
 
 ## lists
@@ -22,6 +23,14 @@ user_id     | integer   | not null, foreign key (references users), indexed
 edible_id   | integer   | not null, foreign key (references edibles), indexed
 
 title       | string    | not null
+
+## ratings
+column name | data type | details
+------------|-----------|-----------------------
+id          | integer   | not null, primary key
+stars       | float     | not null
+user_id   | integer   | not null, foreign key (references users), indexed, unique [edible_id]
+edible_id   | integer   | not null, foreign key (references edibles), indexed
 
 ## favorites
 column name | data type | details
@@ -80,14 +89,6 @@ body            | text      | not null
 column name | data type | details
 ------------|-----------|-----------------------
 id          | integer   | not null, primary key
-author_id   | integer   | not null, foreign key (references users), indexed, unique [edible_id]
-edible_id   | integer   | not null, foreign key (references edibles), indexed
-
-## ratings
-column name | data type | details
-------------|-----------|-----------------------
-id          | integer   | not null, primary key
-stars       | float     | not null
 author_id   | integer   | not null, foreign key (references users), indexed, unique [edible_id]
 edible_id   | integer   | not null, foreign key (references edibles), indexed
 
