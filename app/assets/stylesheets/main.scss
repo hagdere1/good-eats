@@ -1,0 +1,129 @@
+.auth-body {
+  background-color: #F4F1EA;
+}
+
+#root {
+  background-color: white;
+}
+
+ul {
+  list-style: none;
+}
+
+.group:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.root-header {
+  background-color: #F4F1EA;
+}
+
+.root-header-nav {
+
+}
+
+.root-header-logo {
+  font-size: 32px;
+  text-decoration: none;
+  float: left;
+  margin-left: 20px;
+  font-family: helvetica;
+  font-weight: 100;
+}
+
+.root-header-logo a {
+  text-decoration: none;
+}
+
+.root-header-list {
+  float: right;
+}
+
+.root-header-list li {
+  float: left;
+}
+
+.root-header-list h5 {
+  font-size: 12px;
+  margin-right: 10px;
+  margin-top: 20px;
+}
+
+.root-header-button {
+  border: 1px solid #8B4513;
+  padding: 7px 16px 7px 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #FFF8DC;
+  margin-right: 20px;
+  margin-top: 15px;
+}
+
+.root-form {
+  margin: auto;
+  margin-bottom: 50px;
+  background-color: white;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  border-radius: 4px;
+  width: 580px;
+  padding: 30px;
+}
+
+.root-form-description {
+  font-size: 18px;
+  margin-bottom: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+  text-align: center;
+
+}
+
+.root-form-fieldset {
+  margin: auto;
+}
+
+.root-form label {
+  font-size: 14px;
+}
+
+.root-form input {
+  border: 1px solid #ccc;
+  display: block;
+  width: 340px;
+  padding: 10px 5px 10px 5px;
+  margin-bottom: 7px;
+}
+
+.root-form-button {
+  margin-top: 20px;
+  border: 1px solid #8B4513;
+  padding: 10px 20px 10px 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #FFF8DC;
+}
+
+.root-form-agreement {
+  font-size: 14px;
+  margin-top: 35px;
+}
+
+.root-footer {
+
+}
+
+.root-footer-copy {
+  text-align: center;
+  font-size: 12px;
+  margin-bottom: 15px;
+}
+
+.root-footer-banner {
+  width: 100%;
+  height: 60px;
+}

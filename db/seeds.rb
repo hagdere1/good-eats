@@ -5,9 +5,10 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Edible.destroy_all
+List.destroy_all
 
 # Edibles
-
 pizza = Edible.create!({name: "Pizza", description: "Bread covered with mozarella cheese and tomato sauce."})
 burger = Edible.create!({name: "Cheeseburger", description: "God's gift to the world between two buns."})
 fois_gras = Edible.create!({name: "Fois Gras", description: "A duck's liver. Rich and creamy."})
@@ -18,3 +19,8 @@ mixed_nuts = Edible.create!({name: "Mixed nuts", description: "Different types o
 gelato = Edible.create!({name: "Gelato", description: "Ice cream but better than ice cream. Product of Italy."})
 pediasure = Edible.create!({name: "Pediasure", description: "A reliable source of nutrition."})
 ceviche = Edible.create!({name: "Ceviche", description: "Fish in lime juice, Peruvian origin."})
+
+# Lists
+eaten = List.create!({title: "Eaten", user_id: 1, can_delete: false})
+want_to_try = List.create!({title: "Want to Try", user_id: 1, can_delete: false})
+eat_in_new_orleans = List.create!({title: "Eat in New Orleans", user_id: 1, can_delete: true})

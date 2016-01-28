@@ -16,7 +16,23 @@ ApiUtil = {
         ApiActions.receiveSingleEdible(edible);
       }
     });
-  }
+  },
+  fetchAllLists: function () {
+    $.ajax({
+      url: "api/lists",
+      success: function (lists) {
+        ApiActions.receiveAllLists(lists);
+      }
+    });
+  },
+  fetchSingleList: function (id) {
+    $.ajax({
+      url: "api/lists/" + id,
+      success: function (list) {
+        ApiActions.receiveSingleList(list);
+      }
+    });
+  },
 };
 
 window.ApiUtil = ApiUtil;

@@ -13,6 +13,18 @@ var ApiActions = {
       actionType: EdibleConstants.EDIBLE_RECEIVED,
       edible: edible
     });
+  },
+  receiveAllLists: function (lists) {
+    AppDispatcher.dispatch({
+      actionType: ListConstants.LISTS_RECEIVED,
+      lists: lists
+    });
+  },
+  receiveSingleList: function (list) {
+    AppDispatcher.dispatch({
+      actionType: ListConstants.LIST_RECEIVED,
+      list: list
+    });
   }
 };
 
