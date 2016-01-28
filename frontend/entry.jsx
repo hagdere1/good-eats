@@ -2,24 +2,15 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
-var EdiblesIndex = require('./components/edibles_index');
-var EdibleStore = require('./stores/edible');
+var ListStore = require('./stores/list');
 var ApiUtil = require('./util/api_util');
-var Edible = require('./components/edible');
-var EdibleDetail = require('./components/edible_detail');
-
-var App = React.createClass({
-  render: function () {
-    return (
-      <div className="main">
-        <EdiblesIndex />
-      </div>
-    );
-  }
-});
+var ListsIndex = require('./components/lists/lists_index');
+var App = require('./components/app');
+// Delete testing vars
 
 var routes = (
   <Route path="/" component={App}>
+    <Route path="/lists/" component={ListsIndex}></Route>
   </Route>
 );
 
