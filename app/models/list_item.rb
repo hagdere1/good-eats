@@ -3,4 +3,6 @@ class ListItem < ActiveRecord::Base
   validates :edible_id, uniqueness: { scope: :list_id, message: "You've already added this item." }
 
   belongs_to :list
+  belongs_to :edible
+  belongs_to :user
 end
