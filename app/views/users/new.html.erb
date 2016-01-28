@@ -5,20 +5,19 @@
     <title>Sign Up</title>
   </head>
 
-  <header class="header">
-    <nav class="header-nav group">
+  <header class="auth-header">
+    <nav class="auth-header-nav group">
 
-      <h1 class="header-logo">
+      <h1 class="auth-header-logo">
         <a href="#">goodeats</a>
       </h1>
 
-      <ul class="header-list group">
+      <ul class="auth-header-list group">
         <li>
-          <h5>Already a member?</h5>
+          <h5 class="auth-header-five">Already a member?</h5>
         </li>
         <li>
           <a href="../sessions/new.html.erb">
-            <!-- <button class="header-button">Sign in</button> -->
             <%= button_to "Sign in", new_session_url, method: :get %>
           </a>
         </li>
@@ -28,17 +27,17 @@
     </nav>
   </header>
 
-  <body>
-    <section class="form">
+  <body class="auth-body">
+    <section class="auth-form">
       <form action="<%= users_url %>" method="POST">
-        <p class="form-description">
+        <p class="auth-form-description">
           Sign up to see what your friends are eating, get food recommendations,
       and join the world’s most devoted community of eaters.
         </p>
 
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-        <fieldset class="form-fieldset">
+        <fieldset class="auth-form-fieldset">
           <label>Name
             <input type="text" name="user[name]" placeholder="Name" value="">
           </label>
@@ -51,18 +50,18 @@
             <input type="password" name="user[password]" placeholder="Password" value="">
           </label>
 
-          <button class="form-button">Sign up</button>
+          <button class="auth-form-button">Sign up</button>
         </fieldset>
 
-        <p class="form-agreement">
+        <p class="auth-form-agreement">
           By clicking “Sign up” I agree to the Goodeats Terms of Service and confirm that I am at least 13 years old.
         </p>
       </form>
     </section>
 
-    <footer class="footer">
-      <p class="footer-copy">© 2016 Goodeats Inc</p>
-      <img class="footer-banner"
+    <footer class="auth-footer">
+      <p class="auth-footer-copy">© 2016 Goodeats Inc</p>
+      <img class="auth-footer-banner"
            src="http://www.calabriamillbury.com/images/italian.jpg"/>
     </footer>
 

@@ -13,8 +13,12 @@ html, body, header, nav, h1, h5, a, ul, li, p, button, main, section, form, img,
   background-color: transparent;
 }
 
-body {
-  background-color: #FFF8DC;
+.auth-body {
+  background-color: #F4F1EA;
+}
+
+#root {
+  background-color: white;
 }
 
 ul {
@@ -28,7 +32,7 @@ ul {
 }
 
 .header {
-
+  background-color: #F4F1EA;
 }
 
 .header-nav {
@@ -40,6 +44,8 @@ ul {
   text-decoration: none;
   float: left;
   margin-left: 20px;
+  font-family: helvetica;
+  font-weight: 100;
 }
 
 .header-logo a {

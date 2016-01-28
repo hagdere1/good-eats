@@ -7,6 +7,12 @@ var ApiActions = {
       actionType: EdibleConstants.EDIBLES_RECEIVED,
       edibles: edibles
     });
+  },
+  receiveSingleEdible: function (edible) {
+    AppDispatcher.dispatch({
+      actionType: EdibleConstants.EDIBLE_RECEIVED,
+      edible: edible
+    });
   }
 };
 

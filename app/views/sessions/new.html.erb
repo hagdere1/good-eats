@@ -5,16 +5,16 @@
     <title>Sign In</title>
   </head>
 
-  <header class="header">
-    <nav class="header-nav group">
+  <header class="auth-header">
+    <nav class="auth-header-nav group">
 
-      <h1 class="header-logo">
+      <h1 class="auth-header-logo">
         <a href="#">goodeats</a>
       </h1>
 
-      <ul class="header-list group">
+      <ul class="auth-header-list group">
         <li>
-          <h5>Not a member?</h5>
+          <h5 class="auth-header-five">Not a member?</h5>
         </li>
         <li>
           <a href="../sessions/new.html.erb">
@@ -28,13 +28,13 @@
     </nav>
   </header>
 
-  <body>
-    <section class="form">
+  <body class="auth-body">
+    <section class="auth-form">
       <form action="<%= session_url %>" method="POST">
 
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-        <fieldset class="form-fieldset">
+        <fieldset class="auth-form-fieldset">
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
           <label>Email Address
@@ -45,15 +45,15 @@
             <input type="password" name="user[password]" value="">
           </label>
 
-          <button class="form-button">Sign in</button>
+          <button class="auth-form-button">Sign in</button>
         </fieldset>
 
       </form>
     </section>
 
-    <footer class="footer">
-      <p class="footer-copy">© 2016 Goodeats Inc</p>
-      <img class="footer-banner"
+    <footer class="auth-footer">
+      <p class="auth-footer-copy">© 2016 Goodeats Inc</p>
+      <img class="auth-footer-banner"
            src="http://www.calabriamillbury.com/images/italian.jpg"/>
     </footer>
 
