@@ -33,7 +33,22 @@ ApiUtil = {
       }
     });
   },
-
+  fetchAllListItems: function (listId) {
+    $.ajax({
+      url: "api/lists/" + listId + "/list_items",
+      success: function (listItems) {
+        ApiActions.receiveAllListItems(listItems);
+      }
+    });
+  },
+  fetchSingleListItem: function (listId, id) {
+    $.ajax({
+      url: "api/lists/" + listId + "/list_items/" + id,
+      success: function (listItem) {
+        ApiActions.receiveSingleListItem(listItem);
+      }
+    });
+  }
 };
 
 window.ApiUtil = ApiUtil;

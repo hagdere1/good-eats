@@ -1,5 +1,7 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 var EdibleConstants = require('../constants/edible_constants');
+var ListConstants = require('../constants/list_constants');
+var ListItemConstants = require('../constants/list_item_constants');
 
 var ApiActions = {
   receiveAllEdibles: function (edibles) {
@@ -25,7 +27,19 @@ var ApiActions = {
       actionType: ListConstants.LIST_RECEIVED,
       list: list
     });
-  }
+  },
+  receiveAllListItems: function (listItems) {
+    AppDispatcher.dispatch({
+      actionType: ListItemConstants.LIST_ITEMS_RECEIVED,
+      listItems: listItems
+    });
+  },
+  receiveSingleListItem: function (listItem) {
+    AppDispatcher.dispatch({
+      actionType: ListItemConstants.LIST_ITEM_RECEIVED,
+      listItem: listItem
+    });
+  },
 };
 
 module.exports = ApiActions;
