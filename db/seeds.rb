@@ -17,3 +17,4 @@ pumpkin_pie = Edible.create!({name: "Pumpkin Pie", description: "Pumpkins aren't
 mixed_nuts = Edible.create!({name: "Mixed nuts", description: "Different types of nuts mixed together."})
 gelato = Edible.create!({name: "Gelato", description: "Ice cream but better than ice cream. Product of Italy."})
 pediasure = Edible.create!({name: "Pediasure", description: "A reliable source of nutrition."})
+ceviche = Edible.create!({name: "Ceviche", description: "Fish in lime juice, Peruvian origin."})

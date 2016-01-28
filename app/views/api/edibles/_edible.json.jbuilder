@@ -1,4 +1,4 @@
 json.extract!(
   edible,
-  :name, :description
+  :id, :name, :description
 )

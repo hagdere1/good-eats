@@ -3,15 +3,29 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var EdibleStore = new Store(AppDispatcher);
 var EdibleConstants = require('../constants/edible_constants');
 
-var _edibles = [];
-// var CHANGE_EVENT = "change";
+var _edibles = {};
 
 EdibleStore.all = function () {
-  return _edibles.slice(0);
+  var edibles = [];
+  for (var id in _edibles) {
+    edibles.push(_edibles[id]);
+  }
+  return edibles;
 };
 
 EdibleStore.resetEdibles = function (edibles) {
-  _edibles = edibles;
+  _edibles = {};
+  edibles.forEach(function (edible) {
+    _edibles[edible.id] = edible;
+  });
+};
+
+EdibleStore.resetEdible = function (edible) {
+  _edibles[edible.id] = edible;
+};
+
+EdibleStore.find = function (id) {
+  return _edibles[id];
 };
 
 EdibleStore.__onDispatch = function (payload) {
@@ -20,20 +34,12 @@ EdibleStore.__onDispatch = function (payload) {
       this.resetEdibles(payload.edibles);
       EdibleStore.__emitChange();
       break;
+    case EdibleConstants.EDIBLE_RECEIVED:
+      this.resetEdible(payload.edible);
+      EdibleStore.__emitChange();
+      break;
   }
 };
-
-// EdibleStore.__emitChange = function () {
-//   this.emit(CHANGE_EVENT);
-// };
-//
-// EdibleStore.addChangeListener = function (callback) {
-//   this.on(CHANGE_EVENT, callback);
-// };
-//
-// EdibleStore.removeChangeListener = function (callback) {
-//   this.removeListener(CHANGE_EVENT, callback);
-// };
 
 window.EdibleStore = EdibleStore;
 module.exports = EdibleStore;

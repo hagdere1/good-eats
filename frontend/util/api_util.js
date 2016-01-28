@@ -4,9 +4,16 @@ ApiUtil = {
   fetchAllEdibles: function () {
     $.ajax({
       url: "api/edibles",
-      method: 'GET',
       success: function (edibles) {
         ApiActions.receiveAllEdibles(edibles);
+      }
+    });
+  },
+  fetchSingleEdible: function (id) {
+    $.ajax({
+      url: "api/edibles/" + id,
+      success: function (edible) {
+        ApiActions.receiveSingleEdible(edible);
       }
     });
   }
