@@ -51,6 +51,9 @@
 	var ListStore = __webpack_require__(237);
 	var ApiUtil = __webpack_require__(233);
 	var ListsIndex = __webpack_require__(239);
+	// ListsIndex
+	// ListsIndexItem
+	var ListItemStore = __webpack_require__(241);
 	var App = __webpack_require__(236);
 	// Delete testing vars
 
@@ -31119,8 +31122,23 @@
 	        ApiActions.receiveSingleList(list);
 	      }
 	    });
+	  },
+	  fetchAllListItems: function (listId) {
+	    $.ajax({
+	      url: "api/lists/" + listId + "/list_items",
+	      success: function (listItems) {
+	        ApiActions.receiveAllListItems(listItems);
+	      }
+	    });
+	  },
+	  fetchSingleListItem: function (listId, id) {
+	    $.ajax({
+	      url: "api/lists/" + listId + "/list_items/" + id,
+	      success: function (listItem) {
+	        ApiActions.receiveSingleListItem(listItem);
+	      }
+	    });
 	  }
-
 	};
 
 	window.ApiUtil = ApiUtil;
@@ -31132,6 +31150,8 @@
 
 	var AppDispatcher = __webpack_require__(228);
 	var EdibleConstants = __webpack_require__(231);
+	var ListConstants = __webpack_require__(238);
+	var ListItemConstants = __webpack_require__(240);
 
 	var ApiActions = {
 	  receiveAllEdibles: function (edibles) {
@@ -31156,6 +31176,18 @@
 	    AppDispatcher.dispatch({
 	      actionType: ListConstants.LIST_RECEIVED,
 	      list: list
+	    });
+	  },
+	  receiveAllListItems: function (listItems) {
+	    AppDispatcher.dispatch({
+	      actionType: ListItemConstants.LIST_ITEMS_RECEIVED,
+	      listItems: listItems
+	    });
+	  },
+	  receiveSingleListItem: function (listItem) {
+	    AppDispatcher.dispatch({
+	      actionType: ListItemConstants.LIST_ITEM_RECEIVED,
+	      listItem: listItem
 	    });
 	  }
 	};
@@ -31442,6 +31474,67 @@
 	});
 
 	module.exports = ListsIndex;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports) {
+
+	ListItemConstants = {
+	  LIST_ITEMS_RECEIVED: "LIST_ITEMS_RECEIVED",
+	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED"
+	};
+
+	module.exports = ListItemConstants;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(210).Store;
+	var AppDispatcher = __webpack_require__(228);
+	var ListItemStore = new Store(AppDispatcher);
+	var ListItemConstants = __webpack_require__(240);
+
+	var _listItems = {};
+
+	ListItemStore.all = function () {
+	  var listItems = [];
+	  for (var id in _listItems) {
+	    listItems.push(_listItems[id]);
+	  }
+	  return listItems;
+	};
+
+	ListItemStore.resetListItems = function (listItems) {
+	  _listItems = {};
+	  listItems.forEach(function (listItem) {
+	    _listItems[listItem.id] = listItem;
+	  });
+	};
+
+	ListItemStore.resetListItem = function (listItem) {
+	  _listItems[listItem.id] = listItem;
+	};
+
+	ListItemStore.find = function (id) {
+	  return _listItems[id];
+	};
+
+	ListItemStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ListItemConstants.LIST_ITEMS_RECEIVED:
+	      this.resetListItems(payload.listItems);
+	      ListItemStore.__emitChange();
+	      break;
+	    case ListItemConstants.LIST_ITEM_RECEIVED:
+	      this.resetListItem(payload.listItem);
+	      ListItemStore.__emitChange();
+	      break;
+	  }
+	};
+
+	window.ListItemStore = ListItemStore;
+	module.exports = ListItemStore;
 
 /***/ }
 /******/ ]);

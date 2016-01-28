@@ -5,6 +5,9 @@ var Route = require('react-router').Route;
 var ListStore = require('./stores/list');
 var ApiUtil = require('./util/api_util');
 var ListsIndex = require('./components/lists/lists_index');
+// ListsIndex
+// ListsIndexItem
+var ListItemStore = require('./stores/list_item');
 var App = require('./components/app');
 // Delete testing vars
 
