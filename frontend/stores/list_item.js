@@ -28,6 +28,16 @@ ListItemStore.find = function (id) {
   return _listItems[id];
 };
 
+ListItemStore.findByListId = function (listId) {
+  var listItems = [];
+  _ListItems.keys.forEach(function (listItem) {
+    if (listItem.list_id === listId) {
+      listItems.push(listItem);
+    }
+  });
+  return listItems;
+};
+
 ListItemStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ListItemConstants.LIST_ITEMS_RECEIVED:

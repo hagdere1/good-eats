@@ -60,7 +60,11 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(Route, { path: '/lists', component: ListsIndex })
+	  React.createElement(
+	    Route,
+	    { path: 'lists', component: ListsIndex },
+	    React.createElement(Route, { path: ':id', component: ListsIndexItem })
+	  )
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31276,7 +31280,6 @@
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(208);
 	var ApiActions = __webpack_require__(231);
-	var ListsIndexItem = __webpack_require__(236);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31299,21 +31302,42 @@
 	  },
 
 	  render: function () {
+	    // list index item of props id
 	    return React.createElement(
 	      'div',
-	      { className: 'lists' },
+	      null,
 	      React.createElement(
 	        'h1',
 	        { className: 'heading-main' },
 	        'My Edibles'
 	      ),
 	      React.createElement(
-	        'ul',
-	        { className: 'lists-index</div>' },
+	        'h2',
+	        { className: 'heading-sub-main' },
+	        'Lists'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'lists-content group' },
 	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(ListsIndexItem, null)
+	          'ul',
+	          { className: 'lists-index' },
+	          this.state.lists.map(function (list) {
+	            return React.createElement(
+	              'li',
+	              { key: list.id, list: list },
+	              React.createElement(
+	                'a',
+	                { href: '#' },
+	                list.title
+	              )
+	            );
+	          })
+	        ),
+	        React.createElement(
+	          'section',
+	          { className: 'list-main' },
+	          this.props.children
 	        )
 	      )
 	    );
@@ -31328,15 +31352,34 @@
 
 	var React = __webpack_require__(1);
 	var ListItemStore = __webpack_require__(237);
+	var ItemDetail = __webpack_require__(239);
 
 	var ListsIndexItem = React.createClass({
 	  displayName: 'ListsIndexItem',
 
+	  getInitialState: function () {
+	    if (this.props.params.id) {
+	      return { edibles: ListItemStore.findByListId(this.props.params.id) };
+	    } else {
+	      return { edibles: ListItemStore.all() };
+	    }
+	  },
 	  render: function () {
 	    return React.createElement(
-	      'h1',
+	      'div',
 	      null,
-	      'One Edible'
+	      React.createElement(
+	        'h1',
+	        null,
+	        'HOW DO I PASS THE LIST TITLE HERE?'
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.state.edibles.map(function (edible) {
+	          return React.createElement(ItemDetail, { key: edible.id, edible: edible });
+	        })
+	      )
 	    );
 	  }
 	});
@@ -31375,6 +31418,16 @@
 
 	ListItemStore.find = function (id) {
 	  return _listItems[id];
+	};
+
+	ListItemStore.findByListId = function (listId) {
+	  var listItems = [];
+	  _ListItems.keys.forEach(function (listItem) {
+	    if (listItem.list_id === listId) {
+	      listItems.push(listItem);
+	    }
+	  });
+	  return listItems;
 	};
 
 	ListItemStore.__onDispatch = function (payload) {
@@ -31510,6 +31563,15 @@
 	                { href: '#' },
 	                React.createElement('i', { className: 'fa fa-caret-square-o-down' })
 	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#' },
+	                'Logout'
+	              )
 	            )
 	          )
 	        )
@@ -31517,38 +31579,42 @@
 	      React.createElement(
 	        'div',
 	        { className: 'main' },
-	        React.createElement(ListsIndex, null)
+	        this.props.children
 	      ),
 	      React.createElement(
 	        'footer',
-	        { className: 'root-footer group' },
+	        { className: 'root-footer' },
 	        React.createElement(
-	          'small',
-	          { className: 'root-footer-copy' },
-	          '© 2016 Goodeats Inc'
-	        ),
-	        React.createElement(
-	          'ul',
-	          { className: 'root-footer-links group' },
+	          'nav',
+	          { className: 'root-footer-nav group' },
 	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement('a', { href: '#' })
+	            'small',
+	            { className: 'root-footer-copy' },
+	            '© 2016 Goodeats Inc'
 	          ),
 	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement('a', { href: '#' })
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement('a', { href: '#' })
-	          ),
-	          React.createElement(
-	            'li',
-	            null,
-	            React.createElement('a', { href: '#' })
+	            'ul',
+	            { className: 'root-footer-links group' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement('a', { href: '#' })
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement('a', { href: '#' })
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement('a', { href: '#' })
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement('a', { href: '#' })
+	            )
 	          )
 	        )
 	      )
@@ -31557,6 +31623,69 @@
 	});
 
 	module.exports = App;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var ItemDetail = React.createClass({
+	  displayName: "ItemDetail",
+
+	  render: function () {
+	    var modifyEdibleLink;
+	    if (this.props.edible.review.length > 0) {
+	      modifyEdibleLink = React.createElement(
+	        "a",
+	        { href: "#" },
+	        "Edit"
+	      );
+	    } else {
+	      modifyEdibleLink = React.createElement(
+	        "a",
+	        { href: "#" },
+	        "Review"
+	      );
+	    }
+
+	    return React.createElement(
+	      "ul",
+	      { className: "edible-item-attributes" },
+	      React.createElement(
+	        "li",
+	        null,
+	        React.createElement(
+	          "a",
+	          { href: "#" },
+	          this.props.edible.title
+	        )
+	      ),
+	      React.createElement(
+	        "li",
+	        null,
+	        this.props.edible.rating
+	      ),
+	      React.createElement(
+	        "li",
+	        null,
+	        this.props.edible.date_eaten
+	      ),
+	      React.createElement(
+	        "li",
+	        null,
+	        this.props.edible.created_at
+	      ),
+	      React.createElement(
+	        "li",
+	        null,
+	        modifyEdibleLink
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ItemDetail;
 
 /***/ }
 /******/ ]);

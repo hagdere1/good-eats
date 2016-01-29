@@ -28,25 +28,26 @@ var App = React.createClass({
               <li><a href="#"><i className="fa fa-users"></i></a></li>
               <li><a href="#"><i className="fa fa-user"></i></a></li>
               <li><a href="#"><i className="fa fa-caret-square-o-down"></i></a></li>
+              <li><a href="#">Logout</a></li>
             </ul>
           </nav>
         </header>
 
-        <div className="main"><ListsIndex /></div>
+        <div className="main">{this.props.children}</div>
 
-        <footer className="root-footer group">
+        <footer className="root-footer">
+          <nav className="root-footer-nav group">
+            <small className="root-footer-copy">
+              &copy; 2016 Goodeats Inc
+            </small>
 
-          <small className="root-footer-copy">
-            &copy; 2016 Goodeats Inc
-          </small>
-
-          <ul className="root-footer-links group">
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-            <li><a href="#"></a></li>
-          </ul>
-
+            <ul className="root-footer-links group">
+              <li><a href="#"></a></li>
+              <li><a href="#"></a></li>
+              <li><a href="#"></a></li>
+              <li><a href="#"></a></li>
+            </ul>
+          </nav>
         </footer>
       </div>
     );
