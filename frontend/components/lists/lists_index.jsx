@@ -1,6 +1,7 @@
 var React = require('react');
 var ListStore = require('../../stores/list');
 var ApiActions = require('../../util/api_util');
+var ListsIndexItem = require('./lists_index_item');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
@@ -26,7 +27,7 @@ var ListsIndex = React.createClass({
         <h1 className="heading-main">My Edibles</h1>
         <ul className="lists-list">
           {this.state.lists.map(function (list) {
-            return <li key={list.id}>{list.title}</li>;
+            return <ListsIndexItem key={list.id} list={list} />;
           })}
         </ul>
       </div>

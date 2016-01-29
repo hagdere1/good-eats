@@ -5,15 +5,16 @@ var Route = require('react-router').Route;
 var ListStore = require('./stores/list');
 var ApiUtil = require('./util/api_util');
 var ListsIndex = require('./components/lists/lists_index');
-// ListsIndex
-// ListsIndexItem
+var ListsIndexItem = require('./components/lists/lists_index_item');
 var ListItemStore = require('./stores/list_item');
 var App = require('./components/app');
 // Delete testing vars
 
 var routes = (
   <Route path="/" component={App}>
-    <Route path="/lists/" component={ListsIndex}></Route>
+    <Route path="lists/" component={ListsIndex}>
+      <Route path="list_items/:id component={ListsIndexItem}"/>
+    </Route>
   </Route>
 );
 
