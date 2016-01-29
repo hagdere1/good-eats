@@ -1,27 +1,13 @@
 var React = require('react');
 var ListItemStore = require('../../stores/list_item');
 
-var ListIndexItem = React.createClass({
-  getInitialState: function () {
-    var edibles = [];
-    var allEdibles = ListItemStore.all();
-    for (i = 0; i < allEdibles.length; i++) {
-      if (this.props.key === allEdibles[i].list_id) {
-        edibles.push(allEdibles[i]);
-      }
-    }
-    return {edibles: edibles};
-  },
+var ListsIndexItem = React.createClass({
 
   render: function () {
     return (
-      <li className="edible-list">
-        <ul>
-          {this.props.list.title}
-        </ul>
-      </li>
+      <h1>One Edible</h1>
     );
   }
 });
 
-module.exports = ListIndexItem;
+module.exports = ListsIndexItem;
