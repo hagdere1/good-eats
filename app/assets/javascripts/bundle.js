@@ -48,12 +48,12 @@
 	var ReactDOM = __webpack_require__(158);
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
-	var ListStore = __webpack_require__(237);
-	var ApiUtil = __webpack_require__(233);
-	var ListsIndex = __webpack_require__(239);
-	var ListsIndexItem = __webpack_require__(242);
-	var ListItemStore = __webpack_require__(241);
-	var App = __webpack_require__(236);
+	var ListStore = __webpack_require__(208);
+	var ApiUtil = __webpack_require__(231);
+	var ListsIndex = __webpack_require__(235);
+	var ListsIndexItem = __webpack_require__(236);
+	var ListItemStore = __webpack_require__(237);
+	var App = __webpack_require__(238);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 	// Delete testing vars
 
@@ -9328,6 +9328,7 @@
 	 */
 	var EventInterface = {
 	  type: null,
+	  target: null,
 	  // currentTarget is set when dispatching; no use in copying it here
 	  currentTarget: emptyFunction.thatReturnsNull,
 	  eventPhase: null,
@@ -9361,8 +9362,6 @@
 	  this.dispatchConfig = dispatchConfig;
 	  this.dispatchMarker = dispatchMarker;
 	  this.nativeEvent = nativeEvent;
-	  this.target = nativeEventTarget;
-	  this.currentTarget = nativeEventTarget;
 
 	  var Interface = this.constructor.Interface;
 	  for (var propName in Interface) {
@@ -9373,7 +9372,11 @@
 	    if (normalize) {
 	      this[propName] = normalize(nativeEvent);
 	    } else {
-	      this[propName] = nativeEvent[propName];
+	      if (propName === 'target') {
+	        this.target = nativeEventTarget;
+	      } else {
+	        this[propName] = nativeEvent[propName];
+	      }
 	    }
 	  }
 
@@ -13222,7 +13225,10 @@
 	      }
 	    });
 
-	    nativeProps.children = content;
+	    if (content) {
+	      nativeProps.children = content;
+	    }
+
 	    return nativeProps;
 	  }
 
@@ -18695,7 +18701,7 @@
 
 	'use strict';
 
-	module.exports = '0.14.6';
+	module.exports = '0.14.7';
 
 /***/ },
 /* 147 */
@@ -24308,9 +24314,57 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 208 */,
-/* 209 */,
-/* 210 */
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var AppDispatcher = __webpack_require__(227);
+	var ListStore = new Store(AppDispatcher);
+	var ListConstants = __webpack_require__(230);
+
+	var _lists = {};
+
+	ListStore.all = function () {
+	  var lists = [];
+	  for (var id in _lists) {
+	    lists.push(_lists[id]);
+	  }
+	  return lists;
+	};
+
+	ListStore.resetLists = function (lists) {
+	  _lists = {};
+	  lists.forEach(function (list) {
+	    _lists[list.id] = list;
+	  });
+	};
+
+	ListStore.resetList = function (list) {
+	  _lists[list.id] = list;
+	};
+
+	ListStore.find = function (id) {
+	  return _lists[id];
+	};
+
+	ListStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ListConstants.LISTS_RECEIVED:
+	      this.resetLists(payload.lists);
+	      ListStore.__emitChange();
+	      break;
+	    case ListConstants.LIST_RECEIVED:
+	      this.resetList(payload.list);
+	      ListStore.__emitChange();
+	      break;
+	  }
+	};
+
+	window.ListStore = ListStore;
+	module.exports = ListStore;
+
+/***/ },
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24322,15 +24376,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(211);
-	module.exports.MapStore = __webpack_require__(215);
-	module.exports.Mixin = __webpack_require__(227);
-	module.exports.ReduceStore = __webpack_require__(216);
-	module.exports.Store = __webpack_require__(217);
+	module.exports.Container = __webpack_require__(210);
+	module.exports.MapStore = __webpack_require__(214);
+	module.exports.Mixin = __webpack_require__(226);
+	module.exports.ReduceStore = __webpack_require__(215);
+	module.exports.Store = __webpack_require__(216);
 
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24352,10 +24406,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(212);
+	var FluxStoreGroup = __webpack_require__(211);
 
-	var invariant = __webpack_require__(213);
-	var shallowEqual = __webpack_require__(214);
+	var invariant = __webpack_require__(212);
+	var shallowEqual = __webpack_require__(213);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -24513,7 +24567,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24532,7 +24586,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(213);
+	var invariant = __webpack_require__(212);
 
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -24594,7 +24648,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24649,7 +24703,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports) {
 
 	/**
@@ -24704,7 +24758,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24725,10 +24779,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(216);
-	var Immutable = __webpack_require__(226);
+	var FluxReduceStore = __webpack_require__(215);
+	var Immutable = __webpack_require__(225);
 
-	var invariant = __webpack_require__(213);
+	var invariant = __webpack_require__(212);
 
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -24854,7 +24908,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24875,10 +24929,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(217);
+	var FluxStore = __webpack_require__(216);
 
-	var abstractMethod = __webpack_require__(225);
-	var invariant = __webpack_require__(213);
+	var abstractMethod = __webpack_require__(224);
+	var invariant = __webpack_require__(212);
 
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -24961,7 +25015,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 217 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24980,11 +25034,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(218);
+	var _require = __webpack_require__(217);
 
 	var EventEmitter = _require.EventEmitter;
 
-	var invariant = __webpack_require__(213);
+	var invariant = __webpack_require__(212);
 
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -25144,7 +25198,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 218 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25157,14 +25211,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(219)
+	  EventEmitter: __webpack_require__(218)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 219 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25183,11 +25237,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(220);
-	var EventSubscriptionVendor = __webpack_require__(222);
+	var EmitterSubscription = __webpack_require__(219);
+	var EventSubscriptionVendor = __webpack_require__(221);
 
-	var emptyFunction = __webpack_require__(224);
-	var invariant = __webpack_require__(223);
+	var emptyFunction = __webpack_require__(223);
+	var invariant = __webpack_require__(222);
 
 	/**
 	 * @class BaseEventEmitter
@@ -25361,7 +25415,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 220 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25382,7 +25436,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(221);
+	var EventSubscription = __webpack_require__(220);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -25414,7 +25468,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 221 */
+/* 220 */
 /***/ function(module, exports) {
 
 	/**
@@ -25468,7 +25522,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 222 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25487,7 +25541,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(223);
+	var invariant = __webpack_require__(222);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -25577,7 +25631,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 223 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25633,7 +25687,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 224 */
+/* 223 */
 /***/ function(module, exports) {
 
 	/**
@@ -25676,7 +25730,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 225 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25693,7 +25747,7 @@
 
 	'use strict';
 
-	var invariant = __webpack_require__(213);
+	var invariant = __webpack_require__(212);
 
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -25703,7 +25757,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 226 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30690,7 +30744,7 @@
 	}));
 
 /***/ },
-/* 227 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30707,9 +30761,9 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(212);
+	var FluxStoreGroup = __webpack_require__(211);
 
-	var invariant = __webpack_require__(213);
+	var invariant = __webpack_require__(212);
 
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -30813,14 +30867,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 228 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(229).Dispatcher;
+	var Dispatcher = __webpack_require__(228).Dispatcher;
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 229 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30832,11 +30886,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(230);
+	module.exports.Dispatcher = __webpack_require__(229);
 
 
 /***/ },
-/* 230 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30858,7 +30912,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(213);
+	var invariant = __webpack_require__(212);
 
 	var _prefix = 'ID_';
 
@@ -31073,22 +31127,21 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 231 */
+/* 230 */
 /***/ function(module, exports) {
 
-	EdibleConstants = {
-	  EDIBLES_RECEIVED: "EDIBLES_RECEIVED",
-	  EDIBLE_RECEIVED: "EDIBLE_RECEIVED"
+	ListConstants = {
+	  LISTS_RECEIVED: "LISTS_RECEIVED",
+	  LIST_RECEIVED: "LIST_RECEIVED"
 	};
 
-	module.exports = EdibleConstants;
+	module.exports = ListConstants;
 
 /***/ },
-/* 232 */,
-/* 233 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(234);
+	var ApiActions = __webpack_require__(232);
 
 	ApiUtil = {
 	  fetchAllEdibles: function () {
@@ -31145,13 +31198,13 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 234 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(228);
-	var EdibleConstants = __webpack_require__(231);
-	var ListConstants = __webpack_require__(238);
-	var ListItemConstants = __webpack_require__(240);
+	var AppDispatcher = __webpack_require__(227);
+	var EdibleConstants = __webpack_require__(233);
+	var ListConstants = __webpack_require__(230);
+	var ListItemConstants = __webpack_require__(234);
 
 	var ApiActions = {
 	  receiveAllEdibles: function (edibles) {
@@ -31195,12 +31248,157 @@
 	module.exports = ApiActions;
 
 /***/ },
-/* 235 */,
+/* 233 */
+/***/ function(module, exports) {
+
+	EdibleConstants = {
+	  EDIBLES_RECEIVED: "EDIBLES_RECEIVED",
+	  EDIBLE_RECEIVED: "EDIBLE_RECEIVED"
+	};
+
+	module.exports = EdibleConstants;
+
+/***/ },
+/* 234 */
+/***/ function(module, exports) {
+
+	ListItemConstants = {
+	  LIST_ITEMS_RECEIVED: "LIST_ITEMS_RECEIVED",
+	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED"
+	};
+
+	module.exports = ListItemConstants;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ListStore = __webpack_require__(208);
+	var ApiActions = __webpack_require__(231);
+	var ListsIndexItem = __webpack_require__(236);
+
+	var ListsIndex = React.createClass({
+	  displayName: 'ListsIndex',
+
+	  getInitialState: function () {
+	    return { lists: ListStore.all() };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ lists: ListStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.listListener = ListStore.addListener(this._onChange);
+	    ApiActions.fetchAllLists();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listListener.remove();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'lists' },
+	      React.createElement(
+	        'h1',
+	        { className: 'heading-main' },
+	        'My Edibles'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'lists-index</div>' },
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(ListsIndexItem, null)
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ListsIndex;
+
+/***/ },
 /* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ListsIndex = __webpack_require__(239);
+	var ListItemStore = __webpack_require__(237);
+
+	var ListsIndexItem = React.createClass({
+	  displayName: 'ListsIndexItem',
+
+	  render: function () {
+	    return React.createElement(
+	      'h1',
+	      null,
+	      'One Edible'
+	    );
+	  }
+	});
+
+	module.exports = ListsIndexItem;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var AppDispatcher = __webpack_require__(227);
+	var ListItemStore = new Store(AppDispatcher);
+	var ListItemConstants = __webpack_require__(234);
+
+	var _listItems = {};
+
+	ListItemStore.all = function () {
+	  var listItems = [];
+	  for (var id in _listItems) {
+	    listItems.push(_listItems[id]);
+	  }
+	  return listItems;
+	};
+
+	ListItemStore.resetListItems = function (listItems) {
+	  _listItems = {};
+	  listItems.forEach(function (listItem) {
+	    _listItems[listItem.id] = listItem;
+	  });
+	};
+
+	ListItemStore.resetListItem = function (listItem) {
+	  _listItems[listItem.id] = listItem;
+	};
+
+	ListItemStore.find = function (id) {
+	  return _listItems[id];
+	};
+
+	ListItemStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ListItemConstants.LIST_ITEMS_RECEIVED:
+	      this.resetListItems(payload.listItems);
+	      ListItemStore.__emitChange();
+	      break;
+	    case ListItemConstants.LIST_ITEM_RECEIVED:
+	      this.resetListItem(payload.listItem);
+	      ListItemStore.__emitChange();
+	      break;
+	  }
+	};
+
+	window.ListItemStore = ListItemStore;
+	module.exports = ListItemStore;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ListsIndex = __webpack_require__(235);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -31359,202 +31557,6 @@
 	});
 
 	module.exports = App;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(210).Store;
-	var AppDispatcher = __webpack_require__(228);
-	var ListStore = new Store(AppDispatcher);
-	var ListConstants = __webpack_require__(238);
-
-	var _lists = {};
-
-	ListStore.all = function () {
-	  var lists = [];
-	  for (var id in _lists) {
-	    lists.push(_lists[id]);
-	  }
-	  return lists;
-	};
-
-	ListStore.resetLists = function (lists) {
-	  _lists = {};
-	  lists.forEach(function (list) {
-	    _lists[list.id] = list;
-	  });
-	};
-
-	ListStore.resetList = function (list) {
-	  _lists[list.id] = list;
-	};
-
-	ListStore.find = function (id) {
-	  return _lists[id];
-	};
-
-	ListStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ListConstants.LISTS_RECEIVED:
-	      this.resetLists(payload.lists);
-	      ListStore.__emitChange();
-	      break;
-	    case ListConstants.LIST_RECEIVED:
-	      this.resetList(payload.list);
-	      ListStore.__emitChange();
-	      break;
-	  }
-	};
-
-	window.ListStore = ListStore;
-	module.exports = ListStore;
-
-/***/ },
-/* 238 */
-/***/ function(module, exports) {
-
-	ListConstants = {
-	  LISTS_RECEIVED: "LISTS_RECEIVED",
-	  LIST_RECEIVED: "LIST_RECEIVED"
-	};
-
-	module.exports = ListConstants;
-
-/***/ },
-/* 239 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ListStore = __webpack_require__(237);
-	var ApiActions = __webpack_require__(233);
-	var ListsIndexItem = __webpack_require__(242);
-
-	var ListsIndex = React.createClass({
-	  displayName: 'ListsIndex',
-
-	  getInitialState: function () {
-	    return { lists: ListStore.all() };
-	  },
-
-	  _onChange: function () {
-	    this.setState({ lists: ListStore.all() });
-	  },
-
-	  componentDidMount: function () {
-	    this.listListener = ListStore.addListener(this._onChange);
-	    ApiActions.fetchAllLists();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listListener.remove();
-	  },
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'lists' },
-	      React.createElement(
-	        'h1',
-	        { className: 'heading-main' },
-	        'My Edibles'
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'lists-index</div>' },
-	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(ListsIndexItem, null)
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = ListsIndex;
-
-/***/ },
-/* 240 */
-/***/ function(module, exports) {
-
-	ListItemConstants = {
-	  LIST_ITEMS_RECEIVED: "LIST_ITEMS_RECEIVED",
-	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED"
-	};
-
-	module.exports = ListItemConstants;
-
-/***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(210).Store;
-	var AppDispatcher = __webpack_require__(228);
-	var ListItemStore = new Store(AppDispatcher);
-	var ListItemConstants = __webpack_require__(240);
-
-	var _listItems = {};
-
-	ListItemStore.all = function () {
-	  var listItems = [];
-	  for (var id in _listItems) {
-	    listItems.push(_listItems[id]);
-	  }
-	  return listItems;
-	};
-
-	ListItemStore.resetListItems = function (listItems) {
-	  _listItems = {};
-	  listItems.forEach(function (listItem) {
-	    _listItems[listItem.id] = listItem;
-	  });
-	};
-
-	ListItemStore.resetListItem = function (listItem) {
-	  _listItems[listItem.id] = listItem;
-	};
-
-	ListItemStore.find = function (id) {
-	  return _listItems[id];
-	};
-
-	ListItemStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ListItemConstants.LIST_ITEMS_RECEIVED:
-	      this.resetListItems(payload.listItems);
-	      ListItemStore.__emitChange();
-	      break;
-	    case ListItemConstants.LIST_ITEM_RECEIVED:
-	      this.resetListItem(payload.listItem);
-	      ListItemStore.__emitChange();
-	      break;
-	  }
-	};
-
-	window.ListItemStore = ListItemStore;
-	module.exports = ListItemStore;
-
-/***/ },
-/* 242 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ListItemStore = __webpack_require__(241);
-
-	var ListsIndexItem = React.createClass({
-	  displayName: 'ListsIndexItem',
-
-	  render: function () {
-	    return React.createElement(
-	      'h1',
-	      null,
-	      'One Edible'
-	    );
-	  }
-	});
-
-	module.exports = ListsIndexItem;
 
 /***/ }
 /******/ ]);
