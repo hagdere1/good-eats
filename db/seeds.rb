@@ -5,8 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Edible.destroy_all
-List.destroy_all
 
 # Edibles
 pizza = Edible.create!({name: "Pizza", description: "Bread covered with mozarella cheese and tomato sauce."})
