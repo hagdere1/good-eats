@@ -51,8 +51,7 @@
 	var ListStore = __webpack_require__(237);
 	var ApiUtil = __webpack_require__(233);
 	var ListsIndex = __webpack_require__(239);
-	// ListsIndex
-	// ListsIndexItem
+	var ListsIndexItem = __webpack_require__(242);
 	var ListItemStore = __webpack_require__(241);
 	var App = __webpack_require__(236);
 	// Delete testing vars
@@ -60,7 +59,11 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(Route, { path: '/lists/', component: ListsIndex })
+	  React.createElement(
+	    Route,
+	    { path: 'lists/', component: ListsIndex },
+	    React.createElement(Route, { path: 'list_items/:id component={ListsIndexItem}' })
+	  )
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31428,6 +31431,7 @@
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(237);
 	var ApiActions = __webpack_require__(233);
+	var ListsIndexItem = __webpack_require__(242);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31462,11 +31466,7 @@
 	        'ul',
 	        { className: 'lists-list' },
 	        this.state.lists.map(function (list) {
-	          return React.createElement(
-	            'li',
-	            { key: list.id },
-	            list.title
-	          );
+	          return React.createElement(ListsIndexItem, { key: list.id, list: list });
 	        })
 	      )
 	    );
@@ -31535,6 +31535,42 @@
 
 	window.ListItemStore = ListItemStore;
 	module.exports = ListItemStore;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ListItemStore = __webpack_require__(241);
+
+	var ListIndexItem = React.createClass({
+	  displayName: 'ListIndexItem',
+
+	  getInitialState: function () {
+	    var edibles = [];
+	    var allEdibles = ListItemStore.all();
+	    for (i = 0; i < allEdibles.length; i++) {
+	      if (this.props.key === allEdibles[i].list_id) {
+	        edibles.push(allEdibles[i]);
+	      }
+	    }
+	    return { edibles: edibles };
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { className: 'edible-list' },
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.props.list.title
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ListIndexItem;
 
 /***/ }
 /******/ ]);
