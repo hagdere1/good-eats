@@ -8,10 +8,9 @@ class UsersController < ApplicationController
 
     if @user.save
       login_user(@user)
-      redirect_to static_pages_url # redirect to root once auth works
-      # or go through new user process? -> bonus feature
+      redirect_to root_url
     else
-      render :new # redirect from landing page to form?
+      render :new
     end
   end
 

@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
 
     if user
       login_user(user)
-      redirect_to static_pages_url
+      redirect_to root_url
     else
       render :new
     end

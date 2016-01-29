@@ -1,3 +1,42 @@
 // Place all the styles related to the Api::ListItems controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.heading-main {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 5px;
+  padding-top: 15px;
+}
+
+.heading-main:hover {
+
+}
+
+.heading-sub-main {
+  font-color: gray;
+  font-size: 18px;
+}
+
+.lists-content {
+  width: 710px;
+  height: 300px;
+}
+
+
+
+.lists-index {
+  display: block;
+  width: 200px;
+  height: 200px;
+  border: 1px solid black;
+  float: left;
+}
+
+.list-main {
+  display: block;
+  width: 500px;
+  height: 200px;
+  border: 1px solid black;
+  float: right;
+}

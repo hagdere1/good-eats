@@ -13,7 +13,9 @@ var IndexRoute = require('react-router').IndexRoute;
 
 var routes = (
   <Route path="/" component={App}>
-    <Route path="/lists" component={ListsIndex} />
+    <Route path="lists" component={ListsIndex} >
+      <Route path=":id" component={ListsIndexItem}/>
+    </Route>
   </Route>
 );
 

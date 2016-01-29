@@ -1,7 +1,6 @@
 var React = require('react');
 var ListStore = require('../../stores/list');
 var ApiActions = require('../../util/api_util');
-var ListsIndexItem = require('./lists_index_item');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
@@ -22,12 +21,24 @@ var ListsIndex = React.createClass({
   },
 
   render: function () {
+    // list index item of props id
     return (
-      <div className="lists">
+      <div>
         <h1 className="heading-main">My Edibles</h1>
-        <ul className="lists-index</div>">
-          <li><ListsIndexItem /></li>
-        </ul>
+        <h2 className="heading-sub-main">Lists</h2>
+        <div className="lists-content group">
+
+          <ul className="lists-index">
+            {this.state.lists.map(function (list) {
+              return <li key={list.id} list={list}><a href="#">{list.title}</a></li>;
+            })}
+          </ul>
+
+          <section className="list-main">
+            {this.props.children}
+          </section>
+
+        </div>
       </div>
     );
   }

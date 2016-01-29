@@ -1,5 +1,6 @@
 class StaticPagesController < ApplicationController
-  def index
-    render :root
+  before_filter :require_signed_in!
+  
+  def root
   end
 end
