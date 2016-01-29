@@ -1,6 +1,7 @@
 var React = require('react');
 var ListStore = require('../../stores/list');
 var ApiActions = require('../../util/api_util');
+var ListsIndexItem = require('./lists_index_item');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
@@ -25,7 +26,7 @@ var ListsIndex = React.createClass({
       <div className="lists">
         <h1 className="heading-main">My Edibles</h1>
         <ul className="lists-index</div>">
-          <li>{this.props.children}</li>
+          <li><ListsIndexItem /></li>
         </ul>
       </div>
     );

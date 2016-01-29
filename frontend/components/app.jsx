@@ -1,4 +1,5 @@
 var React = require('react');
+var ListsIndex = require('./lists/lists_index');
 
 var App = React.createClass({
   render: function () {
@@ -31,7 +32,7 @@ var App = React.createClass({
           </nav>
         </header>
 
-        <div className="main">{this.props.children}</div>
+        <div className="main"><ListsIndex /></div>
 
         <footer className="root-footer group">
 
