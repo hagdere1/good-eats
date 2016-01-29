@@ -4,5 +4,4 @@ class ListItem < ActiveRecord::Base
 
   belongs_to :list
   belongs_to :edible
-  belongs_to :user
 end
