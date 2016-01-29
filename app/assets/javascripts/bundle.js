@@ -60,11 +60,7 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(
-	    Route,
-	    { path: 'lists', component: ListsIndex },
-	    React.createElement(Route, { path: '/list/:id', component: ListsIndexItem })
-	  )
+	  React.createElement(Route, { path: '/lists', component: ListsIndex })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31204,156 +31200,157 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var ListsIndex = __webpack_require__(239);
 
 	var App = React.createClass({
-	  displayName: "App",
+	  displayName: 'App',
 
 	  render: function () {
 	    return React.createElement(
-	      "div",
+	      'div',
 	      null,
 	      React.createElement(
-	        "header",
-	        { className: "root-header" },
+	        'header',
+	        { className: 'root-header' },
 	        React.createElement(
-	          "nav",
-	          { className: "root-header-nav group" },
+	          'nav',
+	          { className: 'root-header-nav group' },
 	          React.createElement(
-	            "h1",
-	            { className: "root-header-logo" },
+	            'h1',
+	            { className: 'root-header-logo' },
 	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              "goodeats"
+	              'a',
+	              { href: '#' },
+	              'goodeats'
 	            )
 	          ),
-	          React.createElement("input", { type: "text", name: "name", placeholder: "Edible / Group / Tag / Person", value: "" }),
+	          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Edible / Group / Tag / Person', value: '' }),
 	          React.createElement(
-	            "ul",
-	            { className: "root-header-list group" },
+	            'ul',
+	            { className: 'root-header-list group' },
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                "Home"
+	                'a',
+	                { href: '#' },
+	                'Home'
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                "My Lists"
+	                'a',
+	                { href: '#' },
+	                'My Lists'
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                "Groups"
+	                'a',
+	                { href: '#' },
+	                'Groups'
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                "Recommendations"
+	                'a',
+	                { href: '#' },
+	                'Recommendations'
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                "Explore"
+	                'a',
+	                { href: '#' },
+	                'Explore'
 	              )
 	            )
 	          ),
 	          React.createElement(
-	            "ul",
-	            { className: "root-header-icons group" },
+	            'ul',
+	            { className: 'root-header-icons group' },
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                React.createElement("i", { className: "fa fa-envelope" })
+	                'a',
+	                { href: '#' },
+	                React.createElement('i', { className: 'fa fa-envelope' })
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                React.createElement("i", { className: "fa fa-users" })
+	                'a',
+	                { href: '#' },
+	                React.createElement('i', { className: 'fa fa-users' })
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                React.createElement("i", { className: "fa fa-user" })
+	                'a',
+	                { href: '#' },
+	                React.createElement('i', { className: 'fa fa-user' })
 	              )
 	            ),
 	            React.createElement(
-	              "li",
+	              'li',
 	              null,
 	              React.createElement(
-	                "a",
-	                { href: "#" },
-	                React.createElement("i", { className: "fa fa-caret-square-o-down" })
+	                'a',
+	                { href: '#' },
+	                React.createElement('i', { className: 'fa fa-caret-square-o-down' })
 	              )
 	            )
 	          )
 	        )
 	      ),
 	      React.createElement(
-	        "div",
-	        { className: "main" },
-	        this.props.children
+	        'div',
+	        { className: 'main' },
+	        React.createElement(ListsIndex, null)
 	      ),
 	      React.createElement(
-	        "footer",
-	        { className: "root-footer group" },
+	        'footer',
+	        { className: 'root-footer group' },
 	        React.createElement(
-	          "small",
-	          { className: "root-footer-copy" },
-	          "© 2016 Goodeats Inc"
+	          'small',
+	          { className: 'root-footer-copy' },
+	          '© 2016 Goodeats Inc'
 	        ),
 	        React.createElement(
-	          "ul",
-	          { className: "root-footer-links group" },
+	          'ul',
+	          { className: 'root-footer-links group' },
 	          React.createElement(
-	            "li",
+	            'li',
 	            null,
-	            React.createElement("a", { href: "#" })
+	            React.createElement('a', { href: '#' })
 	          ),
 	          React.createElement(
-	            "li",
+	            'li',
 	            null,
-	            React.createElement("a", { href: "#" })
+	            React.createElement('a', { href: '#' })
 	          ),
 	          React.createElement(
-	            "li",
+	            'li',
 	            null,
-	            React.createElement("a", { href: "#" })
+	            React.createElement('a', { href: '#' })
 	          ),
 	          React.createElement(
-	            "li",
+	            'li',
 	            null,
-	            React.createElement("a", { href: "#" })
+	            React.createElement('a', { href: '#' })
 	          )
 	        )
 	      )
@@ -31431,6 +31428,7 @@
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(237);
 	var ApiActions = __webpack_require__(233);
+	var ListsIndexItem = __webpack_require__(242);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31467,7 +31465,7 @@
 	        React.createElement(
 	          'li',
 	          null,
-	          this.props.children
+	          React.createElement(ListsIndexItem, null)
 	        )
 	      )
 	    );
