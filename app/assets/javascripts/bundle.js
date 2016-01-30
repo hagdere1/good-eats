@@ -50,6 +50,7 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var IndexRoute = __webpack_require__(159).IndexRoute;
+	var Link = __webpack_require__(159).Link;
 
 	var ListStore = __webpack_require__(208);
 	var ListItemStore = __webpack_require__(237);
@@ -60,6 +61,7 @@
 	var ListsIndexItem = __webpack_require__(236);
 	var EdiblesIndex = __webpack_require__(245);
 	var Edible = __webpack_require__(246);
+	var EdibleShow = __webpack_require__(247);
 
 	var App = __webpack_require__(239);
 
@@ -67,7 +69,7 @@
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: EdiblesIndex }),
-	  React.createElement(Route, { path: 'edibles/:id', component: Edible }),
+	  React.createElement(Route, { path: 'edibles/:id', component: EdibleShow }),
 	  React.createElement(Route, { path: 'lists/:id', component: ListsIndex })
 	);
 
@@ -31591,7 +31593,7 @@
 	            null,
 	            React.createElement(
 	              "a",
-	              { href: "#" },
+	              { href: "/" },
 	              "Home"
 	            )
 	          ),
@@ -31824,15 +31826,22 @@
 	  },
 
 	  render: function () {
+	    var indexItems = this.state.edibles.map(function (edible) {
+	      return React.createElement(Edible, { key: edible.id, edible: edible });
+	    });
+
 	    return React.createElement(
 	      'div',
 	      null,
 	      React.createElement(
+	        'h1',
+	        { className: 'heading-main' },
+	        'Explore Edibles'
+	      ),
+	      React.createElement(
 	        'ul',
-	        null,
-	        this.state.edibles.map(function (edible) {
-	          return React.createElement(Edible, { key: edible.id, edible: edible });
-	        })
+	        { className: 'edibles-index-items' },
+	        indexItems
 	      )
 	    );
 	  }
@@ -31850,12 +31859,14 @@
 	  displayName: "Edible",
 
 	  render: function () {
+	    var url = "#/edibles/" + this.props.edible.id;
+
 	    return React.createElement(
 	      "li",
 	      { className: "edible-list-item" },
 	      React.createElement(
 	        "a",
-	        { href: "#" },
+	        { href: url },
 	        this.props.edible.name
 	      )
 	    );
@@ -31863,6 +31874,58 @@
 	});
 
 	module.exports = Edible;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EdibleStore = __webpack_require__(243);
+
+	var EdibleShow = React.createClass({
+	  displayName: 'EdibleShow',
+
+	  getInitialState: function () {
+	    return { edible: EdibleStore.find(this.props.params.id) };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edible: EdibleStore.find(this.props.params.id) });
+	  },
+
+	  componentDidMount: function () {
+	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    ApiUtil.fetchSingleEdible();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.edibleListener.remove();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'edible-name' },
+	        this.state.edible.name
+	      ),
+	      React.createElement(
+	        'h2',
+	        { className: 'edible-category' },
+	        this.state.edible.category
+	      ),
+	      React.createElement(
+	        'p',
+	        { className: 'edible-description' },
+	        this.state.edible.description
+	      )
+	    );
+	  }
+	});
+
+	module.exports = EdibleShow;
 
 /***/ }
 /******/ ]);

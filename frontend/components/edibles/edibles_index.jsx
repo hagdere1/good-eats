@@ -24,13 +24,17 @@ var EdiblesIndex = React.createClass({
   },
 
   render: function () {
-    return (
+    var indexItems = (
+      this.state.edibles.map(function (edible) {
+        return <Edible key={edible.id} edible={edible} />;
+      })
+    );
 
+    return (
       <div>
-        <ul>
-          {this.state.edibles.map(function (edible) {
-            return <Edible key={edible.id} edible={edible} />;
-          })}
+        <h1 className="heading-main">Explore Edibles</h1>
+        <ul className="edibles-index-items">
+          {indexItems}
         </ul>
       </div>
     );
