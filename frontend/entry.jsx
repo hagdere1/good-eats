@@ -1,21 +1,27 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
+var IndexRoute = require('react-router').IndexRoute;
+
 var ListStore = require('./stores/list');
+var ListItemStore = require('./stores/list_item');
 var ApiUtil = require('./util/api_util');
+// Delete testing vars
+
 var ListsIndex = require('./components/lists/lists_index');
 var ListsIndexItem = require('./components/lists/lists_index_item');
-var ListItemStore = require('./stores/list_item');
+var EdiblesIndex = require('./components/edibles/edibles_index');
+var Edible = require('./components/edibles/edible');
+
 var App = require('./components/app');
-var IndexRoute = require('react-router').IndexRoute;
-// Delete testing vars
 
 var routes = (
   <Route path="/" component={App}>
-    <Route path="lists" component={ListsIndex} >
-      <Route path=":id" component={ListsIndexItem}/>
-    </Route>
+    <IndexRoute component={ EdiblesIndex } />
+      <Route path="edibles/:id" component={ Edible } />
+    <Route path="lists/:id" component={ ListsIndex } />
   </Route>
 );
 

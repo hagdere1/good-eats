@@ -1,7 +1,9 @@
 var React = require('react');
-var EdibleStore = require('../stores/edible');
+
+var EdibleStore = require('./../../stores/edible');
+var ApiUtil = require('./../../util/api_util');
+
 var Edible = require('./edible');
-var ApiUtil = require('../util/api_util');
 
 var EdiblesIndex = React.createClass({
   getInitialState: function () {

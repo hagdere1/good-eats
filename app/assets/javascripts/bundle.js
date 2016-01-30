@@ -46,25 +46,29 @@
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
+
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
+	var IndexRoute = __webpack_require__(159).IndexRoute;
+
 	var ListStore = __webpack_require__(208);
+	var ListItemStore = __webpack_require__(237);
 	var ApiUtil = __webpack_require__(231);
+	// Delete testing vars
+
 	var ListsIndex = __webpack_require__(235);
 	var ListsIndexItem = __webpack_require__(236);
-	var ListItemStore = __webpack_require__(237);
+	var EdiblesIndex = __webpack_require__(245);
+	var Edible = __webpack_require__(246);
+
 	var App = __webpack_require__(239);
-	var IndexRoute = __webpack_require__(159).IndexRoute;
-	// Delete testing vars
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(
-	    Route,
-	    { path: 'lists', component: ListsIndex },
-	    React.createElement(Route, { path: ':id', component: ListsIndexItem })
-	  )
+	  React.createElement(IndexRoute, { component: EdiblesIndex }),
+	  React.createElement(Route, { path: 'edibles/:id', component: Edible }),
+	  React.createElement(Route, { path: 'lists/:id', component: ListsIndex })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31655,7 +31659,7 @@
 	            React.createElement(
 	              "a",
 	              { href: "#" },
-	              React.createElement("i", { className: "fa fa-user" })
+	              React.createElement("i", { className: "fa fa-user fa-1.5x" })
 	            )
 	          ),
 	          React.createElement(
@@ -31735,6 +31739,130 @@
 	});
 
 	module.exports = Footer;
+
+/***/ },
+/* 242 */,
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var AppDispatcher = __webpack_require__(227);
+	var EdibleStore = new Store(AppDispatcher);
+	var EdibleConstants = __webpack_require__(233);
+
+	var _edibles = {};
+
+	EdibleStore.all = function () {
+	  var edibles = [];
+	  for (var id in _edibles) {
+	    edibles.push(_edibles[id]);
+	  }
+	  return edibles;
+	};
+
+	EdibleStore.resetEdibles = function (edibles) {
+	  _edibles = {};
+	  edibles.forEach(function (edible) {
+	    _edibles[edible.id] = edible;
+	  });
+	};
+
+	EdibleStore.resetEdible = function (edible) {
+	  _edibles[edible.id] = edible;
+	};
+
+	EdibleStore.find = function (id) {
+	  return _edibles[id];
+	};
+
+	EdibleStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case EdibleConstants.EDIBLES_RECEIVED:
+	      this.resetEdibles(payload.edibles);
+	      EdibleStore.__emitChange();
+	      break;
+	    case EdibleConstants.EDIBLE_RECEIVED:
+	      this.resetEdible(payload.edible);
+	      EdibleStore.__emitChange();
+	      break;
+	  }
+	};
+
+	window.EdibleStore = EdibleStore;
+	module.exports = EdibleStore;
+
+/***/ },
+/* 244 */,
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var EdibleStore = __webpack_require__(243);
+	var ApiUtil = __webpack_require__(231);
+
+	var Edible = __webpack_require__(246);
+
+	var EdiblesIndex = React.createClass({
+	  displayName: 'EdiblesIndex',
+
+	  getInitialState: function () {
+	    return { edibles: EdibleStore.all() };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edibles: EdibleStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    ApiUtil.fetchAllEdibles();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.edibleListener.remove();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'ul',
+	        null,
+	        this.state.edibles.map(function (edible) {
+	          return React.createElement(Edible, { key: edible.id, edible: edible });
+	        })
+	      )
+	    );
+	  }
+	});
+
+	module.exports = EdiblesIndex;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Edible = React.createClass({
+	  displayName: "Edible",
+
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      { className: "edible-list-item" },
+	      React.createElement(
+	        "a",
+	        { href: "#" },
+	        this.props.edible.name
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Edible;
 
 /***/ }
 /******/ ]);

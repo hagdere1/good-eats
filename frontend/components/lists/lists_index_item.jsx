@@ -1,7 +1,7 @@
 var React = require('react');
-var ListItemStore = require('../../stores/list_item');
+var ListItemStore = require('./../../stores/list_item');
 var ItemDetail = require('./item_detail');
-var ApiActions = require('../../actions/api_actions');
+var ApiActions = require('./../../actions/api_actions');
 
 var ListsIndexItem = React.createClass({
   getInitialState: function () {
