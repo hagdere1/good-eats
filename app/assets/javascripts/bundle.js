@@ -53,7 +53,7 @@
 	var ListsIndex = __webpack_require__(235);
 	var ListsIndexItem = __webpack_require__(236);
 	var ListItemStore = __webpack_require__(237);
-	var App = __webpack_require__(238);
+	var App = __webpack_require__(239);
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 	// Delete testing vars
 
@@ -31352,7 +31352,7 @@
 
 	var React = __webpack_require__(1);
 	var ListItemStore = __webpack_require__(237);
-	var ItemDetail = __webpack_require__(239);
+	var ItemDetail = __webpack_require__(238);
 
 	var ListsIndexItem = React.createClass({
 	  displayName: 'ListsIndexItem',
@@ -31451,184 +31451,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ListsIndex = __webpack_require__(235);
-
-	var App = React.createClass({
-	  displayName: 'App',
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'header',
-	        { className: 'root-header' },
-	        React.createElement(
-	          'nav',
-	          { className: 'root-header-nav group' },
-	          React.createElement(
-	            'h1',
-	            { className: 'root-header-logo' },
-	            React.createElement(
-	              'a',
-	              { href: '#' },
-	              'goodeats'
-	            )
-	          ),
-	          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Edible / Group / Tag / Person', value: '' }),
-	          React.createElement(
-	            'ul',
-	            { className: 'root-header-list group' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Home'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'My Lists'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Groups'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Recommendations'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Explore'
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'root-header-icons group' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-envelope' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-users' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-user' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-caret-square-o-down' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Logout'
-	              )
-	            )
-	          )
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'main' },
-	        this.props.children
-	      ),
-	      React.createElement(
-	        'footer',
-	        { className: 'root-footer' },
-	        React.createElement(
-	          'nav',
-	          { className: 'root-footer-nav group' },
-	          React.createElement(
-	            'small',
-	            { className: 'root-footer-copy' },
-	            '© 2016 Goodeats Inc'
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'root-footer-links group' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement('a', { href: '#' })
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement('a', { href: '#' })
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement('a', { href: '#' })
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement('a', { href: '#' })
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = App;
-
-/***/ },
-/* 239 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
 
 	var ItemDetail = React.createClass({
 	  displayName: "ItemDetail",
@@ -31686,6 +31508,218 @@
 	});
 
 	module.exports = ItemDetail;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ListsIndex = __webpack_require__(235);
+	var Header = __webpack_require__(240);
+	var Footer = __webpack_require__(241);
+
+	var App = React.createClass({
+	  displayName: 'App',
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Header, null),
+	      React.createElement(
+	        'div',
+	        { className: 'main' },
+	        this.props.children
+	      ),
+	      React.createElement(Footer, null)
+	    );
+	  }
+	});
+
+	module.exports = App;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Header = React.createClass({
+	  displayName: "Header",
+
+	  render: function () {
+	    return React.createElement(
+	      "header",
+	      { className: "root-header" },
+	      React.createElement(
+	        "nav",
+	        { className: "root-header-nav group" },
+	        React.createElement(
+	          "h1",
+	          { className: "root-header-logo" },
+	          React.createElement(
+	            "a",
+	            { href: "#" },
+	            "goodeats"
+	          )
+	        ),
+	        React.createElement("input", { type: "text", name: "name", placeholder: "Edible / Group / Tag / Person", value: "" }),
+	        React.createElement(
+	          "ul",
+	          { className: "root-header-list group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Home"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "My Lists"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Groups"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Recommendations"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Explore"
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          "ul",
+	          { className: "root-header-icons group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-envelope" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-users" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-user" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-caret-square-o-down" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Logout"
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Header;
+
+/***/ },
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Footer = React.createClass({
+	  displayName: "Footer",
+
+	  render: function () {
+	    return React.createElement(
+	      "footer",
+	      { className: "root-footer" },
+	      React.createElement(
+	        "nav",
+	        { className: "root-footer-nav group" },
+	        React.createElement(
+	          "small",
+	          { className: "root-footer-copy" },
+	          "© 2016 Goodeats Inc"
+	        ),
+	        React.createElement(
+	          "ul",
+	          { className: "root-footer-links group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Footer;
 
 /***/ }
 /******/ ]);
