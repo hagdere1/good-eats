@@ -1,6 +1,7 @@
 var React = require('react');
 var ListItemStore = require('../../stores/list_item');
 var ItemDetail = require('./item_detail');
+var ApiActions = require('../../actions/api_actions');
 
 var ListsIndexItem = React.createClass({
   getInitialState: function () {
@@ -10,12 +11,25 @@ var ListsIndexItem = React.createClass({
     else {
       return { edibles: ListItemStore.all() };
     }
-
   },
+
+  _onChange: function () {
+    this.setState({ edibles: ListItemStore.all() });
+  },
+
+  componentDidMount: function () {
+    this.listItemListener = ListItemStore.addListener(this._onChange);
+    ApiActions.fetchAllListItems();
+  },
+
+  componentWillUnmount: function () {
+    this.listItemListener.remove();
+  },
+
   render: function () {
     return (
       <div>
-        <h1>HOW DO I PASS THE LIST TITLE HERE?</h1>
+        <h1>PASS THE LIST TITLE HERE</h1>
         <ul>
           {this.state.edibles.map(function (edible) {
             return (
