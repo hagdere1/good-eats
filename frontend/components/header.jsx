@@ -23,7 +23,7 @@ var Header = React.createClass({
           <ul className="root-header-icons group">
             <li><a href="#"><i className="fa fa-envelope"></i></a></li>
             <li><a href="#"><i className="fa fa-users"></i></a></li>
-            <li><a href="#"><i className="fa fa-user"></i></a></li>
+            <li><a href="#"><i className="fa fa-user fa-1.5x"></i></a></li>
             <li><a href="#"><i className="fa fa-caret-square-o-down"></i></a></li>
             <li><a href="#">Logout</a></li>
           </ul>

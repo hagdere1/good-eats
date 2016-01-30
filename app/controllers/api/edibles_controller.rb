@@ -8,6 +8,6 @@ class Api::EdiblesController < ApplicationController
   end
 
   def edible_params
-    params.require(:edible).permit(:name, :description)
+    params.require(:edible).permit(:name, :description, :category)
   end
 end

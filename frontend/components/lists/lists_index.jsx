@@ -1,6 +1,6 @@
 var React = require('react');
-var ListStore = require('../../stores/list');
-var ApiActions = require('../../util/api_util');
+var ListStore = require('./../../stores/list');
+var ApiActions = require('./../../util/api_util');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
