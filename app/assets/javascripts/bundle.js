@@ -31353,6 +31353,7 @@
 	var React = __webpack_require__(1);
 	var ListItemStore = __webpack_require__(237);
 	var ItemDetail = __webpack_require__(238);
+	var ApiActions = __webpack_require__(232);
 
 	var ListsIndexItem = React.createClass({
 	  displayName: 'ListsIndexItem',
@@ -31364,6 +31365,20 @@
 	      return { edibles: ListItemStore.all() };
 	    }
 	  },
+
+	  _onChange: function () {
+	    this.setState({ edibles: ListItemStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.listItemListener = ListItemStore.addListener(this._onChange);
+	    ApiActions.fetchAllListItems();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listItemListener.remove();
+	  },
+
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -31371,7 +31386,7 @@
 	      React.createElement(
 	        'h1',
 	        null,
-	        'HOW DO I PASS THE LIST TITLE HERE?'
+	        'PASS THE LIST TITLE HERE'
 	      ),
 	      React.createElement(
 	        'ul',
