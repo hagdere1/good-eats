@@ -13,7 +13,7 @@ var Header = React.createClass({
           <input type="text" name="name" placeholder="Edible / Group / Tag / Person" value="" />
 
           <ul className="root-header-list group">
-            <li><a href="#">Home</a></li>
+            <li><a href="/">Home</a></li>
             <li><a href="#">My Lists</a></li>
             <li><a href="#">Groups</a></li>
             <li><a href="#">Recommendations</a></li>
