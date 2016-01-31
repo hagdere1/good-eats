@@ -1,18 +1,14 @@
 var React = require('react');
 var ItemDetail = require('./item_detail');
 var ApiActions = require('./../../actions/api_actions');
-var History = require('react-router').History;
 
 var ListsIndexItem = React.createClass({
-  mixins: [History],
-
-  showList: function () {
-    this.history.pushState(null, '/lists/' + this.props.list.id, {});
-  },
 
   render: function () {
+    var url = "#/lists/" + this.props.list.id;
+
     return (
-      <li onClick={this.showList}>{this.props.list.title}</li>
+      <li><a href={url}>{this.props.list.title}</a></li>
     );
   }
 });

@@ -53,9 +53,10 @@ ApiUtil = {
     $.ajax({
       url: "api/list_items/",
       method: "POST",
-      data: {listItem: listItem},
-      success: function (listItem) {
-        ApiActions.receiveSingleListItem(listItem);
+      data: {list_item: listItem},
+      success: function (listItemData) {
+        ApiActions.receiveSingleListItem(listItemData);
+        alert("List Item created! Great success!");
       }
     });
   }

@@ -22,7 +22,6 @@ var ListsIndex = React.createClass({
   },
 
   render: function () {
-    // list index item of props id
     return (
       <div>
         <h1 className="heading-main">My Edibles</h1>
