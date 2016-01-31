@@ -57,6 +57,9 @@ ApiUtil = {
       success: function (listItemData) {
         ApiActions.receiveSingleListItem(listItemData);
         alert("List Item created! Great success!");
+      },
+      error: function () {
+        alert("You've already added that item.");
       }
     });
   }
