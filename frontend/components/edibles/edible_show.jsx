@@ -1,5 +1,6 @@
 var React = require('react');
 var EdibleStore = require('./../../stores/edible');
+var ApiUtil = require('./../../util/api_util');
 
 var EdibleShow = React.createClass({
   getInitialState: function () {
@@ -12,7 +13,7 @@ var EdibleShow = React.createClass({
 
   componentDidMount: function () {
     this.edibleListener = EdibleStore.addListener(this._onChange);
-    ApiUtil.fetchSingleEdible();
+    ApiUtil.fetchSingleEdible(this.props.params.id);
   },
 
   componentWillUnmount: function () {

@@ -31201,6 +31201,16 @@
 	        ApiActions.receiveSingleListItem(listItem);
 	      }
 	    });
+	  },
+	  createListItem: function (listItem) {
+	    $.ajax({
+	      url: "api/list_items/",
+	      method: "POST",
+	      data: { listItem: listItem },
+	      success: function (listItem) {
+	        ApiActions.receiveSingleListItem(listItem);
+	      }
+	    });
 	  }
 	};
 
@@ -31439,7 +31449,7 @@
 	  displayName: "ItemDetail",
 
 	  getInitialState: function () {
-	    return { edibles: ListItemStore.findByListId(this.props.params.id) };
+	    return { edibles: ListItemStore.findByListId(parseInt(this.props.params.id)) };
 	  },
 
 	  _onChange: function () {
@@ -31518,7 +31528,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ListsIndex = __webpack_require__(235);
 	var Header = __webpack_require__(240);
 	var Footer = __webpack_require__(241);
 
@@ -31774,10 +31783,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-
 	var EdibleStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(231);
-
 	var Edible = __webpack_require__(246);
 
 	var EdiblesIndex = React.createClass({
@@ -31829,19 +31836,22 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ReactDom = __webpack_require__(158);
+	var ReactDOM = __webpack_require__(158);
+	var ApiUtil = __webpack_require__(231);
 
 	var Edible = React.createClass({
 	  displayName: 'Edible',
 
-	  addToListClick: function (event) {
-
-	    alert("Added to Your List!");
+	  addToList: function (event) {
+	    event.preventDefault();
+	    var listItem = {};
+	    listItem.list_id = 1; // Hard-code Want To Try list for now
+	    listItem.edible_id = this.props.key;
+	    ApiUtil.createListItem(listItem);
 	  },
 
 	  render: function () {
 	    var url = "#/edibles/" + this.props.edible.id;
-
 	    return React.createElement(
 	      'li',
 	      { className: 'edible-list-item' },
@@ -31852,7 +31862,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.addToListClick },
+	        { onClick: this.addToList },
 	        'Want to Try'
 	      )
 	    );
@@ -31867,6 +31877,7 @@
 
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(243);
+	var ApiUtil = __webpack_require__(231);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
@@ -31881,7 +31892,7 @@
 
 	  componentDidMount: function () {
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
-	    ApiUtil.fetchSingleEdible();
+	    ApiUtil.fetchSingleEdible(this.props.params.id);
 	  },
 
 	  componentWillUnmount: function () {

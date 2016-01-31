@@ -22,7 +22,6 @@ class Api::ListItemsController < ApplicationController
   def destroy
     @list_item = ListItem.find(params[:id])
     @list_item.destroy
-    render :show #change to show page of list_item's list
   end
 
   def list_item_params

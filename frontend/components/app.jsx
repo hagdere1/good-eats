@@ -1,5 +1,4 @@
 var React = require('react');
-var ListsIndex = require('./lists/lists_index');
 var Header = require('./header');
 var Footer = require('./footer');
 

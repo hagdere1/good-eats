@@ -2,7 +2,7 @@ var React = require('react');
 
 var ItemDetail = React.createClass({
   getInitialState: function () {
-    return { edibles: ListItemStore.findByListId(this.props.params.id) };
+    return { edibles: ListItemStore.findByListId(parseInt(this.props.params.id)) };
   },
 
   _onChange: function () {
