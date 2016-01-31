@@ -31918,27 +31918,35 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement('img', { src: this.state.edible.image_url }),
+	      { className: 'edible-details group' },
 	      React.createElement(
-	        'h1',
-	        { className: 'edible-name' },
-	        this.state.edible.name
+	        'div',
+	        { className: 'edible-image' },
+	        React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url }),
+	        React.createElement(
+	          'button',
+	          { className: 'edible-show-button', onClick: this.addToList },
+	          'Want to Try'
+	        )
 	      ),
 	      React.createElement(
-	        'h2',
-	        { className: 'edible-category' },
-	        this.state.edible.category
-	      ),
-	      React.createElement(
-	        'p',
-	        { className: 'edible-description' },
-	        this.state.edible.description
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this.addToList },
-	        'Want to Try'
+	        'div',
+	        { className: 'edible-info' },
+	        React.createElement(
+	          'h1',
+	          { className: 'edible-name' },
+	          this.state.edible.name
+	        ),
+	        React.createElement(
+	          'h2',
+	          { className: 'edible-category' },
+	          this.state.edible.category
+	        ),
+	        React.createElement(
+	          'p',
+	          { className: 'edible-description' },
+	          this.state.edible.description
+	        )
 	      )
 	    );
 	  }

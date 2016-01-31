@@ -11,9 +11,7 @@
   width: 965px;
   margin: auto;
   height: auto;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  padding-top: 5px;
+  padding-top: 10px;
 }
 
 ul {
@@ -56,6 +54,14 @@ ul {
   padding-right: 10px;
   padding-bottom: 10px;
   font-weight: 100;
+}
+
+.good {
+  font-weight: 100;
+}
+
+.reads {
+  font-weight: 200;
 }
 
 .root-header-logo a {
