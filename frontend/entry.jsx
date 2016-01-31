@@ -22,6 +22,7 @@ var App = require('./components/app');
 var routes = (
   <Route path="/" component={App}>
     <IndexRoute component={ EdiblesIndex }/>
+    <Route path="edibles" component={ EdiblesIndex } />
     <Route path="edibles/:id" component={ EdibleShow } />
     <Route path="lists/:id" component={ ListsIndex } />
   </Route>
