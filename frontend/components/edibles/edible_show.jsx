@@ -30,12 +30,16 @@ var EdibleShow = React.createClass({
 
   render: function () {
     return (
-      <div>
-        <img src={this.state.edible.image_url} />
-        <h1 className="edible-name">{this.state.edible.name}</h1>
-        <h2 className="edible-category">{this.state.edible.category}</h2>
-        <p className="edible-description">{this.state.edible.description}</p>
-        <button onClick={this.addToList}>Want to Try</button>
+      <div className="edible-details group">
+        <div className="edible-image">
+          <img className="edible-show-image" src={this.state.edible.image_url} />
+          <button className="edible-show-button" onClick={this.addToList}>Want to Try</button>
+        </div>
+        <div className="edible-info">
+          <h1 className="edible-name">{this.state.edible.name}</h1>
+          <h2 className="edible-category">{this.state.edible.category}</h2>
+          <p className="edible-description">{this.state.edible.description}</p>
+        </div>
       </div>
     );
   }
