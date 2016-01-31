@@ -1,6 +1,23 @@
 var React = require('react');
 
 var ItemDetail = React.createClass({
+  getInitialState: function () {
+    return { edibles: ListItemStore.findByListId(this.props.params.id) };
+  },
+
+  _onChange: function () {
+    this.setState({ edibles: ListItemStore.all() });
+  },
+
+  componentDidMount: function () {
+    this.listItemListener = ListItemStore.addListener(this._onChange);
+    ApiActions.fetchAllListItems();
+  },
+
+  componentWillUnmount: function () {
+    this.listItemListener.remove();
+  },
+
   render: function () {
     var modifyEdibleLink;
     if (this.props.edible.review.length > 0) {
@@ -10,13 +27,23 @@ var ItemDetail = React.createClass({
       modifyEdibleLink = <a href="#">Review</a>;
     }
 
+    var items = (
+      this.state.edibles.map(function (edible) {
+        return (
+          <ul>
+            <li>{this.props.edible.title}</li>
+            <li>{this.props.edible.rating}</li>
+            <li>{this.props.edible.date_eaten}</li>
+            <li>{this.props.edible.created_at}</li>
+            <li>{modifyEdibleLink}</li>
+          </ul>
+        );
+      })
+    );
+
     return (
       <ul className="edible-item-attributes">
-        <li><a href="#">{this.props.edible.title}</a></li>
-        <li>{this.props.edible.rating}</li>
-        <li>{this.props.edible.date_eaten}</li>
-        <li>{this.props.edible.created_at}</li>
-        <li>{modifyEdibleLink}</li>
+        {items}
       </ul>
     );
   }

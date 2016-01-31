@@ -1,6 +1,7 @@
 var React = require('react');
 var ListStore = require('./../../stores/list');
 var ApiActions = require('./../../util/api_util');
+var ListsIndexItem = require('./lists_index_item');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
@@ -30,13 +31,9 @@ var ListsIndex = React.createClass({
 
           <ul className="lists-index">
             {this.state.lists.map(function (list) {
-              return <li key={list.id} list={list}><a href="#">{list.title}</a></li>;
+              return <ListsIndexItem key={list.id} list={list} />;
             })}
           </ul>
-
-          <section className="list-main">
-            {this.props.children}
-          </section>
 
         </div>
       </div>
