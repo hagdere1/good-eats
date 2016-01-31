@@ -31865,6 +31865,7 @@
 	      React.createElement(
 	        'a',
 	        { href: url },
+	        React.createElement('img', { src: this.props.edible.image_url }),
 	        this.props.edible.name
 	      ),
 	      React.createElement(
@@ -31918,6 +31919,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement('img', { src: this.state.edible.image_url }),
 	      React.createElement(
 	        'h1',
 	        { className: 'edible-name' },

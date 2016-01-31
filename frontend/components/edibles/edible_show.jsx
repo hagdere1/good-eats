@@ -31,6 +31,7 @@ var EdibleShow = React.createClass({
   render: function () {
     return (
       <div>
+        <img src={this.state.edible.image_url} />
         <h1 className="edible-name">{this.state.edible.name}</h1>
         <h2 className="edible-category">{this.state.edible.category}</h2>
         <p className="edible-description">{this.state.edible.description}</p>
