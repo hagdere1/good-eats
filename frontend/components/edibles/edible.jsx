@@ -1,19 +1,22 @@
 var React = require('react');
-var ReactDom = require('react-dom');
+var ReactDOM = require('react-dom');
+var ApiUtil = require('./../../util/api_util');
 
 var Edible = React.createClass({
-  addToListClick: function (event) {
-
-    alert("Added to Your List!");
+  addToList: function (event) {
+    event.preventDefault();
+    var listItem = {};
+    listItem.list_id = 1; // Hard-code Want To Try list for now
+    listItem.edible_id = this.props.key;
+    ApiUtil.createListItem(listItem);
   },
 
   render: function () {
     var url = "#/edibles/" + this.props.edible.id;
-
     return (
       <li className="edible-list-item">
         <a href={url}>{this.props.edible.name}</a>
-        <button onClick={this.addToListClick}>Want to Try</button>
+        <button onClick={this.addToList}>Want to Try</button>
       </li>
     );
   }

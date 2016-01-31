@@ -48,6 +48,16 @@ ApiUtil = {
         ApiActions.receiveSingleListItem(listItem);
       }
     });
+  },
+  createListItem: function (listItem) {
+    $.ajax({
+      url: "api/list_items/",
+      method: "POST",
+      data: {listItem: listItem},
+      success: function (listItem) {
+        ApiActions.receiveSingleListItem(listItem);
+      }
+    });
   }
 };
 
