@@ -31846,7 +31846,7 @@
 	    event.preventDefault();
 	    var listItem = {};
 	    listItem.list_id = 1; // Hard-code Want To Try list for now
-	    listItem.edible_id = this.props.key;
+	    listItem.edible_id = parseInt(this.props.key);
 	    ApiUtil.createListItem(listItem);
 	  },
 
@@ -31883,11 +31883,11 @@
 	  displayName: 'EdibleShow',
 
 	  getInitialState: function () {
-	    return { edible: EdibleStore.find(this.props.params.id) };
+	    return { edible: EdibleStore.find(parseInt(this.props.params.id)) };
 	  },
 
 	  _onChange: function () {
-	    this.setState({ edible: EdibleStore.find(this.props.params.id) });
+	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
 	  },
 
 	  componentDidMount: function () {

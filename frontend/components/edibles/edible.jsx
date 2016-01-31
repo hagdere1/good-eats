@@ -7,7 +7,7 @@ var Edible = React.createClass({
     event.preventDefault();
     var listItem = {};
     listItem.list_id = 1; // Hard-code Want To Try list for now
-    listItem.edible_id = this.props.key;
+    listItem.edible_id = parseInt(this.props.key);
     ApiUtil.createListItem(listItem);
   },
 

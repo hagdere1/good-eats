@@ -4,11 +4,11 @@ var ApiUtil = require('./../../util/api_util');
 
 var EdibleShow = React.createClass({
   getInitialState: function () {
-    return {edible: EdibleStore.find(this.props.params.id)};
+    return {edible: EdibleStore.find(parseInt(this.props.params.id))};
   },
 
   _onChange: function () {
-    this.setState({ edible: EdibleStore.find(this.props.params.id) });
+    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
   },
 
   componentDidMount: function () {
