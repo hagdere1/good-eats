@@ -31210,6 +31210,9 @@
 	      success: function (listItemData) {
 	        ApiActions.receiveSingleListItem(listItemData);
 	        alert("List Item created! Great success!");
+	      },
+	      error: function () {
+	        alert("You've already added that item.");
 	      }
 	    });
 	  }
@@ -31298,6 +31301,7 @@
 	var ListStore = __webpack_require__(208);
 	var ApiActions = __webpack_require__(231);
 	var ListsIndexItem = __webpack_require__(236);
+	var ItemDetail = __webpack_require__(238);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31342,6 +31346,11 @@
 	          this.state.lists.map(function (list) {
 	            return React.createElement(ListsIndexItem, { key: list.id, list: list });
 	          })
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          React.createElement(ItemDetail, null)
 	        )
 	      )
 	    );
@@ -31355,7 +31364,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ItemDetail = __webpack_require__(238);
 	var ApiActions = __webpack_require__(232);
 
 	var ListsIndexItem = React.createClass({
@@ -31885,6 +31893,14 @@
 	    return { edible: EdibleStore.find(parseInt(this.props.params.id)) };
 	  },
 
+	  addToList: function (event) {
+	    event.preventDefault();
+	    var listItem = {};
+	    listItem.list_id = 1; // Hard-code Want To Try list for now
+	    listItem.edible_id = parseInt(this.props.params.id);
+	    ApiUtil.createListItem(listItem);
+	  },
+
 	  _onChange: function () {
 	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
 	  },
@@ -31919,7 +31935,7 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        null,
+	        { onClick: this.addToList },
 	        'Want to Try'
 	      )
 	    );
