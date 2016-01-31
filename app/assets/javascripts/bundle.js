@@ -31206,9 +31206,10 @@
 	    $.ajax({
 	      url: "api/list_items/",
 	      method: "POST",
-	      data: { listItem: listItem },
-	      success: function (listItem) {
-	        ApiActions.receiveSingleListItem(listItem);
+	      data: { list_item: listItem },
+	      success: function (listItemData) {
+	        ApiActions.receiveSingleListItem(listItemData);
+	        alert("List Item created! Great success!");
 	      }
 	    });
 	  }
@@ -31319,7 +31320,6 @@
 	  },
 
 	  render: function () {
-	    // list index item of props id
 	    return React.createElement(
 	      'div',
 	      null,
@@ -31357,22 +31357,21 @@
 	var React = __webpack_require__(1);
 	var ItemDetail = __webpack_require__(238);
 	var ApiActions = __webpack_require__(232);
-	var History = __webpack_require__(159).History;
 
 	var ListsIndexItem = React.createClass({
 	  displayName: 'ListsIndexItem',
 
-	  mixins: [History],
-
-	  showList: function () {
-	    this.history.pushState(null, '/lists/' + this.props.list.id, {});
-	  },
-
 	  render: function () {
+	    var url = "#/lists/" + this.props.list.id;
+
 	    return React.createElement(
 	      'li',
-	      { onClick: this.showList },
-	      this.props.list.title
+	      null,
+	      React.createElement(
+	        'a',
+	        { href: url },
+	        this.props.list.title
+	      )
 	    );
 	  }
 	});
@@ -31595,7 +31594,7 @@
 	            null,
 	            React.createElement(
 	              "a",
-	              { href: "#" },
+	              { href: "#/lists/1" },
 	              "My Lists"
 	            )
 	          ),
@@ -31846,7 +31845,7 @@
 	    event.preventDefault();
 	    var listItem = {};
 	    listItem.list_id = 1; // Hard-code Want To Try list for now
-	    listItem.edible_id = parseInt(this.props.key);
+	    listItem.edible_id = parseInt(this.props.edible.id);
 	    ApiUtil.createListItem(listItem);
 	  },
 
