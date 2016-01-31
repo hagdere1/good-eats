@@ -8,7 +8,7 @@ var Header = React.createClass({
         <nav className="root-header-nav group">
 
           <h1 className="root-header-logo">
-            <a href="#">goodeats</a>
+            <a href="/">good<span>eats</span></a>
           </h1>
 
           <input type="text" name="name" placeholder="Edible / Group / Tag / Person" value="" />

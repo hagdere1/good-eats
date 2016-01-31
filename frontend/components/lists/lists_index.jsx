@@ -35,9 +35,7 @@ var ListsIndex = React.createClass({
             })}
           </ul>
 
-          <div>
-            <ItemDetail />
-          </div>
+
 
         </div>
       </div>

@@ -16,10 +16,10 @@ var Edible = React.createClass({
     return (
       <li className="edible-list-item">
         <a href={url}>
-          <img src={this.props.edible.image_url} />
+          <img className="edible-list-item-image" src={this.props.edible.image_url} />
           {this.props.edible.name}
         </a>
-        <button onClick={this.addToList}>Want to Try</button>
+        <button className="edible-list-item-button" onClick={this.addToList}>Want to Try</button>
       </li>
     );
   }

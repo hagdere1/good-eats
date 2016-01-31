@@ -69,6 +69,7 @@
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: EdiblesIndex }),
+	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
 	  React.createElement(Route, { path: 'edibles/:id', component: EdibleShow }),
 	  React.createElement(Route, { path: 'lists/:id', component: ListsIndex })
 	);
@@ -31406,11 +31407,6 @@
 	          this.state.lists.map(function (list) {
 	            return React.createElement(ListsIndexItem, { key: list.id, list: list });
 	          })
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          React.createElement(ItemDetail, null)
 	        )
 	      )
 	    );
@@ -31660,12 +31656,12 @@
 	      React.createElement(
 	        'a',
 	        { href: url },
-	        React.createElement('img', { src: this.props.edible.image_url }),
+	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url }),
 	        this.props.edible.name
 	      ),
 	      React.createElement(
 	        'button',
-	        { onClick: this.addToList },
+	        { className: 'edible-list-item-button', onClick: this.addToList },
 	        'Want to Try'
 	      )
 	    );
@@ -31726,20 +31722,20 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'edible-info' },
+	        { className: 'edible-show-info' },
 	        React.createElement(
 	          'h1',
-	          { className: 'edible-name' },
+	          { className: 'edible-show-name' },
 	          this.state.edible.name
 	        ),
 	        React.createElement(
 	          'h2',
-	          { className: 'edible-category' },
+	          { className: 'edible-show-category' },
 	          this.state.edible.category
 	        ),
 	        React.createElement(
 	          'p',
-	          { className: 'edible-description' },
+	          { className: 'edible-show-description' },
 	          this.state.edible.description
 	        )
 	      )
@@ -31799,8 +31795,13 @@
 	          { className: "root-header-logo" },
 	          React.createElement(
 	            "a",
-	            { href: "#" },
-	            "goodeats"
+	            { href: "/" },
+	            "good",
+	            React.createElement(
+	              "span",
+	              null,
+	              "eats"
+	            )
 	          )
 	        ),
 	        React.createElement("input", { type: "text", name: "name", placeholder: "Edible / Group / Tag / Person", value: "" }),
