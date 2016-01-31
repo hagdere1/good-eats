@@ -31286,6 +31286,7 @@
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(208);
 	var ApiActions = __webpack_require__(231);
+	var ListsIndexItem = __webpack_require__(236);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31329,21 +31330,8 @@
 	          'ul',
 	          { className: 'lists-index' },
 	          this.state.lists.map(function (list) {
-	            return React.createElement(
-	              'li',
-	              { key: list.id, list: list },
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                list.title
-	              )
-	            );
+	            return React.createElement(ListsIndexItem, { key: list.id, list: list });
 	          })
-	        ),
-	        React.createElement(
-	          'section',
-	          { className: 'list-main' },
-	          this.props.children
 	        )
 	      )
 	    );
@@ -31357,50 +31345,24 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ListItemStore = __webpack_require__(237);
 	var ItemDetail = __webpack_require__(238);
 	var ApiActions = __webpack_require__(232);
+	var History = __webpack_require__(159).History;
 
 	var ListsIndexItem = React.createClass({
 	  displayName: 'ListsIndexItem',
 
-	  getInitialState: function () {
-	    if (this.props.params.id) {
-	      return { edibles: ListItemStore.findByListId(this.props.params.id) };
-	    } else {
-	      return { edibles: ListItemStore.all() };
-	    }
-	  },
+	  mixins: [History],
 
-	  _onChange: function () {
-	    this.setState({ edibles: ListItemStore.all() });
-	  },
-
-	  componentDidMount: function () {
-	    this.listItemListener = ListItemStore.addListener(this._onChange);
-	    ApiActions.fetchAllListItems();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listItemListener.remove();
+	  showList: function () {
+	    this.history.pushState(null, '/lists/' + this.props.list.id, {});
 	  },
 
 	  render: function () {
 	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'PASS THE LIST TITLE HERE'
-	      ),
-	      React.createElement(
-	        'ul',
-	        null,
-	        this.state.edibles.map(function (edible) {
-	          return React.createElement(ItemDetail, { key: edible.id, edible: edible });
-	        })
-	      )
+	      'li',
+	      { onClick: this.showList },
+	      this.props.list.title
 	    );
 	  }
 	});
@@ -31476,6 +31438,23 @@
 	var ItemDetail = React.createClass({
 	  displayName: "ItemDetail",
 
+	  getInitialState: function () {
+	    return { edibles: ListItemStore.findByListId(this.props.params.id) };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edibles: ListItemStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.listItemListener = ListItemStore.addListener(this._onChange);
+	    ApiActions.fetchAllListItems();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listItemListener.remove();
+	  },
+
 	  render: function () {
 	    var modifyEdibleLink;
 	    if (this.props.edible.review.length > 0) {
@@ -31492,38 +31471,42 @@
 	      );
 	    }
 
+	    var items = this.state.edibles.map(function (edible) {
+	      return React.createElement(
+	        "ul",
+	        null,
+	        React.createElement(
+	          "li",
+	          null,
+	          this.props.edible.title
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          this.props.edible.rating
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          this.props.edible.date_eaten
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          this.props.edible.created_at
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          modifyEdibleLink
+	        )
+	      );
+	    });
+
 	    return React.createElement(
 	      "ul",
 	      { className: "edible-item-attributes" },
-	      React.createElement(
-	        "li",
-	        null,
-	        React.createElement(
-	          "a",
-	          { href: "#" },
-	          this.props.edible.title
-	        )
-	      ),
-	      React.createElement(
-	        "li",
-	        null,
-	        this.props.edible.rating
-	      ),
-	      React.createElement(
-	        "li",
-	        null,
-	        this.props.edible.date_eaten
-	      ),
-	      React.createElement(
-	        "li",
-	        null,
-	        this.props.edible.created_at
-	      ),
-	      React.createElement(
-	        "li",
-	        null,
-	        modifyEdibleLink
-	      )
+	      items
 	    );
 	  }
 	});
@@ -31569,6 +31552,7 @@
 	  displayName: "Header",
 
 	  render: function () {
+
 	    return React.createElement(
 	      "header",
 	      { className: "root-header" },
@@ -31594,7 +31578,7 @@
 	            React.createElement(
 	              "a",
 	              { href: "/" },
-	              "Home"
+	              "Explore"
 	            )
 	          ),
 	          React.createElement(
@@ -31622,15 +31606,6 @@
 	              "a",
 	              { href: "#" },
 	              "Recommendations"
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              "Explore"
 	            )
 	          )
 	        ),
@@ -31854,20 +31829,31 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var ReactDom = __webpack_require__(158);
 
 	var Edible = React.createClass({
-	  displayName: "Edible",
+	  displayName: 'Edible',
+
+	  addToListClick: function (event) {
+
+	    alert("Added to Your List!");
+	  },
 
 	  render: function () {
 	    var url = "#/edibles/" + this.props.edible.id;
 
 	    return React.createElement(
-	      "li",
-	      { className: "edible-list-item" },
+	      'li',
+	      { className: 'edible-list-item' },
 	      React.createElement(
-	        "a",
+	        'a',
 	        { href: url },
 	        this.props.edible.name
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.addToListClick },
+	        'Want to Try'
 	      )
 	    );
 	  }
@@ -31920,6 +31906,11 @@
 	        'p',
 	        { className: 'edible-description' },
 	        this.state.edible.description
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Want to Try'
 	      )
 	    );
 	  }
