@@ -67,7 +67,7 @@ ApiUtil = {
       }
     });
   },
-  destroy: function (id) {
+  destroyListItem: function (id) {
     $.ajax({
       url: "/api/list_items/" + id,
       type: "DELETE",
@@ -78,6 +78,14 @@ ApiUtil = {
       },
       error: function () {
         console.log("error");
+      }
+    });
+  },
+  fetchAllReviews: function () {
+    $.ajax({
+      url: "/api/reviews",
+      success: function (reviews) {
+        ApiActions.receiveAllReviews(reviews);
       }
     });
   }

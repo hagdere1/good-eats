@@ -17,6 +17,7 @@ var EdiblesIndex = require('./components/edibles/edibles_index');
 var Edible = require('./components/edibles/edible');
 var EdibleShow = require('./components/edibles/edible_show');
 var ListShow = require('./components/lists/list_show');
+var ReviewIndex = require('./components/reviews/review_index');
 
 var App = require('./components/app');
 
@@ -24,7 +25,9 @@ var routes = (
   <Route path="/" component={App}>
     <IndexRoute component={ EdiblesIndex }/>
     <Route path="edibles" component={ EdiblesIndex } />
-    <Route path="edibles/:id" component={ EdibleShow } />
+    <Route path="edibles/:id" component={ EdibleShow } >
+      <Route path="reviews" component={ ReviewIndex }/>
+    </Route>
     <Route path="lists" component={ ListsIndex }>
       <Route path=":id" component={ ListShow } />
     </Route>

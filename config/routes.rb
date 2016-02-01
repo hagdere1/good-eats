@@ -8,5 +8,6 @@ Rails.application.routes.draw do
     resources :edibles, only: [:show, :index]
     resources :lists, except: :new
     resources :list_items, except: :new
+    resources :reviews, except: :new
   end
 end

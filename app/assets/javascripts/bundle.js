@@ -63,6 +63,7 @@
 	var Edible = __webpack_require__(241);
 	var EdibleShow = __webpack_require__(242);
 	var ListShow = __webpack_require__(246);
+	var ReviewIndex = __webpack_require__(248);
 
 	var App = __webpack_require__(243);
 
@@ -71,7 +72,11 @@
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: EdiblesIndex }),
 	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
-	  React.createElement(Route, { path: 'edibles/:id', component: EdibleShow }),
+	  React.createElement(
+	    Route,
+	    { path: 'edibles/:id', component: EdibleShow },
+	    React.createElement(Route, { path: 'reviews', component: ReviewIndex })
+	  ),
 	  React.createElement(
 	    Route,
 	    { path: 'lists', component: ListsIndex },
@@ -31296,7 +31301,7 @@
 	      }
 	    });
 	  },
-	  destroy: function (id) {
+	  destroyListItem: function (id) {
 	    $.ajax({
 	      url: "/api/list_items/" + id,
 	      type: "DELETE",
@@ -31307,6 +31312,14 @@
 	      },
 	      error: function () {
 	        console.log("error");
+	      }
+	    });
+	  },
+	  fetchAllReviews: function () {
+	    $.ajax({
+	      url: "/api/reviews",
+	      success: function (reviews) {
+	        ApiActions.receiveAllReviews(reviews);
 	      }
 	    });
 	  }
@@ -31365,6 +31378,12 @@
 	    AppDispatcher.dispatch({
 	      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
 	      listItem: listItem
+	    });
+	  },
+	  receiveAllReviews: function (reviews) {
+	    AppDispatcher.dispatch({
+	      actionType: ReviewConstants.REVIEWS_RECEIVED,
+	      reviews: reviews
 	    });
 	  }
 	};
@@ -31627,12 +31646,14 @@
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(240);
 	var ApiUtil = __webpack_require__(233);
+	var ReviewIndex = __webpack_require__(248);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
 
 	  getInitialState: function () {
-	    return { edible: EdibleStore.find(parseInt(this.props.params.id)) };
+	    return { edible: EdibleStore.find(parseInt(this.props.params.id)),
+	      buttonClicked: false };
 	  },
 
 	  addToList: function (event) {
@@ -31657,6 +31678,7 @@
 	  },
 
 	  render: function () {
+
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-details group' },
@@ -31688,6 +31710,11 @@
 	          { className: 'edible-show-description' },
 	          this.state.edible.description
 	        )
+	      ),
+	      React.createElement(
+	        'section',
+	        { className: 'edible-reviews' },
+	        React.createElement(ReviewIndex, { edible: edible })
 	      )
 	    );
 	  }
@@ -31996,7 +32023,7 @@
 
 	  destroyListItem: function (event, id) {
 	    event.preventDefault();
-	    ApiUtil.destroy(id);
+	    ApiUtil.destroyListItem(id);
 	  },
 
 	  render: function () {
@@ -32107,6 +32134,86 @@
 	});
 
 	module.exports = ItemsTable;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(233);
+
+	var ReviewIndex = React.createClass({
+	  displayName: 'ReviewIndex',
+
+	  getInitialState: function () {
+	    return this.getReviews();
+	  },
+
+	  getReviews: function () {
+	    var allReviews = ReviewStore.all();
+	    var edibleReviews = [];
+	    allReviews.forEach(function (review) {
+	      if (review.edible_id === parseInt(this.props.edibleId)) {
+	        edibleReviews.push(review);
+	      }
+	    }.bind(this));
+	    return { reviews: edibleReviews };
+	  },
+
+	  _onChange: function () {
+	    this.setState(this.getReviews());
+	  },
+
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.fetchAllReviews();
+	  },
+
+	  componentDidMount: function () {
+	    this.reviewListener = ReviewStore.addListener(this._onChange);
+	    ApiUtil.fetchAllReviews();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.reviewListener.remove();
+	  },
+
+	  render: function () {
+	    var reviews = this.state.reviews.map(function (review) {
+	      React.createElement(
+	        'article',
+	        null,
+	        React.createElement(
+	          'p',
+	          null,
+	          review.title
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          review.user
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          review.created_at
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          review.body
+	        )
+	      );
+	    });
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      reviews
+	    );
+	  }
+	});
+
+	module.exports = ReviewIndex;
 
 /***/ }
 /******/ ]);
