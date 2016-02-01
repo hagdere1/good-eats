@@ -25,7 +25,9 @@ var routes = (
     <IndexRoute component={ EdiblesIndex }/>
     <Route path="edibles" component={ EdiblesIndex } />
     <Route path="edibles/:id" component={ EdibleShow } />
-    <Route path="lists/:id" component={ ListShow } />
+    <Route path="lists" component={ ListsIndex }>
+      <Route path=":id" component={ ListShow } />
+    </Route>
   </Route>
 );
 

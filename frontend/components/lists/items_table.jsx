@@ -37,7 +37,26 @@ var ItemsTable = React.createClass({
 
   render: function () {
 
+    if (this.state.edibles === undefined) { return <div></div>; }
+
+    var tableBody = (
+      this.state.edibles.map(function (edible) {
+        return (
+          <tr className="item-detail-table-row" key={edible.name}>
+            <td><img src={edible.image_url} className="item-detail-image"/></td>
+            <td>{edible.name}</td>
+            <td>{edible.category}</td>
+            <td>{edible.rating}</td>
+            <td>{edible.date_eaten}</td>
+            <td>{edible.created_at}</td>
+            <td>Edit Review</td>
+          </tr>
+        );
+      })
+    );
+
     return (
+      
       <table className="item-detail-table">
         <tbody className="item-detail-table-body">
           <tr className="item-detail-table-headers">
@@ -49,19 +68,8 @@ var ItemsTable = React.createClass({
             <th>Date Added</th>
           </tr>
 
-          {this.state.edibles.map(function (edible) {
-            return (
-              <tr className="item-detail-table-row" key={edible.name}>
-                <td><img src={edible.image_url} className="item-detail-image"/></td>
-                <td>{edible.name}</td>
-                <td>{edible.category}</td>
-                <td>{edible.rating}</td>
-                <td>{edible.date_eaten}</td>
-                <td>{edible.created_at}</td>
-                <td>Edit Review</td>
-              </tr>
-            );
-          })}
+          {tableBody}
+
         </tbody>
       </table>
     );
