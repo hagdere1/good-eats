@@ -4,7 +4,7 @@ class Api::ListItemsController < ApplicationController
     if @list_item.save
       render json: @list_item
     else
-      render json: "Failed"
+      render json: "Failed to add item to your list."
     end
   end
 
