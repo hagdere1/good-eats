@@ -2,7 +2,6 @@ var React = require('react');
 var ListStore = require('./../../stores/list');
 var ApiUtil = require('./../../util/api_util');
 var ListsIndexItem = require('./lists_index_item');
-var ItemDetail = require('./item_detail');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
