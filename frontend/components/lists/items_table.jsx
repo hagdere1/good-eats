@@ -35,11 +35,6 @@ var ItemsTable = React.createClass({
     this.listItemListener.remove();
   },
 
-  destroyListItem: function (event, id) {
-    event.preventDefault();
-    ApiUtil.destroyListItem(id);
-  },
-
   render: function () {
 
     if (this.state.edibles === undefined) { return <div></div>; }
@@ -55,7 +50,7 @@ var ItemsTable = React.createClass({
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
             <td>Edit Review</td>
-            <td><button onClick={this.destroyListItem}>Delete</button></td>
+            <td><button>Delete</button></td>
           </tr>
         );
       })

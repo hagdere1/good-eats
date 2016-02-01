@@ -47,7 +47,7 @@ var EdibleShow = React.createClass({
         </div>
 
         <section className="edible-reviews">
-          <ReviewIndex edible={edible} />
+          <p>This.props.children here</p>
         </section>
       </div>
     );

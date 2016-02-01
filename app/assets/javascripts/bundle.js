@@ -31192,10 +31192,6 @@
 	  return _listItems[id];
 	};
 
-	ListItemStore.destroy = function (id) {
-	  delete _listItems[id];
-	};
-
 	ListItemStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListItemConstants.LIST_ITEMS_RECEIVED:
@@ -31204,10 +31200,6 @@
 	      break;
 	    case ListItemConstants.LIST_ITEM_RECEIVED:
 	      this.resetListItem(payload.listItem);
-	      ListItemStore.__emitChange();
-	      break;
-	    case ListItemConstants.LIST_ITEM_DESTROYED:
-	      this.destroy(payload.listItem.id);
 	      ListItemStore.__emitChange();
 	      break;
 	  }
@@ -31275,6 +31267,7 @@
 	        ApiActions.receiveAllListItems(listItems);
 	      },
 	      error: function () {
+	        debugger;
 	        console.log("Failed to fetch list items.");
 	      }
 	    });
@@ -31301,26 +31294,13 @@
 	      }
 	    });
 	  },
-	  destroyListItem: function (id) {
+	  fetchAllReviews: function (id) {
 	    $.ajax({
-	      url: "/api/list_items/" + id,
-	      type: "DELETE",
-	      dataType: "json",
-	      success: function (data) {
-	        ApiActions.destroyListItem(data);
-	        console.log("Edible destroyed!");
-	      },
-	      error: function () {
-	        console.log("error");
-	      }
-	    });
-	  },
-	  fetchAllReviews: function () {
-	    $.ajax({
-	      url: "/api/reviews",
+	      url: "/api/edibles/" + id + "/reviews",
 	      success: function (reviews) {
 	        ApiActions.receiveAllReviews(reviews);
-	      }
+	      },
+	      error: function () {}
 	    });
 	  }
 	};
@@ -31336,6 +31316,7 @@
 	var EdibleConstants = __webpack_require__(235);
 	var ListConstants = __webpack_require__(230);
 	var ListItemConstants = __webpack_require__(232);
+	var ReviewConstants = __webpack_require__(249);
 
 	var ApiActions = {
 	  receiveAllEdibles: function (edibles) {
@@ -31371,12 +31352,6 @@
 	  receiveSingleListItem: function (listItem) {
 	    AppDispatcher.dispatch({
 	      actionType: ListItemConstants.LIST_ITEM_RECEIVED,
-	      listItem: listItem
-	    });
-	  },
-	  destroyListItem: function (listItem) {
-	    AppDispatcher.dispatch({
-	      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
 	      listItem: listItem
 	    });
 	  },
@@ -31714,7 +31689,11 @@
 	      React.createElement(
 	        'section',
 	        { className: 'edible-reviews' },
-	        React.createElement(ReviewIndex, { edible: edible })
+	        React.createElement(
+	          'p',
+	          null,
+	          'This.props.children here'
+	        )
 	      )
 	    );
 	  }
@@ -32021,11 +32000,6 @@
 	    this.listItemListener.remove();
 	  },
 
-	  destroyListItem: function (event, id) {
-	    event.preventDefault();
-	    ApiUtil.destroyListItem(id);
-	  },
-
 	  render: function () {
 
 	    if (this.state.edibles === undefined) {
@@ -32080,7 +32054,7 @@
 	          null,
 	          React.createElement(
 	            'button',
-	            { onClick: this.destroyListItem },
+	            null,
 	            'Delete'
 	          )
 	        )
@@ -32141,6 +32115,7 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
+	var ReviewStore = __webpack_require__(250);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32153,7 +32128,7 @@
 	    var allReviews = ReviewStore.all();
 	    var edibleReviews = [];
 	    allReviews.forEach(function (review) {
-	      if (review.edible_id === parseInt(this.props.edibleId)) {
+	      if (review.edible_id === parseInt(this.props.params.id)) {
 	        edibleReviews.push(review);
 	      }
 	    }.bind(this));
@@ -32165,12 +32140,12 @@
 	  },
 
 	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.fetchAllReviews();
+	    ApiUtil.fetchAllReviews(this.props.params.id);
 	  },
 
 	  componentDidMount: function () {
 	    this.reviewListener = ReviewStore.addListener(this._onChange);
-	    ApiUtil.fetchAllReviews();
+	    ApiUtil.fetchAllReviews(this.props.params.id);
 	  },
 
 	  componentWillUnmount: function () {
@@ -32178,6 +32153,10 @@
 	  },
 
 	  render: function () {
+	    if (this.state.reviews === undefined) {
+	      return React.createElement('div', null);
+	    }
+
 	    var reviews = this.state.reviews.map(function (review) {
 	      React.createElement(
 	        'article',
@@ -32214,6 +32193,66 @@
 	});
 
 	module.exports = ReviewIndex;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports) {
+
+	ReviewConstants = {
+	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED"
+	};
+
+	module.exports = ReviewConstants;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var AppDispatcher = __webpack_require__(227);
+	var ReviewStore = new Store(AppDispatcher);
+	var ReviewConstants = __webpack_require__(249);
+
+	var _reviews = {};
+
+	ReviewStore.all = function () {
+	  var reviews = [];
+	  for (var id in _reviews) {
+	    reviews.push(_reviews[id]);
+	  }
+	  return reviews;
+	};
+
+	ReviewStore.resetReviews = function (reviews) {
+	  _reviews = {};
+	  reviews.forEach(function (review) {
+	    _reviews[review.id] = review;
+	  });
+	};
+
+	ReviewStore.resetReview = function (review) {
+	  _reviews[review.id] = review;
+	};
+
+	ReviewStore.find = function (id) {
+	  return _reviews[id];
+	};
+
+	ReviewStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ReviewConstants.REVIEWS_RECEIVED:
+	      this.resetReviews(payload.reviews);
+	      ReviewStore.__emitChange();
+	      break;
+	    case ReviewConstants.REVIEW_RECEIVED:
+	      this.resetReview(payload.review);
+	      ReviewStore.__emitChange();
+	      break;
+	  }
+	};
+
+	window.ReviewStore = ReviewStore;
+	module.exports = ReviewStore;
 
 /***/ }
 /******/ ]);

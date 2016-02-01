@@ -41,6 +41,7 @@ ApiUtil = {
         ApiActions.receiveAllListItems(listItems);
       },
       error: function () {
+        debugger
         console.log("Failed to fetch list items.");
       }
     });
@@ -67,25 +68,14 @@ ApiUtil = {
       }
     });
   },
-  destroyListItem: function (id) {
+  fetchAllReviews: function (id) {
     $.ajax({
-      url: "/api/list_items/" + id,
-      type: "DELETE",
-      dataType: "json",
-      success: function (data) {
-        ApiActions.destroyListItem(data);
-        console.log("Edible destroyed!");
-      },
-      error: function () {
-        console.log("error");
-      }
-    });
-  },
-  fetchAllReviews: function () {
-    $.ajax({
-      url: "/api/reviews",
+      url: "/api/edibles/" + id + "/reviews",
       success: function (reviews) {
         ApiActions.receiveAllReviews(reviews);
+      },
+      error: function () {
+
       }
     });
   }
