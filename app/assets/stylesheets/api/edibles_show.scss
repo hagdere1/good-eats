@@ -12,24 +12,49 @@
 
 }
 
-.edible-show-button {
-  display: block;
+.edible-show-buttons {
   color: white;
-  background-color: #409D69;
-  border-radius: 3px;
-  border-style: solid;
   font-family: helvetica;
   line-height: 18px;
   font-size: 13px;
-  width: 130px;
+  width: 112px;
+  margin: auto;
+}
+
+.edible-show-button {
+  background-color: #409D69;
+  display: block;
+  border-radius-top-left: 3px;
+  border-radius-bottom-left: 3px;
+  border-right: 1px solid #003300;
+  width: 80px;
   padding-top: 5px;
   padding-left: 5px;
   padding-bottom: 5px;
   margin: auto;
   margin-top: 5px;
+  float: left;
 }
 
 .edible-show-button:hover {
+  background-color: #008000;
+  cursor: pointer;
+}
+
+.edible-show-button-select-list {
+  background-color: #409D69;
+  font-size: 8px;
+  width: 25px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin: auto;
+  margin-top: 5px;
+  border-radius-top-right: 3px;
+  border-radius-bottom-right: 3px;
+}
+
+.edible-show-button-select-list:hover {
   background-color: #008000;
   cursor: pointer;
 }

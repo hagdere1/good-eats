@@ -32,8 +32,8 @@ var ListShow = React.createClass({
     }
 
     return (
-      <div>
-        <ItemsTable listId={this.props.params.id}/>
+      <div className="list-items-table">
+        <ItemsTable listId={this.props.params.id} />
       </div>
     );
 

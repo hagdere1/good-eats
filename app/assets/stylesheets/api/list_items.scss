@@ -23,14 +23,6 @@
   height: 300px;
 }
 
-.lists-index {
-  display: block;
-  width: 200px;
-  height: 200px;
-  border: 1px solid black;
-  float: left;
-}
-
 .list-main {
   display: block;
   width: 500px;
@@ -39,20 +31,14 @@
   float: right;
 }
 
-.item-detail-table {
-
+.lists-index-nav {
+  float: left;
+  width: 200px;
 }
 
-.item-detail-table-body {
-
-}
-
-.item-detail-table-headers {
-
-}
-
-.item-detail-table-row {
-
+.list-items-table {
+  float: right;
+  width: 750px;
 }
 
 .item-detail-image {

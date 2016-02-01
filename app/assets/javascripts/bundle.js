@@ -31420,7 +31420,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'lists-index' },
+	      { className: 'lists-index group' },
 	      React.createElement(
 	        'div',
 	        { className: 'lists-index-nav' },
@@ -31436,7 +31436,7 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'lists-content group' },
+	          { className: 'lists-content' },
 	          React.createElement(
 	            'ul',
 	            { className: 'lists-index' },
@@ -31520,7 +31520,7 @@
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'list-items-table' },
 	      React.createElement(ItemsTable, { listId: this.props.params.id })
 	    );
 	  }
@@ -31825,6 +31825,7 @@
 
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(242);
+	var ListStore = __webpack_require__(208);
 	var ApiUtil = __webpack_require__(233);
 
 	var EdibleShow = React.createClass({
@@ -31832,7 +31833,7 @@
 
 	  getInitialState: function () {
 	    return { edible: EdibleStore.find(parseInt(this.props.params.id)),
-	      buttonClicked: false };
+	      lists: ListStore.all() };
 	  },
 
 	  addToList: function (event) {
@@ -31844,12 +31845,14 @@
 	  },
 
 	  _onChange: function () {
-	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
+	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)),
+	      lists: ListStore.all() });
 	  },
 
 	  componentDidMount: function () {
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
+	    ApiUtil.fetchAllLists();
 	  },
 
 	  componentWillUnmount: function () {
@@ -31857,6 +31860,18 @@
 	  },
 
 	  render: function () {
+	    var lists;
+
+	    if (this.state.lists) {
+	      lists = this.state.lists.map(function (list) {
+	        return React.createElement(
+	          'li',
+	          null,
+	          list.title
+	        );
+	      }.bind(this));
+	    }
+
 	    var edibleImage, edibleName, edibleCategory, edibleDescription;
 
 	    if (this.state.edible) {
@@ -31885,9 +31900,23 @@
 	        { className: 'edible-image' },
 	        edibleImage,
 	        React.createElement(
-	          'button',
-	          { className: 'edible-show-button', onClick: this.addToList },
-	          'Want to Try'
+	          'div',
+	          { className: 'edible-show-buttons group' },
+	          React.createElement(
+	            'button',
+	            { className: 'edible-show-button', onClick: this.addToList },
+	            'Want to Try'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'edible-show-button-select-list' },
+	            '▼'
+	          )
+	        ),
+	        React.createElement(
+	          'ul',
+	          null,
+	          lists
 	        )
 	      ),
 	      React.createElement(
