@@ -1,7 +1,6 @@
-json.id review.id
-json.user_id review.user_id
-json.user review.user
-json.edible_id review.edible_id
-json.edible review.edible
-json.title review.title
-json.description review.description
+json.extract!(
+  review,
+  :id, :user_id, :edible_id, :title, :body, :created_at
+)
+json.user review.user.name
+json.user review.edible.name

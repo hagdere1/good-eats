@@ -4,7 +4,6 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
-var Link = require('react-router').Link;
 
 var ListStore = require('./stores/list');
 var ListItemStore = require('./stores/list_item');
@@ -24,9 +23,9 @@ var App = require('./components/app');
 var routes = (
   <Route path="/" component={App}>
     <IndexRoute component={ EdiblesIndex }/>
-    <Route path="edibles" component={ EdiblesIndex } />
-    <Route path="edibles/:id" component={ EdibleShow } >
-      <Route path="reviews" component={ ReviewIndex }/>
+    <Route path="edibles" component={ EdiblesIndex }/>
+    <Route path="edibles/:id" component={ EdibleShow }>
+      <IndexRoute component={ ReviewIndex }/>
     </Route>
     <Route path="lists" component={ ListsIndex }>
       <Route path=":id" component={ ListShow } />

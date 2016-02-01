@@ -15,13 +15,10 @@ ReviewStore.all = function () {
 
 ReviewStore.resetReviews = function (reviews) {
   _reviews = {};
+
   reviews.forEach(function (review) {
     _reviews[review.id] = review;
   });
-};
-
-ReviewStore.resetReview = function (review) {
-  _reviews[review.id] = review;
 };
 
 ReviewStore.find = function (id) {
@@ -32,10 +29,6 @@ ReviewStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ReviewConstants.REVIEWS_RECEIVED:
       this.resetReviews(payload.reviews);
-      ReviewStore.__emitChange();
-      break;
-    case ReviewConstants.REVIEW_RECEIVED:
-      this.resetReview(payload.review);
       ReviewStore.__emitChange();
       break;
   }

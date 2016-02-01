@@ -50,7 +50,6 @@
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var IndexRoute = __webpack_require__(159).IndexRoute;
-	var Link = __webpack_require__(159).Link;
 
 	var ListStore = __webpack_require__(208);
 	var ListItemStore = __webpack_require__(231);
@@ -75,7 +74,7 @@
 	  React.createElement(
 	    Route,
 	    { path: 'edibles/:id', component: EdibleShow },
-	    React.createElement(Route, { path: 'reviews', component: ReviewIndex })
+	    React.createElement(IndexRoute, { component: ReviewIndex })
 	  ),
 	  React.createElement(
 	    Route,
@@ -31267,7 +31266,6 @@
 	        ApiActions.receiveAllListItems(listItems);
 	      },
 	      error: function () {
-	        debugger;
 	        console.log("Failed to fetch list items.");
 	      }
 	    });
@@ -31294,13 +31292,16 @@
 	      }
 	    });
 	  },
-	  fetchAllReviews: function (id) {
+	  fetchAllReviews: function () {
 	    $.ajax({
-	      url: "/api/edibles/" + id + "/reviews",
+	      url: "/api/reviews/",
 	      success: function (reviews) {
 	        ApiActions.receiveAllReviews(reviews);
+	        console.log("Successfully retrieved reviews");
 	      },
-	      error: function () {}
+	      error: function () {
+	        console.log("Failed to retrieve reviews");
+	      }
 	    });
 	  }
 	};
@@ -31602,11 +31603,6 @@
 	        React.createElement(
 	          'td',
 	          null,
-	          edible.rating
-	        ),
-	        React.createElement(
-	          'td',
-	          null,
 	          edible.date_eaten
 	        ),
 	        React.createElement(
@@ -31796,7 +31792,7 @@
 	  addToList: function (event) {
 	    event.preventDefault();
 	    var listItem = {};
-	    listItem.list_id = 1; // Hard-code Want To Try list for now
+	    listItem.list_id = 4;
 	    listItem.edible_id = parseInt(this.props.edible.id);
 	    ApiUtil.createListItem(listItem);
 	  },
@@ -31830,7 +31826,6 @@
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(242);
 	var ApiUtil = __webpack_require__(233);
-	var ReviewIndex = __webpack_require__(245);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
@@ -31843,7 +31838,7 @@
 	  addToList: function (event) {
 	    event.preventDefault();
 	    var listItem = {};
-	    listItem.list_id = 1; // Hard-code Want To Try list for now
+	    listItem.list_id = 4;
 	    listItem.edible_id = parseInt(this.props.params.id);
 	    ApiUtil.createListItem(listItem);
 	  },
@@ -31862,14 +31857,33 @@
 	  },
 
 	  render: function () {
+	    var edibleImage, edibleName, edibleCategory, edibleDescription;
 
+	    if (this.state.edible) {
+	      edibleImage = React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url });
+	      edibleName = React.createElement(
+	        'h1',
+	        { className: 'edible-show-name' },
+	        this.state.edible.name
+	      );
+	      edibleCategory = React.createElement(
+	        'h2',
+	        { className: 'edible-show-category' },
+	        this.state.edible.category
+	      );
+	      edibleDescription = React.createElement(
+	        'p',
+	        { className: 'edible-show-description' },
+	        this.state.edible.description
+	      );
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-details group' },
 	      React.createElement(
 	        'div',
 	        { className: 'edible-image' },
-	        React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url }),
+	        edibleImage,
 	        React.createElement(
 	          'button',
 	          { className: 'edible-show-button', onClick: this.addToList },
@@ -31879,30 +31893,14 @@
 	      React.createElement(
 	        'div',
 	        { className: 'edible-show-info' },
-	        React.createElement(
-	          'h1',
-	          { className: 'edible-show-name' },
-	          this.state.edible.name
-	        ),
-	        React.createElement(
-	          'h2',
-	          { className: 'edible-show-category' },
-	          this.state.edible.category
-	        ),
-	        React.createElement(
-	          'p',
-	          { className: 'edible-show-description' },
-	          this.state.edible.description
-	        )
+	        edibleName,
+	        edibleCategory,
+	        edibleDescription
 	      ),
 	      React.createElement(
-	        'section',
+	        'div',
 	        { className: 'edible-reviews' },
-	        React.createElement(
-	          'p',
-	          null,
-	          'This.props.children here'
-	        )
+	        this.props.children
 	      )
 	    );
 	  }
@@ -31922,31 +31920,29 @@
 	  displayName: 'ReviewIndex',
 
 	  getInitialState: function () {
-	    return this.getReviews();
+	    return this.getEdibleReviews();
 	  },
 
-	  getReviews: function () {
+	  getEdibleReviews: function () {
 	    var allReviews = ReviewStore.all();
+
 	    var edibleReviews = [];
 	    allReviews.forEach(function (review) {
-	      if (review.edible_id === parseInt(this.props.params.id)) {
+	      if (review.edible_id == parseInt(this.props.params.id)) {
 	        edibleReviews.push(review);
 	      }
 	    }.bind(this));
+
 	    return { reviews: edibleReviews };
 	  },
 
 	  _onChange: function () {
-	    this.setState(this.getReviews());
-	  },
-
-	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.fetchAllReviews(this.props.params.id);
+	    this.setState(this.getEdibleReviews());
 	  },
 
 	  componentDidMount: function () {
 	    this.reviewListener = ReviewStore.addListener(this._onChange);
-	    ApiUtil.fetchAllReviews(this.props.params.id);
+	    ApiUtil.fetchAllReviews();
 	  },
 
 	  componentWillUnmount: function () {
@@ -31954,14 +31950,15 @@
 	  },
 
 	  render: function () {
+
 	    if (this.state.reviews === undefined) {
 	      return React.createElement('div', null);
 	    }
 
 	    var reviews = this.state.reviews.map(function (review) {
-	      React.createElement(
+	      return React.createElement(
 	        'article',
-	        null,
+	        { key: review.id },
 	        React.createElement(
 	          'p',
 	          null,
@@ -32016,13 +32013,10 @@
 
 	ReviewStore.resetReviews = function (reviews) {
 	  _reviews = {};
+
 	  reviews.forEach(function (review) {
 	    _reviews[review.id] = review;
 	  });
-	};
-
-	ReviewStore.resetReview = function (review) {
-	  _reviews[review.id] = review;
 	};
 
 	ReviewStore.find = function (id) {
@@ -32033,10 +32027,6 @@
 	  switch (payload.actionType) {
 	    case ReviewConstants.REVIEWS_RECEIVED:
 	      this.resetReviews(payload.reviews);
-	      ReviewStore.__emitChange();
-	      break;
-	    case ReviewConstants.REVIEW_RECEIVED:
-	      this.resetReview(payload.review);
 	      ReviewStore.__emitChange();
 	      break;
 	  }

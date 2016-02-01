@@ -6,7 +6,7 @@ var Edible = React.createClass({
   addToList: function (event) {
     event.preventDefault();
     var listItem = {};
-    listItem.list_id = 1; // Hard-code Want To Try list for now
+    listItem.list_id = 4;
     listItem.edible_id = parseInt(this.props.edible.id);
     ApiUtil.createListItem(listItem);
   },

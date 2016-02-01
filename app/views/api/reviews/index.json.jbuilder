@@ -1,3 +1,3 @@
 json.array!(@reviews) do |review|
-  json.partial!('review', review: review)
+  json.partial!('/api/reviews/review', review: review)
 end

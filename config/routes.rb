@@ -6,8 +6,8 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: {format: :json} do
     resources :edibles, only: [:show, :index]
+    resources :reviews, except: :new
     resources :lists, except: :new
     resources :list_items, except: :new
-    resources :reviews, except: :new
   end
 end
