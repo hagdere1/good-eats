@@ -31183,17 +31183,6 @@
 	  return _listItems[id];
 	};
 
-	ListItemStore.findByListId = function (listId) {
-	  var listItems = [];
-	  debugger;
-	  _listItems.keys.forEach(function (listItem) {
-	    if (listItem.list_id === listId) {
-	      listItems.push(listItem);
-	    }
-	  });
-	  return listItems;
-	};
-
 	ListItemStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListItemConstants.LIST_ITEMS_RECEIVED:
@@ -31916,7 +31905,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(ItemsTable, null)
+	      React.createElement(ItemsTable, { listId: this.props.params.id })
 	    );
 	  }
 	});
@@ -31935,11 +31924,26 @@
 	  displayName: 'ItemsTable',
 
 	  getInitialState: function () {
-	    return { edibles: ListItemStore.all() };
+	    return this.getListItems();
+	  },
+
+	  getListItems: function () {
+	    var allItems = ListItemStore.all();
+	    var listItems = [];
+	    allItems.forEach(function (listItem) {
+	      if (listItem.list_id === parseInt(this.props.listId)) {
+	        listItems.push(listItem);
+	      }
+	    }.bind(this));
+	    return { edibles: listItems };
 	  },
 
 	  _onChange: function () {
-	    this.setState({ edibles: ListItemStore.all() });
+	    this.setState(this.getListItems());
+	  },
+
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.fetchAllListItems();
 	  },
 
 	  componentDidMount: function () {
@@ -31996,7 +32000,7 @@
 	        this.state.edibles.map(function (edible) {
 	          return React.createElement(
 	            'tr',
-	            { className: 'item-detail-table-row' },
+	            { className: 'item-detail-table-row', key: edible.name },
 	            React.createElement(
 	              'td',
 	              null,

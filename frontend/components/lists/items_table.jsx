@@ -4,11 +4,26 @@ var ListItemStore = require('../../stores/list_item');
 
 var ItemsTable = React.createClass({
   getInitialState: function () {
-    return { edibles: ListItemStore.all() };
+    return this.getListItems();
+  },
+
+  getListItems: function () {
+    var allItems = ListItemStore.all();
+    var listItems = [];
+    allItems.forEach(function (listItem) {
+      if (listItem.list_id === parseInt(this.props.listId)) {
+        listItems.push(listItem);
+      }
+    }.bind(this));
+    return { edibles: listItems };
   },
 
   _onChange: function () {
-    this.setState({ edibles: ListItemStore.all() });
+    this.setState(this.getListItems());
+  },
+
+  componentWillReceiveProps: function (newProps) {
+    ApiUtil.fetchAllListItems();
   },
 
   componentDidMount: function () {
@@ -36,7 +51,7 @@ var ItemsTable = React.createClass({
 
           {this.state.edibles.map(function (edible) {
             return (
-              <tr className="item-detail-table-row">
+              <tr className="item-detail-table-row" key={edible.name}>
                 <td><img src={edible.image_url} className="item-detail-image"/></td>
                 <td>{edible.name}</td>
                 <td>{edible.category}</td>
