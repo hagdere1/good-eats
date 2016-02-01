@@ -35,6 +35,11 @@ var ItemsTable = React.createClass({
     this.listItemListener.remove();
   },
 
+  destroyListItem: function (event, id) {
+    event.preventDefault();
+    ApiUtil.destroy(id);
+  },
+
   render: function () {
 
     if (this.state.edibles === undefined) { return <div></div>; }
@@ -44,19 +49,20 @@ var ItemsTable = React.createClass({
         return (
           <tr className="item-detail-table-row" key={edible.name}>
             <td><img src={edible.image_url} className="item-detail-image"/></td>
-            <td>{edible.name}</td>
+            <td><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
             <td>{edible.category}</td>
             <td>{edible.rating}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
             <td>Edit Review</td>
+            <td><button onClick={this.destroyListItem}>Delete</button></td>
           </tr>
         );
       })
     );
 
     return (
-      
+
       <table className="item-detail-table">
         <tbody className="item-detail-table-body">
           <tr className="item-detail-table-headers">
