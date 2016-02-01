@@ -66,8 +66,23 @@ ApiUtil = {
         alert("You've already added that item.");
       }
     });
+  },
+  destroy: function (id) {
+    $.ajax({
+      url: "/api/list_items/" + id,
+      type: "DELETE",
+      dataType: "json",
+      success: function (data) {
+        ApiActions.destroyListItem(data);
+        console.log("Edible destroyed!");
+      },
+      error: function () {
+        console.log("error");
+      }
+    });
   }
 };
+
 
 window.ApiUtil = ApiUtil;
 module.exports = ApiUtil;

@@ -40,6 +40,12 @@ var ApiActions = {
       listItem: listItem
     });
   },
+  destroyListItem: function (listItem) {
+    AppDispatcher.dispatch({
+      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
+      listItem: listItem
+    });
+  }
 };
 
 module.exports = ApiActions;

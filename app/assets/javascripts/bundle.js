@@ -31187,6 +31187,10 @@
 	  return _listItems[id];
 	};
 
+	ListItemStore.destroy = function (id) {
+	  delete _listItems[id];
+	};
+
 	ListItemStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListItemConstants.LIST_ITEMS_RECEIVED:
@@ -31195,6 +31199,10 @@
 	      break;
 	    case ListItemConstants.LIST_ITEM_RECEIVED:
 	      this.resetListItem(payload.listItem);
+	      ListItemStore.__emitChange();
+	      break;
+	    case ListItemConstants.LIST_ITEM_DESTROYED:
+	      this.destroy(payload.listItem.id);
 	      ListItemStore.__emitChange();
 	      break;
 	  }
@@ -31209,7 +31217,8 @@
 
 	ListItemConstants = {
 	  LIST_ITEMS_RECEIVED: "LIST_ITEMS_RECEIVED",
-	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED"
+	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED",
+	  LIST_ITEM_DESTROYED: "LIST_ITEM_DESTROYED"
 	};
 
 	module.exports = ListItemConstants;
@@ -31286,6 +31295,20 @@
 	        alert("You've already added that item.");
 	      }
 	    });
+	  },
+	  destroy: function (id) {
+	    $.ajax({
+	      url: "/api/list_items/" + id,
+	      type: "DELETE",
+	      dataType: "json",
+	      success: function (data) {
+	        ApiActions.destroyListItem(data);
+	        console.log("Edible destroyed!");
+	      },
+	      error: function () {
+	        console.log("error");
+	      }
+	    });
 	  }
 	};
 
@@ -31335,6 +31358,12 @@
 	  receiveSingleListItem: function (listItem) {
 	    AppDispatcher.dispatch({
 	      actionType: ListItemConstants.LIST_ITEM_RECEIVED,
+	      listItem: listItem
+	    });
+	  },
+	  destroyListItem: function (listItem) {
+	    AppDispatcher.dispatch({
+	      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
 	      listItem: listItem
 	    });
 	  }
@@ -31965,6 +31994,11 @@
 	    this.listItemListener.remove();
 	  },
 
+	  destroyListItem: function (event, id) {
+	    event.preventDefault();
+	    ApiUtil.destroy(id);
+	  },
+
 	  render: function () {
 
 	    if (this.state.edibles === undefined) {
@@ -31983,7 +32017,11 @@
 	        React.createElement(
 	          'td',
 	          null,
-	          edible.name
+	          React.createElement(
+	            'a',
+	            { href: "#/edibles/" + edible.edible_id },
+	            edible.name
+	          )
 	        ),
 	        React.createElement(
 	          'td',
@@ -32009,6 +32047,15 @@
 	          'td',
 	          null,
 	          'Edit Review'
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          React.createElement(
+	            'button',
+	            { onClick: this.destroyListItem },
+	            'Delete'
+	          )
 	        )
 	      );
 	    });
