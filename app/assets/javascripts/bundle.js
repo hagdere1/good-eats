@@ -57,15 +57,15 @@
 	var ApiUtil = __webpack_require__(233);
 	// Delete testing vars
 
-	var ListsIndex = __webpack_require__(236);
-	var ListsIndexItem = __webpack_require__(237);
-	var EdiblesIndex = __webpack_require__(239);
-	var Edible = __webpack_require__(241);
-	var EdibleShow = __webpack_require__(242);
-	var ListShow = __webpack_require__(246);
-	var ReviewIndex = __webpack_require__(248);
+	var ListsIndex = __webpack_require__(237);
+	var ListsIndexItem = __webpack_require__(238);
+	var EdiblesIndex = __webpack_require__(241);
+	var Edible = __webpack_require__(243);
+	var EdibleShow = __webpack_require__(244);
+	var ListShow = __webpack_require__(239);
+	var ReviewIndex = __webpack_require__(245);
 
-	var App = __webpack_require__(243);
+	var App = __webpack_require__(247);
 
 	var routes = React.createElement(
 	  Route,
@@ -31316,7 +31316,7 @@
 	var EdibleConstants = __webpack_require__(235);
 	var ListConstants = __webpack_require__(230);
 	var ListItemConstants = __webpack_require__(232);
-	var ReviewConstants = __webpack_require__(249);
+	var ReviewConstants = __webpack_require__(236);
 
 	var ApiActions = {
 	  receiveAllEdibles: function (edibles) {
@@ -31378,13 +31378,23 @@
 
 /***/ },
 /* 236 */
+/***/ function(module, exports) {
+
+	ReviewConstants = {
+	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED"
+	};
+
+	module.exports = ReviewConstants;
+
+/***/ },
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(208);
 	var ApiUtil = __webpack_require__(233);
-	var ListsIndexItem = __webpack_require__(237);
-	var ListShow = __webpack_require__(246);
+	var ListsIndexItem = __webpack_require__(238);
+	var ListShow = __webpack_require__(239);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31443,7 +31453,7 @@
 	module.exports = ListsIndex;
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31470,453 +31480,13 @@
 	module.exports = ListsIndexItem;
 
 /***/ },
-/* 238 */,
 /* 239 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(240);
-	var ApiUtil = __webpack_require__(233);
-	var Edible = __webpack_require__(241);
-
-	var EdiblesIndex = React.createClass({
-	  displayName: 'EdiblesIndex',
-
-	  getInitialState: function () {
-	    return { edibles: EdibleStore.all() };
-	  },
-
-	  _onChange: function () {
-	    this.setState({ edibles: EdibleStore.all() });
-	  },
-
-	  componentDidMount: function () {
-	    this.edibleListener = EdibleStore.addListener(this._onChange);
-	    ApiUtil.fetchAllEdibles();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.edibleListener.remove();
-	  },
-
-	  render: function () {
-	    var indexItems = this.state.edibles.map(function (edible) {
-	      return React.createElement(Edible, { key: edible.id, edible: edible });
-	    });
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        { className: 'heading-main' },
-	        'Explore Edibles'
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'edibles-index-items' },
-	        indexItems
-	      )
-	    );
-	  }
-	});
-
-	module.exports = EdiblesIndex;
-
-/***/ },
-/* 240 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var AppDispatcher = __webpack_require__(227);
-	var EdibleStore = new Store(AppDispatcher);
-	var EdibleConstants = __webpack_require__(235);
-
-	var _edibles = {};
-
-	EdibleStore.all = function () {
-	  var edibles = [];
-	  for (var id in _edibles) {
-	    edibles.push(_edibles[id]);
-	  }
-	  return edibles;
-	};
-
-	EdibleStore.resetEdibles = function (edibles) {
-	  _edibles = {};
-	  edibles.forEach(function (edible) {
-	    _edibles[edible.id] = edible;
-	  });
-	};
-
-	EdibleStore.resetEdible = function (edible) {
-	  _edibles[edible.id] = edible;
-	};
-
-	EdibleStore.find = function (id) {
-	  return _edibles[id];
-	};
-
-	EdibleStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case EdibleConstants.EDIBLES_RECEIVED:
-	      this.resetEdibles(payload.edibles);
-	      EdibleStore.__emitChange();
-	      break;
-	    case EdibleConstants.EDIBLE_RECEIVED:
-	      this.resetEdible(payload.edible);
-	      EdibleStore.__emitChange();
-	      break;
-	  }
-	};
-
-	window.EdibleStore = EdibleStore;
-	module.exports = EdibleStore;
-
-/***/ },
-/* 241 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	var ApiUtil = __webpack_require__(233);
-
-	var Edible = React.createClass({
-	  displayName: 'Edible',
-
-	  addToList: function (event) {
-	    event.preventDefault();
-	    var listItem = {};
-	    listItem.list_id = 1; // Hard-code Want To Try list for now
-	    listItem.edible_id = parseInt(this.props.edible.id);
-	    ApiUtil.createListItem(listItem);
-	  },
-
-	  render: function () {
-	    var url = "#/edibles/" + this.props.edible.id;
-	    return React.createElement(
-	      'li',
-	      { className: 'edible-list-item' },
-	      React.createElement(
-	        'a',
-	        { href: url },
-	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url }),
-	        this.props.edible.name
-	      ),
-	      React.createElement(
-	        'button',
-	        { className: 'edible-list-item-button', onClick: this.addToList },
-	        'Want to Try'
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Edible;
-
-/***/ },
-/* 242 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(240);
-	var ApiUtil = __webpack_require__(233);
-	var ReviewIndex = __webpack_require__(248);
-
-	var EdibleShow = React.createClass({
-	  displayName: 'EdibleShow',
-
-	  getInitialState: function () {
-	    return { edible: EdibleStore.find(parseInt(this.props.params.id)),
-	      buttonClicked: false };
-	  },
-
-	  addToList: function (event) {
-	    event.preventDefault();
-	    var listItem = {};
-	    listItem.list_id = 1; // Hard-code Want To Try list for now
-	    listItem.edible_id = parseInt(this.props.params.id);
-	    ApiUtil.createListItem(listItem);
-	  },
-
-	  _onChange: function () {
-	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
-	  },
-
-	  componentDidMount: function () {
-	    this.edibleListener = EdibleStore.addListener(this._onChange);
-	    ApiUtil.fetchSingleEdible(this.props.params.id);
-	  },
-
-	  componentWillUnmount: function () {
-	    this.edibleListener.remove();
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'edible-details group' },
-	      React.createElement(
-	        'div',
-	        { className: 'edible-image' },
-	        React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url }),
-	        React.createElement(
-	          'button',
-	          { className: 'edible-show-button', onClick: this.addToList },
-	          'Want to Try'
-	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'edible-show-info' },
-	        React.createElement(
-	          'h1',
-	          { className: 'edible-show-name' },
-	          this.state.edible.name
-	        ),
-	        React.createElement(
-	          'h2',
-	          { className: 'edible-show-category' },
-	          this.state.edible.category
-	        ),
-	        React.createElement(
-	          'p',
-	          { className: 'edible-show-description' },
-	          this.state.edible.description
-	        )
-	      ),
-	      React.createElement(
-	        'section',
-	        { className: 'edible-reviews' },
-	        React.createElement(
-	          'p',
-	          null,
-	          'This.props.children here'
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = EdibleShow;
-
-/***/ },
-/* 243 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Header = __webpack_require__(244);
-	var Footer = __webpack_require__(245);
-
-	var App = React.createClass({
-	  displayName: 'App',
-
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(Header, null),
-	      React.createElement(
-	        'div',
-	        { className: 'main' },
-	        this.props.children
-	      ),
-	      React.createElement(Footer, null)
-	    );
-	  }
-	});
-
-	module.exports = App;
-
-/***/ },
-/* 244 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var Header = React.createClass({
-	  displayName: "Header",
-
-	  render: function () {
-
-	    return React.createElement(
-	      "header",
-	      { className: "root-header" },
-	      React.createElement(
-	        "nav",
-	        { className: "root-header-nav group" },
-	        React.createElement(
-	          "h1",
-	          { className: "root-header-logo" },
-	          React.createElement(
-	            "a",
-	            { href: "/" },
-	            "good",
-	            React.createElement(
-	              "span",
-	              null,
-	              "eats"
-	            )
-	          )
-	        ),
-	        React.createElement("input", { type: "text", name: "name", placeholder: "Edible / Group / Tag / Person", value: "" }),
-	        React.createElement(
-	          "ul",
-	          { className: "root-header-list group" },
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/" },
-	              "Explore"
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#/lists/1" },
-	              "My Lists"
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              "Groups"
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              "Recommendations"
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          "ul",
-	          { className: "root-header-icons group" },
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              React.createElement("i", { className: "fa fa-envelope" })
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              React.createElement("i", { className: "fa fa-users" })
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              React.createElement("i", { className: "fa fa-user fa-1.5x" })
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              React.createElement("i", { className: "fa fa-caret-square-o-down" })
-	            )
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "#" },
-	              "Logout"
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Header;
-
-/***/ },
-/* 245 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var Footer = React.createClass({
-	  displayName: "Footer",
-
-	  render: function () {
-	    return React.createElement(
-	      "footer",
-	      { className: "root-footer" },
-	      React.createElement(
-	        "nav",
-	        { className: "root-footer-nav group" },
-	        React.createElement(
-	          "small",
-	          { className: "root-footer-copy" },
-	          "© 2016 Goodeats Inc"
-	        ),
-	        React.createElement(
-	          "ul",
-	          { className: "root-footer-links group" },
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Footer;
-
-/***/ },
-/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(208);
 	var ApiUtil = __webpack_require__(233);
-	var ItemsTable = __webpack_require__(247);
+	var ItemsTable = __webpack_require__(240);
 
 	var ListShow = React.createClass({
 	  displayName: 'ListShow',
@@ -31958,7 +31528,7 @@
 	module.exports = ListShow;
 
 /***/ },
-/* 247 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32110,12 +31680,243 @@
 	module.exports = ItemsTable;
 
 /***/ },
-/* 248 */
+/* 241 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EdibleStore = __webpack_require__(242);
+	var ApiUtil = __webpack_require__(233);
+	var Edible = __webpack_require__(243);
+
+	var EdiblesIndex = React.createClass({
+	  displayName: 'EdiblesIndex',
+
+	  getInitialState: function () {
+	    return { edibles: EdibleStore.all() };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edibles: EdibleStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    ApiUtil.fetchAllEdibles();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.edibleListener.remove();
+	  },
+
+	  render: function () {
+	    var indexItems = this.state.edibles.map(function (edible) {
+	      return React.createElement(Edible, { key: edible.id, edible: edible });
+	    });
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'heading-main' },
+	        'Explore Edibles'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'edibles-index-items' },
+	        indexItems
+	      )
+	    );
+	  }
+	});
+
+	module.exports = EdiblesIndex;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var AppDispatcher = __webpack_require__(227);
+	var EdibleStore = new Store(AppDispatcher);
+	var EdibleConstants = __webpack_require__(235);
+
+	var _edibles = {};
+
+	EdibleStore.all = function () {
+	  var edibles = [];
+	  for (var id in _edibles) {
+	    edibles.push(_edibles[id]);
+	  }
+	  return edibles;
+	};
+
+	EdibleStore.resetEdibles = function (edibles) {
+	  _edibles = {};
+	  edibles.forEach(function (edible) {
+	    _edibles[edible.id] = edible;
+	  });
+	};
+
+	EdibleStore.resetEdible = function (edible) {
+	  _edibles[edible.id] = edible;
+	};
+
+	EdibleStore.find = function (id) {
+	  return _edibles[id];
+	};
+
+	EdibleStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case EdibleConstants.EDIBLES_RECEIVED:
+	      this.resetEdibles(payload.edibles);
+	      EdibleStore.__emitChange();
+	      break;
+	    case EdibleConstants.EDIBLE_RECEIVED:
+	      this.resetEdible(payload.edible);
+	      EdibleStore.__emitChange();
+	      break;
+	  }
+	};
+
+	window.EdibleStore = EdibleStore;
+	module.exports = EdibleStore;
+
+/***/ },
+/* 243 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var ApiUtil = __webpack_require__(233);
+
+	var Edible = React.createClass({
+	  displayName: 'Edible',
+
+	  addToList: function (event) {
+	    event.preventDefault();
+	    var listItem = {};
+	    listItem.list_id = 1; // Hard-code Want To Try list for now
+	    listItem.edible_id = parseInt(this.props.edible.id);
+	    ApiUtil.createListItem(listItem);
+	  },
+
+	  render: function () {
+	    var url = "#/edibles/" + this.props.edible.id;
+	    return React.createElement(
+	      'li',
+	      { className: 'edible-list-item' },
+	      React.createElement(
+	        'a',
+	        { href: url },
+	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url }),
+	        this.props.edible.name
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'edible-list-item-button', onClick: this.addToList },
+	        'Want to Try'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Edible;
+
+/***/ },
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EdibleStore = __webpack_require__(242);
+	var ApiUtil = __webpack_require__(233);
+	var ReviewIndex = __webpack_require__(245);
+
+	var EdibleShow = React.createClass({
+	  displayName: 'EdibleShow',
+
+	  getInitialState: function () {
+	    return { edible: EdibleStore.find(parseInt(this.props.params.id)),
+	      buttonClicked: false };
+	  },
+
+	  addToList: function (event) {
+	    event.preventDefault();
+	    var listItem = {};
+	    listItem.list_id = 1; // Hard-code Want To Try list for now
+	    listItem.edible_id = parseInt(this.props.params.id);
+	    ApiUtil.createListItem(listItem);
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
+	  },
+
+	  componentDidMount: function () {
+	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    ApiUtil.fetchSingleEdible(this.props.params.id);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.edibleListener.remove();
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'edible-details group' },
+	      React.createElement(
+	        'div',
+	        { className: 'edible-image' },
+	        React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url }),
+	        React.createElement(
+	          'button',
+	          { className: 'edible-show-button', onClick: this.addToList },
+	          'Want to Try'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'edible-show-info' },
+	        React.createElement(
+	          'h1',
+	          { className: 'edible-show-name' },
+	          this.state.edible.name
+	        ),
+	        React.createElement(
+	          'h2',
+	          { className: 'edible-show-category' },
+	          this.state.edible.category
+	        ),
+	        React.createElement(
+	          'p',
+	          { className: 'edible-show-description' },
+	          this.state.edible.description
+	        )
+	      ),
+	      React.createElement(
+	        'section',
+	        { className: 'edible-reviews' },
+	        React.createElement(
+	          'p',
+	          null,
+	          'This.props.children here'
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = EdibleShow;
+
+/***/ },
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
-	var ReviewStore = __webpack_require__(250);
+	var ReviewStore = __webpack_require__(246);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32195,23 +31996,13 @@
 	module.exports = ReviewIndex;
 
 /***/ },
-/* 249 */
-/***/ function(module, exports) {
-
-	ReviewConstants = {
-	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED"
-	};
-
-	module.exports = ReviewConstants;
-
-/***/ },
-/* 250 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(209).Store;
 	var AppDispatcher = __webpack_require__(227);
 	var ReviewStore = new Store(AppDispatcher);
-	var ReviewConstants = __webpack_require__(249);
+	var ReviewConstants = __webpack_require__(236);
 
 	var _reviews = {};
 
@@ -32253,6 +32044,214 @@
 
 	window.ReviewStore = ReviewStore;
 	module.exports = ReviewStore;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Header = __webpack_require__(248);
+	var Footer = __webpack_require__(249);
+
+	var App = React.createClass({
+	  displayName: 'App',
+
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(Header, null),
+	      React.createElement(
+	        'div',
+	        { className: 'main' },
+	        this.props.children
+	      ),
+	      React.createElement(Footer, null)
+	    );
+	  }
+	});
+
+	module.exports = App;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Header = React.createClass({
+	  displayName: "Header",
+
+	  render: function () {
+
+	    return React.createElement(
+	      "header",
+	      { className: "root-header" },
+	      React.createElement(
+	        "nav",
+	        { className: "root-header-nav group" },
+	        React.createElement(
+	          "h1",
+	          { className: "root-header-logo" },
+	          React.createElement(
+	            "a",
+	            { href: "/" },
+	            "good",
+	            React.createElement(
+	              "span",
+	              null,
+	              "eats"
+	            )
+	          )
+	        ),
+	        React.createElement("input", { type: "text", name: "name", placeholder: "Edible / Group / Tag / Person", value: "" }),
+	        React.createElement(
+	          "ul",
+	          { className: "root-header-list group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "/" },
+	              "Explore"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#/lists/1" },
+	              "My Lists"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Groups"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Recommendations"
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          "ul",
+	          { className: "root-header-icons group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-envelope" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-users" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-user fa-1.5x" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              React.createElement("i", { className: "fa fa-caret-square-o-down" })
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "#" },
+	              "Logout"
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Header;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Footer = React.createClass({
+	  displayName: "Footer",
+
+	  render: function () {
+	    return React.createElement(
+	      "footer",
+	      { className: "root-footer" },
+	      React.createElement(
+	        "nav",
+	        { className: "root-footer-nav group" },
+	        React.createElement(
+	          "small",
+	          { className: "root-footer-copy" },
+	          "© 2016 Goodeats Inc"
+	        ),
+	        React.createElement(
+	          "ul",
+	          { className: "root-footer-links group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Footer;
 
 /***/ }
 /******/ ]);

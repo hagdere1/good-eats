@@ -29,8 +29,6 @@
     <section class="auth-form">
       <form action="<%= session_url %>" method="POST">
 
-        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-
         <fieldset class="auth-form-fieldset">
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
@@ -47,6 +45,13 @@
 
       </form>
     </section>
+
+    <form action="<%= session_url %>" method="POST">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <input type="hidden" name="user[email]" placeholder="you@yours.com" value="harry@aol.com">
+      <input type="hidden" name="user[password]" value="123456">
+      <button class="auth-form-button">Sign in as Guest</button>
+    </form>
 
     <footer class="auth-footer">
       <p class="auth-footer-copy">© 2016 Goodeats Inc</p>
