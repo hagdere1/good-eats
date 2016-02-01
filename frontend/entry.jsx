@@ -16,17 +16,16 @@ var ListsIndexItem = require('./components/lists/lists_index_item');
 var EdiblesIndex = require('./components/edibles/edibles_index');
 var Edible = require('./components/edibles/edible');
 var EdibleShow = require('./components/edibles/edible_show');
-var ItemDetail = require('./components/lists/item_detail');
+var ListShow = require('./components/lists/list_show');
 
 var App = require('./components/app');
 
 var routes = (
   <Route path="/" component={App}>
-    <IndexRoute component={ ItemDetail }/>
-    <Route path="lists/:id" component={ ItemDetail } />
+    <IndexRoute component={ EdiblesIndex }/>
     <Route path="edibles" component={ EdiblesIndex } />
     <Route path="edibles/:id" component={ EdibleShow } />
-
+    <Route path="lists/:id" component={ ListShow } />
   </Route>
 );
 

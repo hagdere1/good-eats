@@ -2,21 +2,13 @@ var React = require('react');
 var ApiUtil = require('../../util/api_util');
 var ListItemStore = require('../../stores/list_item');
 
-var ItemDetail = React.createClass({
-  getStateFromStore: function () {
+var ItemsTable = React.createClass({
+  getInitialState: function () {
     return { edibles: ListItemStore.all() };
   },
 
   _onChange: function () {
-    this.setState(this.getStateFromStore());
-  },
-
-  getInitialState: function () {
-    return this.getStateFromStore();
-  },
-
-  componentWillReceiveProps: function (newProps) {
-    ApiUtil.fetchAllListItems();
+    this.setState({ edibles: ListItemStore.all() });
   },
 
   componentDidMount: function () {
@@ -29,10 +21,6 @@ var ItemDetail = React.createClass({
   },
 
   render: function () {
-
-    if (this.state.edibles === undefined) {
-      return <div></div>;
-    }
 
     return (
       <table className="item-detail-table">
@@ -66,4 +54,4 @@ var ItemDetail = React.createClass({
 });
 
 
-module.exports = ItemDetail;
+module.exports = ItemsTable;

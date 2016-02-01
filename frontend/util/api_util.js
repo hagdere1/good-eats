@@ -29,6 +29,7 @@ ApiUtil = {
     $.ajax({
       url: "api/lists/" + id,
       success: function (list) {
+        console.log("Successfully fetched your list!");
         ApiActions.receiveSingleList(list);
       }
     });
@@ -37,7 +38,6 @@ ApiUtil = {
     $.ajax({
       url: "api/list_items/",
       success: function (listItems) {
-        console.log("Successfully fetched all list items!");
         ApiActions.receiveAllListItems(listItems);
       },
       error: function () {
