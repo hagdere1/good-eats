@@ -72,7 +72,11 @@
 	  React.createElement(IndexRoute, { component: EdiblesIndex }),
 	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
 	  React.createElement(Route, { path: 'edibles/:id', component: EdibleShow }),
-	  React.createElement(Route, { path: 'lists/:id', component: ListShow })
+	  React.createElement(
+	    Route,
+	    { path: 'lists', component: ListsIndex },
+	    React.createElement(Route, { path: ':id', component: ListShow })
+	  )
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31357,6 +31361,7 @@
 	var ListStore = __webpack_require__(208);
 	var ApiUtil = __webpack_require__(233);
 	var ListsIndexItem = __webpack_require__(237);
+	var ListShow = __webpack_require__(246);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31381,28 +31386,33 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        { className: 'heading-main' },
-	        'My Edibles'
-	      ),
-	      React.createElement(
-	        'h2',
-	        { className: 'heading-sub-main' },
-	        'Lists'
-	      ),
+	      { className: 'lists-index' },
 	      React.createElement(
 	        'div',
-	        { className: 'lists-content group' },
+	        { className: 'lists-index-nav' },
 	        React.createElement(
-	          'ul',
-	          { className: 'lists-index' },
-	          this.state.lists.map(function (list) {
-	            return React.createElement(ListsIndexItem, { key: list.id, list: list });
-	          })
+	          'h1',
+	          { className: 'heading-main' },
+	          'My Edibles'
+	        ),
+	        React.createElement(
+	          'h2',
+	          { className: 'heading-sub-main' },
+	          'Lists'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'lists-content group' },
+	          React.createElement(
+	            'ul',
+	            { className: 'lists-index' },
+	            this.state.lists.map(function (list) {
+	              return React.createElement(ListsIndexItem, { key: list.id, list: list });
+	            })
+	          )
 	        )
-	      )
+	      ),
+	      this.props.children
 	    );
 	  }
 	});
@@ -31957,6 +31967,52 @@
 
 	  render: function () {
 
+	    if (this.state.edibles === undefined) {
+	      return React.createElement('div', null);
+	    }
+
+	    var tableBody = this.state.edibles.map(function (edible) {
+	      return React.createElement(
+	        'tr',
+	        { className: 'item-detail-table-row', key: edible.name },
+	        React.createElement(
+	          'td',
+	          null,
+	          React.createElement('img', { src: edible.image_url, className: 'item-detail-image' })
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          edible.name
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          edible.category
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          edible.rating
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          edible.date_eaten
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          edible.created_at
+	        ),
+	        React.createElement(
+	          'td',
+	          null,
+	          'Edit Review'
+	        )
+	      );
+	    });
+
 	    return React.createElement(
 	      'table',
 	      { className: 'item-detail-table' },
@@ -31997,47 +32053,7 @@
 	            'Date Added'
 	          )
 	        ),
-	        this.state.edibles.map(function (edible) {
-	          return React.createElement(
-	            'tr',
-	            { className: 'item-detail-table-row', key: edible.name },
-	            React.createElement(
-	              'td',
-	              null,
-	              React.createElement('img', { src: edible.image_url, className: 'item-detail-image' })
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              edible.name
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              edible.category
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              edible.rating
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              edible.date_eaten
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              edible.created_at
-	            ),
-	            React.createElement(
-	              'td',
-	              null,
-	              'Edit Review'
-	            )
-	          );
-	        })
+	        tableBody
 	      )
 	    );
 	  }
