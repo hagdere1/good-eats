@@ -41,7 +41,6 @@ ApiUtil = {
         ApiActions.receiveAllListItems(listItems);
       },
       error: function () {
-        debugger
         console.log("Failed to fetch list items.");
       }
     });
@@ -68,14 +67,15 @@ ApiUtil = {
       }
     });
   },
-  fetchAllReviews: function (id) {
+  fetchAllReviews: function () {
     $.ajax({
-      url: "/api/edibles/" + id + "/reviews",
+      url: "/api/reviews/",
       success: function (reviews) {
         ApiActions.receiveAllReviews(reviews);
+        console.log("Successfully retrieved reviews");
       },
       error: function () {
-
+        console.log("Failed to retrieve reviews");
       }
     });
   }

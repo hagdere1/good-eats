@@ -46,7 +46,6 @@ var ItemsTable = React.createClass({
             <td><img src={edible.image_url} className="item-detail-image"/></td>
             <td><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
             <td>{edible.category}</td>
-            <td>{edible.rating}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
             <td>Edit Review</td>
