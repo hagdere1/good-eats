@@ -28,10 +28,6 @@ ListItemStore.find = function (id) {
   return _listItems[id];
 };
 
-ListItemStore.destroy = function (id) {
-  delete _listItems[id];
-};
-
 ListItemStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ListItemConstants.LIST_ITEMS_RECEIVED:
@@ -40,10 +36,6 @@ ListItemStore.__onDispatch = function (payload) {
       break;
     case ListItemConstants.LIST_ITEM_RECEIVED:
       this.resetListItem(payload.listItem);
-      ListItemStore.__emitChange();
-      break;
-    case ListItemConstants.LIST_ITEM_DESTROYED:
-      this.destroy(payload.listItem.id);
       ListItemStore.__emitChange();
       break;
   }

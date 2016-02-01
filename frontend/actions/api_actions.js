@@ -2,6 +2,7 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var EdibleConstants = require('../constants/edible_constants');
 var ListConstants = require('../constants/list_constants');
 var ListItemConstants = require('../constants/list_item_constants');
+var ReviewConstants = require('../constants/review_constants');
 
 var ApiActions = {
   receiveAllEdibles: function (edibles) {
@@ -37,12 +38,6 @@ var ApiActions = {
   receiveSingleListItem: function (listItem) {
     AppDispatcher.dispatch({
       actionType: ListItemConstants.LIST_ITEM_RECEIVED,
-      listItem: listItem
-    });
-  },
-  destroyListItem: function (listItem) {
-    AppDispatcher.dispatch({
-      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
       listItem: listItem
     });
   },
