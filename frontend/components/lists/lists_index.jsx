@@ -1,6 +1,6 @@
 var React = require('react');
 var ListStore = require('./../../stores/list');
-var ApiActions = require('./../../util/api_util');
+var ApiUtil = require('./../../util/api_util');
 var ListsIndexItem = require('./lists_index_item');
 var ItemDetail = require('./item_detail');
 
@@ -15,7 +15,7 @@ var ListsIndex = React.createClass({
 
   componentDidMount: function () {
     this.listListener = ListStore.addListener(this._onChange);
-    ApiActions.fetchAllLists();
+    ApiUtil.fetchAllLists();
   },
 
   componentWillUnmount: function () {
@@ -34,8 +34,6 @@ var ListsIndex = React.createClass({
               return <ListsIndexItem key={list.id} list={list} />;
             })}
           </ul>
-
-
 
         </div>
       </div>

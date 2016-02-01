@@ -1,17 +1,27 @@
 var React = require('react');
+var ApiUtil = require('../../util/api_util');
+var ListItemStore = require('../../stores/list_item');
 
 var ItemDetail = React.createClass({
-  getInitialState: function () {
-    return { edibles: ListItemStore.findByListId(parseInt(this.props.params.id)) };
+  getStateFromStore: function () {
+    return { edibles: ListItemStore.all() };
   },
 
   _onChange: function () {
-    this.setState({ edibles: ListItemStore.all() });
+    this.setState(this.getStateFromStore());
+  },
+
+  getInitialState: function () {
+    return this.getStateFromStore();
+  },
+
+  componentWillReceiveProps: function (newProps) {
+    ApiUtil.fetchAllListItems();
   },
 
   componentDidMount: function () {
     this.listItemListener = ListItemStore.addListener(this._onChange);
-    ApiActions.fetchAllListItems();
+    ApiUtil.fetchAllListItems();
   },
 
   componentWillUnmount: function () {
@@ -19,32 +29,38 @@ var ItemDetail = React.createClass({
   },
 
   render: function () {
-    var modifyEdibleLink;
-    if (this.props.edible.review.length > 0) {
-      modifyEdibleLink = <a href="#">Edit</a>;
-    }
-    else {
-      modifyEdibleLink = <a href="#">Review</a>;
-    }
 
-    var items = (
-      this.state.edibles.map(function (edible) {
-        return (
-          <ul>
-            <li>{this.props.edible.title}</li>
-            <li>{this.props.edible.rating}</li>
-            <li>{this.props.edible.date_eaten}</li>
-            <li>{this.props.edible.created_at}</li>
-            <li>{modifyEdibleLink}</li>
-          </ul>
-        );
-      })
-    );
+    if (this.state.edibles === undefined) {
+      return <div></div>;
+    }
 
     return (
-      <ul className="edible-item-attributes">
-        {items}
-      </ul>
+      <table className="item-detail-table">
+        <tbody className="item-detail-table-body">
+          <tr className="item-detail-table-headers">
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Rating</th>
+            <th>Date Eaten</th>
+            <th>Date Added</th>
+          </tr>
+
+          {this.state.edibles.map(function (edible) {
+            return (
+              <tr className="item-detail-table-row">
+                <td><img src={edible.image_url} className="item-detail-image"/></td>
+                <td>{edible.name}</td>
+                <td>{edible.category}</td>
+                <td>{edible.rating}</td>
+                <td>{edible.date_eaten}</td>
+                <td>{edible.created_at}</td>
+                <td>Edit Review</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     );
   }
 });
