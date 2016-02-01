@@ -30,7 +30,8 @@ ListItemStore.find = function (id) {
 
 ListItemStore.findByListId = function (listId) {
   var listItems = [];
-  _ListItems.keys.forEach(function (listItem) {
+  debugger
+  _listItems.keys.forEach(function (listItem) {
     if (listItem.list_id === listId) {
       listItems.push(listItem);
     }

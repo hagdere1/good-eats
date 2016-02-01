@@ -62,16 +62,17 @@
 	var EdiblesIndex = __webpack_require__(239);
 	var Edible = __webpack_require__(241);
 	var EdibleShow = __webpack_require__(242);
+	var ItemDetail = __webpack_require__(238);
 
 	var App = __webpack_require__(243);
 
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: EdiblesIndex }),
+	  React.createElement(IndexRoute, { component: ItemDetail }),
+	  React.createElement(Route, { path: 'lists/:id', component: ItemDetail }),
 	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
-	  React.createElement(Route, { path: 'edibles/:id', component: EdibleShow }),
-	  React.createElement(Route, { path: 'lists/:id', component: ListsIndex })
+	  React.createElement(Route, { path: 'edibles/:id', component: EdibleShow })
 	);
 
 	document.addEventListener("DOMContentLoaded", function () {
@@ -31184,7 +31185,8 @@
 
 	ListItemStore.findByListId = function (listId) {
 	  var listItems = [];
-	  _ListItems.keys.forEach(function (listItem) {
+	  debugger;
+	  _listItems.keys.forEach(function (listItem) {
 	    if (listItem.list_id === listId) {
 	      listItems.push(listItem);
 	    }
@@ -31258,17 +31260,21 @@
 	      }
 	    });
 	  },
-	  fetchAllListItems: function (id) {
+	  fetchAllListItems: function () {
 	    $.ajax({
 	      url: "api/list_items/",
 	      success: function (listItems) {
+	        console.log("Successfully fetched all list items!");
 	        ApiActions.receiveAllListItems(listItems);
+	      },
+	      error: function () {
+	        console.log("Failed to fetch list items.");
 	      }
 	    });
 	  },
 	  fetchSingleListItem: function (id) {
 	    $.ajax({
-	      url: "api/list_items/" + id,
+	      url: "api/list_item/" + id,
 	      success: function (listItem) {
 	        ApiActions.receiveSingleListItem(listItem);
 	      }
@@ -31360,7 +31366,7 @@
 
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(208);
-	var ApiActions = __webpack_require__(233);
+	var ApiUtil = __webpack_require__(233);
 	var ListsIndexItem = __webpack_require__(237);
 	var ItemDetail = __webpack_require__(238);
 
@@ -31377,7 +31383,7 @@
 
 	  componentDidMount: function () {
 	    this.listListener = ListStore.addListener(this._onChange);
-	    ApiActions.fetchAllLists();
+	    ApiUtil.fetchAllLists();
 	  },
 
 	  componentWillUnmount: function () {
@@ -31420,22 +31426,22 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiActions = __webpack_require__(234);
+	var History = __webpack_require__(159).History;
 
 	var ListsIndexItem = React.createClass({
 	  displayName: 'ListsIndexItem',
 
-	  render: function () {
-	    var url = "#/lists/" + this.props.list.id;
+	  mixins: [History],
 
+	  showDetail: function () {
+	    this.history.pushState(null, '/lists/' + this.props.list.id, {});
+	  },
+
+	  render: function () {
 	    return React.createElement(
 	      'li',
-	      null,
-	      React.createElement(
-	        'a',
-	        { href: url },
-	        this.props.list.title
-	      )
+	      { onClick: this.showDetail, className: 'lists-index-item' },
+	      this.props.list.title
 	    );
 	  }
 	});
@@ -31447,21 +31453,31 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(233);
+	var ListItemStore = __webpack_require__(231);
 
 	var ItemDetail = React.createClass({
-	  displayName: "ItemDetail",
+	  displayName: 'ItemDetail',
 
-	  getInitialState: function () {
-	    return { edibles: ListItemStore.findByListId(parseInt(this.props.params.id)) };
+	  getStateFromStore: function () {
+	    return { edibles: ListItemStore.all() };
 	  },
 
 	  _onChange: function () {
-	    this.setState({ edibles: ListItemStore.all() });
+	    this.setState(this.getStateFromStore());
+	  },
+
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.fetchAllListItems();
 	  },
 
 	  componentDidMount: function () {
 	    this.listItemListener = ListItemStore.addListener(this._onChange);
-	    ApiActions.fetchAllListItems();
+	    ApiUtil.fetchAllListItems();
 	  },
 
 	  componentWillUnmount: function () {
@@ -31469,57 +31485,93 @@
 	  },
 
 	  render: function () {
-	    var modifyEdibleLink;
-	    if (this.props.edible.review.length > 0) {
-	      modifyEdibleLink = React.createElement(
-	        "a",
-	        { href: "#" },
-	        "Edit"
-	      );
-	    } else {
-	      modifyEdibleLink = React.createElement(
-	        "a",
-	        { href: "#" },
-	        "Review"
-	      );
+
+	    if (this.state.edibles === undefined) {
+	      return React.createElement('div', null);
 	    }
 
-	    var items = this.state.edibles.map(function (edible) {
-	      return React.createElement(
-	        "ul",
-	        null,
-	        React.createElement(
-	          "li",
-	          null,
-	          this.props.edible.title
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          this.props.edible.rating
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          this.props.edible.date_eaten
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          this.props.edible.created_at
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          modifyEdibleLink
-	        )
-	      );
-	    });
-
 	    return React.createElement(
-	      "ul",
-	      { className: "edible-item-attributes" },
-	      items
+	      'table',
+	      { className: 'item-detail-table' },
+	      React.createElement(
+	        'tbody',
+	        { className: 'item-detail-table-body' },
+	        React.createElement(
+	          'tr',
+	          { className: 'item-detail-table-headers' },
+	          React.createElement(
+	            'th',
+	            null,
+	            'Image'
+	          ),
+	          React.createElement(
+	            'th',
+	            null,
+	            'Name'
+	          ),
+	          React.createElement(
+	            'th',
+	            null,
+	            'Category'
+	          ),
+	          React.createElement(
+	            'th',
+	            null,
+	            'Rating'
+	          ),
+	          React.createElement(
+	            'th',
+	            null,
+	            'Date Eaten'
+	          ),
+	          React.createElement(
+	            'th',
+	            null,
+	            'Date Added'
+	          )
+	        ),
+	        this.state.edibles.map(function (edible) {
+	          return React.createElement(
+	            'tr',
+	            { className: 'item-detail-table-row' },
+	            React.createElement(
+	              'td',
+	              null,
+	              React.createElement('img', { src: edible.image_url, className: 'item-detail-image' })
+	            ),
+	            React.createElement(
+	              'td',
+	              null,
+	              edible.name
+	            ),
+	            React.createElement(
+	              'td',
+	              null,
+	              edible.category
+	            ),
+	            React.createElement(
+	              'td',
+	              null,
+	              edible.rating
+	            ),
+	            React.createElement(
+	              'td',
+	              null,
+	              edible.date_eaten
+	            ),
+	            React.createElement(
+	              'td',
+	              null,
+	              edible.created_at
+	            ),
+	            React.createElement(
+	              'td',
+	              null,
+	              'Edit Review'
+	            )
+	          );
+	        })
+	      )
 	    );
 	  }
 	});

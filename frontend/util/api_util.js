@@ -33,17 +33,21 @@ ApiUtil = {
       }
     });
   },
-  fetchAllListItems: function (id) {
+  fetchAllListItems: function () {
     $.ajax({
       url: "api/list_items/",
       success: function (listItems) {
+        console.log("Successfully fetched all list items!");
         ApiActions.receiveAllListItems(listItems);
+      },
+      error: function () {
+        console.log("Failed to fetch list items.");
       }
     });
   },
   fetchSingleListItem: function (id) {
     $.ajax({
-      url: "api/list_items/" + id,
+      url: "api/list_item/" + id,
       success: function (listItem) {
         ApiActions.receiveSingleListItem(listItem);
       }
