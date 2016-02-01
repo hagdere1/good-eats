@@ -78,7 +78,7 @@ ApiUtil = {
         console.log("Failed to retrieve reviews");
       }
     });
-  }
+  },
 };
 
 

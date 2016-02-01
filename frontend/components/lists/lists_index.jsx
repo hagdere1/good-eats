@@ -24,11 +24,11 @@ var ListsIndex = React.createClass({
 
   render: function () {
     return (
-      <div className="lists-index">
+      <div className="lists-index group">
         <div className="lists-index-nav">
           <h1 className="heading-main">My Edibles</h1>
           <h2 className="heading-sub-main">Lists</h2>
-          <div className="lists-content group">
+          <div className="lists-content">
             <ul className="lists-index">
               {this.state.lists.map(function (list) {
                 return <ListsIndexItem key={list.id} list={list} />;

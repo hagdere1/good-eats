@@ -1,11 +1,12 @@
 var React = require('react');
 var EdibleStore = require('./../../stores/edible');
+var ListStore = require('./../../stores/list');
 var ApiUtil = require('./../../util/api_util');
 
 var EdibleShow = React.createClass({
   getInitialState: function () {
     return {edible: EdibleStore.find(parseInt(this.props.params.id)),
-            buttonClicked: false};
+            lists: ListStore.all()};
   },
 
   addToList: function (event) {
@@ -17,12 +18,15 @@ var EdibleShow = React.createClass({
   },
 
   _onChange: function () {
-    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
+    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)),
+                    lists: ListStore.all()});
   },
 
   componentDidMount: function () {
     this.edibleListener = EdibleStore.addListener(this._onChange);
     ApiUtil.fetchSingleEdible(this.props.params.id);
+    ApiUtil.fetchAllLists();
+
   },
 
   componentWillUnmount: function () {
@@ -30,6 +34,16 @@ var EdibleShow = React.createClass({
   },
 
   render: function () {
+    var lists;
+
+    if (this.state.lists) {
+      lists = (
+        this.state.lists.map(function(list) {
+          return <li>{list.title}</li>;
+        }.bind(this))
+      );
+    }
+
     var edibleImage,
         edibleName,
         edibleCategory,
@@ -46,7 +60,11 @@ var EdibleShow = React.createClass({
 
         <div className="edible-image">
           {edibleImage}
-          <button className="edible-show-button" onClick={this.addToList}>Want to Try</button>
+          <div className="edible-show-buttons group">
+            <button className="edible-show-button" onClick={this.addToList}>Want to Try</button>
+            <button className="edible-show-button-select-list">&#9660;</button>
+          </div>
+          <ul>{lists}</ul>
         </div>
 
         <div className="edible-show-info">
