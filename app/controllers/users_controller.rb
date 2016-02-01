@@ -8,6 +8,8 @@ class UsersController < ApplicationController
 
     if @user.save
       login_user(@user)
+      List.create!(title: "Want to Try", user_id: current_user.id, can_delete: false)
+      List.create!(title: "Eaten", user_id: current_user.id, can_delete: false)
       redirect_to root_url
     else
       render :new
