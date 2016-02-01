@@ -1,10 +1,12 @@
 var React = require('react');
 var EdibleStore = require('./../../stores/edible');
 var ApiUtil = require('./../../util/api_util');
+var ReviewIndex = require('../reviews/review_index');
 
 var EdibleShow = React.createClass({
   getInitialState: function () {
-    return {edible: EdibleStore.find(parseInt(this.props.params.id))};
+    return {edible: EdibleStore.find(parseInt(this.props.params.id)),
+            buttonClicked: false};
   },
 
   addToList: function (event) {
@@ -29,17 +31,24 @@ var EdibleShow = React.createClass({
   },
 
   render: function () {
+
     return (
       <div className="edible-details group">
+
         <div className="edible-image">
           <img className="edible-show-image" src={this.state.edible.image_url} />
           <button className="edible-show-button" onClick={this.addToList}>Want to Try</button>
         </div>
+
         <div className="edible-show-info">
           <h1 className="edible-show-name">{this.state.edible.name}</h1>
           <h2 className="edible-show-category">{this.state.edible.category}</h2>
           <p className="edible-show-description">{this.state.edible.description}</p>
         </div>
+
+        <section className="edible-reviews">
+          <ReviewIndex edible={edible} />
+        </section>
       </div>
     );
   }

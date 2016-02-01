@@ -45,6 +45,12 @@ var ApiActions = {
       actionType: ListItemConstants.LIST_ITEM_DESTROYED,
       listItem: listItem
     });
+  },
+  receiveAllReviews: function (reviews) {
+    AppDispatcher.dispatch({
+      actionType: ReviewConstants.REVIEWS_RECEIVED,
+      reviews: reviews
+    });
   }
 };
 
