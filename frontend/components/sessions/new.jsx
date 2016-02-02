@@ -18,22 +18,30 @@ var SessionForm = React.createClass({
   render: function() {
 
     return (
-      <form onSubmit={ this.submit }>
+      <div>
+        <form onSubmit={ this.submit }>
 
-        <h1>Sign in</h1>
+          <h1>Sign in</h1>
 
-        <label>
-          Email
-          <input type="text" name="email" />
-        </label>
+          <label>
+            Email
+            <input type="text" name="email" />
+          </label>
 
-        <label>
-          Password
-          <input type="password" name="password" />
-        </label>
+          <label>
+            Password
+            <input type="password" name="password" />
+          </label>
 
-        <button>Sign in</button>
-      </form>
+          <button>Sign in</button>
+        </form>
+
+        <form onSubmit={ this.submit }>
+          <input type="hidden" name="email" value="harry@aol.com" />
+          <input type="hidden" name="password" value="123456" />
+          <button>Sign in as Guest</button>
+        </form>
+      </div>
     );
   },
 
