@@ -49,11 +49,12 @@
 
 .list-items-table {
   display: block;
+  margin-top: 20px;
   padding-top: 10px;
   padding-left: 10px;
   border-left: 1px solid #EBE8D5;
   float: right;
-  width: 720px;
+  width: 753px;
   height: 900px;
 }
 
@@ -85,6 +86,7 @@
 
 .item-detail-table-body {
   padding-top: 5px;
+    border-bottom: 2px solid black;
 }
 
 .item-detail-table-row {
@@ -106,6 +108,7 @@
 
 .item-heading-image {
   width: 110px;
+  padding-left: 5px;
 }
 
 .item-heading-name {
