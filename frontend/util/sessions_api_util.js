@@ -35,7 +35,7 @@ var SessionsApiUtil = {
         cb && cb(currentUser);
       },
       error: function () {
-        debugger
+        console.log("Failed to get session");
       }
     });
   }

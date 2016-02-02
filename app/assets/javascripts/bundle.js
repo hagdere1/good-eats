@@ -77,7 +77,7 @@
 	//Delete one ensureLoggedIn
 	var routes = React.createElement(
 	  Route,
-	  { path: '/', component: App, onEnter: _ensureLoggedIn },
+	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: UsersIndex, onEnter: _ensureLoggedIn }),
 	  React.createElement(Route, { path: 'login', component: SessionForm }),
 	  React.createElement(Route, { path: 'users/new', component: UserForm }),
@@ -32234,7 +32234,7 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { href: '/' },
+	                { href: '#/edibles' },
 	                'Explore'
 	              )
 	            ),
@@ -32501,7 +32501,7 @@
 	        cb && cb(currentUser);
 	      },
 	      error: function () {
-	        debugger;
+	        console.log("Failed to get session");
 	      }
 	    });
 	  }
