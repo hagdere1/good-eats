@@ -32866,7 +32866,7 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { href: '#/lists/1' },
+	                { href: '#/lists/' },
 	                'My Lists'
 	              )
 	            ),
