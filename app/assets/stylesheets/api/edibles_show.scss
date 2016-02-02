@@ -59,11 +59,40 @@
   margin-top: 5px;
   border-radius-top-right: 3px;
   border-radius-bottom-right: 3px;
+  position: relative;
 }
 
 .edible-show-button-select-list:hover {
   background-color: #008000;
   cursor: pointer;
+}
+
+.edible-select-list {
+  display: none;
+  position: absolute;
+  left: -1px;
+  font-size: 14px;
+  white-space: nowrap;
+  background: #fff;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+}
+
+button:hover .edible-select-list {
+  display: block;
+}
+
+.edible-select-list > li {
+  border-top: 1px solid #ccc;
+  color: #000;
+}
+
+.edible-select-list > li:hover {
+  background: #eee;
 }
 
 .edible-show-info {

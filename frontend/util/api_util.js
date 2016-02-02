@@ -39,6 +39,7 @@ ApiUtil = {
       url: "api/list_items/",
       success: function (listItems) {
         ApiActions.receiveAllListItems(listItems);
+        console.log("Successfully fetched all lists!");
       },
       error: function () {
         console.log("Failed to fetch list items.");
@@ -53,30 +54,31 @@ ApiUtil = {
       }
     });
   },
-  createListItem: function (listItem) {
+  createListItem: function (listItem, cb) {
     $.ajax({
       url: "api/list_items/",
       method: "POST",
       data: {list_item: listItem},
       success: function (listItemData) {
         ApiActions.receiveSingleListItem(listItemData);
-        alert("List Item created! Great success!");
+        cb && cb();
       },
       error: function () {
-        alert("You've already added that item.");
+        console.log("Failed to create list item");
       }
     });
   },
-  destroyListItem: function (id) {
+  destroyListItem: function (id, cb) {
     $.ajax({
       url: "api/list_items/" + id,
       method: "DELETE",
       success: function () {
         ApiActions.destroyListItem(id);
         console.log("Deleted list item!");
+        cb && cb();
       },
       error: function () {
-        alert("Failed to delete item.");
+        console.log("Failed to delete list item");
       }
     });
   },

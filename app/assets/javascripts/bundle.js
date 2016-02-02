@@ -31299,6 +31299,7 @@
 	      url: "api/list_items/",
 	      success: function (listItems) {
 	        ApiActions.receiveAllListItems(listItems);
+	        console.log("Successfully fetched all lists!");
 	      },
 	      error: function () {
 	        console.log("Failed to fetch list items.");
@@ -31313,30 +31314,31 @@
 	      }
 	    });
 	  },
-	  createListItem: function (listItem) {
+	  createListItem: function (listItem, cb) {
 	    $.ajax({
 	      url: "api/list_items/",
 	      method: "POST",
 	      data: { list_item: listItem },
 	      success: function (listItemData) {
 	        ApiActions.receiveSingleListItem(listItemData);
-	        alert("List Item created! Great success!");
+	        cb && cb();
 	      },
 	      error: function () {
-	        alert("You've already added that item.");
+	        console.log("Failed to create list item");
 	      }
 	    });
 	  },
-	  destroyListItem: function (id) {
+	  destroyListItem: function (id, cb) {
 	    $.ajax({
 	      url: "api/list_items/" + id,
 	      method: "DELETE",
 	      success: function () {
 	        ApiActions.destroyListItem(id);
 	        console.log("Deleted list item!");
+	        cb && cb();
 	      },
 	      error: function () {
-	        alert("Failed to delete item.");
+	        console.log("Failed to delete list item");
 	      }
 	    });
 	  },
@@ -31893,38 +31895,96 @@
 
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(242);
-	var ListStore = __webpack_require__(208);
 	var ApiUtil = __webpack_require__(233);
+	var CurrentUserStore = __webpack_require__(258);
+	var ListItemStore = __webpack_require__(231);
+	var SessionsApiUtil = __webpack_require__(254);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
 
 	  getInitialState: function () {
-	    return { edible: EdibleStore.find(parseInt(this.props.params.id)),
-	      lists: ListStore.all() };
+	    return this.getInitialValues();
 	  },
 
-	  addToList: function (event) {
+	  getInitialValues: function (edible, currentUser) {
+
+	    // this.edible = edible || this.edible
+	    // this.currentUser = currentUser || this.currentUser
+
+	    this.edible = EdibleStore.find(parseInt(this.props.params.id));
+	    this.currentUser = CurrentUserStore.currentUser();
+	    var currentList;
+	    var currentListItem;
+	    var userItems = this.currentUser.list_items;
+	    var userHasListItem = false;
+	    var inList = false;
+
+	    for (i = 0; i < userItems.length; i++) {
+	      if (userItems[i].edible_id == this.props.params.id) {
+	        userHasListItem = true;
+	        currentList = userItems[i].list;
+	        currentListItem = userItems[i];
+	      }
+	    }
+
+	    if (!userHasListItem) {
+	      currentList = this.currentUser.lists[0];
+	      currentListItem = null;
+	    }
+
+	    return { edible: this.edible,
+	      lists: this.currentUser.lists,
+	      currentList: currentList,
+	      currentListItem: currentListItem,
+	      loading: false,
+	      userHasListItem: userHasListItem };
+	  },
+
+	  addToListOrDestroy: function (event) {
 	    event.preventDefault();
 	    var listItem = {};
-	    listItem.list_id = 4;
-	    listItem.edible_id = parseInt(this.props.params.id);
+
+	    if (!this.state.userHasListItem) {
+	      listItem.list_id = this.state.currentList.id;
+	      listItem.edible_id = parseInt(this.props.params.id);
+	      ApiUtil.createListItem(listItem, this.setState({ userHasListItem: true }));
+	    } else {
+	      ApiUtil.destroyListItem(this.state.currentListItem.id, this.setState({ userHasListItem: false }));
+	    }
+	  },
+
+	  handleChooseList: function (event) {
+	    var listItem = {};
+
+	    listItem.list_id = event.currentTarget.list.id;
+	    listItem.edible_id = this.props.params.id;
 	    ApiUtil.createListItem(listItem);
+
+	    this.setState({ loading: true });
 	  },
 
 	  _onChange: function () {
-	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)),
-	      lists: ListStore.all() });
+	    var state = this.getInitialValues();
+	    this.setState(state);
+	  },
+
+	  _onCurrentUserChange: function () {
+	    var state = this.getInitialValues();
+	    this.setState(state);
 	  },
 
 	  componentDidMount: function () {
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
 	    ApiUtil.fetchAllLists();
+	    SessionsApiUtil.fetchCurrentUser();
 	  },
 
 	  componentWillUnmount: function () {
 	    this.edibleListener.remove();
+	    this.currentUserListener.remove();
 	  },
 
 	  render: function () {
@@ -31934,7 +31994,7 @@
 	      lists = this.state.lists.map(function (list) {
 	        return React.createElement(
 	          'li',
-	          null,
+	          { onClick: this.handleChooseList, list: list, key: list.id },
 	          list.title
 	        );
 	      }.bind(this));
@@ -31960,6 +32020,22 @@
 	        this.state.edible.description
 	      );
 	    }
+
+	    var edibleShowButton;
+	    if (this.state.loading) {
+	      edibleShowButton = React.createElement(
+	        'button',
+	        null,
+	        'Saving...'
+	      );
+	    } else {
+	      edibleShowButton = React.createElement(
+	        'button',
+	        { className: 'edible-show-button', onClick: this.addToListOrDestroy },
+	        this.state.userHasListItem ? "Remove" : "Add"
+	      );
+	    }
+
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-show' },
@@ -31973,11 +32049,7 @@
 	          React.createElement(
 	            'div',
 	            { className: 'edible-show-buttons group' },
-	            React.createElement(
-	              'button',
-	              { className: 'edible-show-button', onClick: this.addToList },
-	              'Want to Try'
-	            ),
+	            edibleShowButton,
 	            React.createElement(
 	              'button',
 	              { className: 'edible-show-button-select-list' },
@@ -31986,7 +32058,7 @@
 	          ),
 	          React.createElement(
 	            'ul',
-	            null,
+	            { className: 'edible-select-list' },
 	            lists
 	          )
 	        ),
@@ -32701,7 +32773,7 @@
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'wrapper' },
 	      React.createElement(Header, null),
 	      React.createElement(
 	        'div',
