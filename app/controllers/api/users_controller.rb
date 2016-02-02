@@ -5,6 +5,18 @@ class Api::UsersController < ApplicationController
     render :index
   end
 
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      sign_in!(@user)
+      List.create!(title: "Want to Try", user_id: current_user.id, can_delete: false)
+      List.create!(title: "Eaten", user_id: current_user.id, can_delete: false)
+      render :show
+    else
+      render json: "Login failed."
+    end
+  end
+
   def show
     @user = User.find(params[:id])
     render :show

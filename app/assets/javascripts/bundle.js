@@ -31962,41 +31962,50 @@
 	    }
 	    return React.createElement(
 	      'div',
-	      { className: 'edible-details group' },
+	      { className: 'edible-show' },
 	      React.createElement(
 	        'div',
-	        { className: 'edible-image' },
-	        edibleImage,
+	        { className: 'edible-details group' },
 	        React.createElement(
 	          'div',
-	          { className: 'edible-show-buttons group' },
+	          { className: 'edible-image' },
+	          edibleImage,
 	          React.createElement(
-	            'button',
-	            { className: 'edible-show-button', onClick: this.addToList },
-	            'Want to Try'
+	            'div',
+	            { className: 'edible-show-buttons group' },
+	            React.createElement(
+	              'button',
+	              { className: 'edible-show-button', onClick: this.addToList },
+	              'Want to Try'
+	            ),
+	            React.createElement(
+	              'button',
+	              { className: 'edible-show-button-select-list' },
+	              '▼'
+	            )
 	          ),
 	          React.createElement(
-	            'button',
-	            { className: 'edible-show-button-select-list' },
-	            '▼'
+	            'ul',
+	            null,
+	            lists
 	          )
 	        ),
 	        React.createElement(
-	          'ul',
-	          null,
-	          lists
+	          'div',
+	          { className: 'edible-show-info' },
+	          edibleName,
+	          edibleCategory,
+	          edibleDescription
 	        )
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'edible-show-info' },
-	        edibleName,
-	        edibleCategory,
-	        edibleDescription
-	      ),
-	      React.createElement(
-	        'div',
 	        { className: 'edible-reviews' },
+	        React.createElement(
+	          'p',
+	          { className: 'reviews-heading' },
+	          'Community Reviews'
+	        ),
 	        this.props.children
 	      )
 	    );
@@ -32057,31 +32066,39 @@
 	    var reviews = this.state.reviews.map(function (review) {
 	      return React.createElement(
 	        'article',
-	        { key: review.id },
+	        { key: review.id, className: 'review' },
 	        React.createElement(
-	          'p',
-	          null,
-	          review.title
+	          'div',
+	          { className: 'review-name-date group' },
+	          React.createElement(
+	            'p',
+	            { className: 'review-name' },
+	            review.user,
+	            ':'
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'review-date' },
+	            review.created_at
+	          )
 	        ),
 	        React.createElement(
-	          'p',
+	          'div',
 	          null,
-	          review.user
+	          React.createElement(
+	            'p',
+	            { className: 'review-title' },
+	            review.title
+	          )
 	        ),
 	        React.createElement(
-	          'p',
+	          'div',
 	          null,
-	          review.created_at
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          review.body
-	        ),
-	        React.createElement(
-	          'button',
-	          { onClick: this.updateReview },
-	          'Update'
+	          React.createElement(
+	            'p',
+	            { className: 'review-body' },
+	            review.body
+	          )
 	        )
 	      );
 	    });

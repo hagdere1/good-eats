@@ -76,6 +76,30 @@ ceviche = Edible.create!({name: "Ceviche",
                           category: "Latin American",
                           image_url: "/assets/edible_thumbs/ceviche.jpg"})
 
+bagel_with_lox = Edible.create!({name: "Bagel with Cream Cheese and Lox",
+                                description: "Bagel with Cream Cheese and Lox is the combination of a bagel, cream cheese, and lox. Lox is a fillet of brined salmon. Traditionally, lox is served on a bagel with cream cheese, and is usually garnished with tomato, sliced red onion, and sometimes capers. The American English word lox is derived from the Yiddish word for salmon, laks (cf. German Lachs), which ultimately derives from the Indo-European word for salmon, *laks-. The word lox has cognates in numerous Indo-European languages. For example, cured salmon in Scotland and Scandinavian countries is known by different versions of the name Gravlax or gravad laks.",
+                                category: "Breakfast",
+                                image_url: "/assets/edible_thumbs/bagel-with-cream-cheese-and-lox.jpg"})
+
+gummy_bears = Edible.create!({name: "Gummy Bears",
+                              description: "A gummy bear (German: Gummibär) is a small, fruit gum candy, similar to a jelly baby in some English-speaking countries. The candy is roughly 2 cm (0.8 in) long and shaped in the form of a bear. The gummy bear is one of many gummies, popular gelatin-based candies sold in a variety of shapes and colors. The success of gummi bears has spawned the production of many other gummy candies that look like animals and other objects: rings, worms, frogs, snakes, hamburgers, cherries, sharks, penguins, hippos, lobsters, octopuses, apples, peaches, oranges, and even Ampelmännchen, Smurfs, and spiders. Manufacturers offer sizes from the standard candy size, and smaller, to bears that weigh several kilograms.",
+                              category: "Candy",
+                              image_url: "/assets/edible_thumbs/gummy_bears.png"})
+
+shrimp_scampi = Edible.create!({name: "Scampi (assorted preparations)",
+                                description: "Scampi includes various culinary preparations of certain crustaceans, commonly Nephrops norvegicus (the Norway lobster, also known as ‘Langoustine’ or ‘Dublin Bay Prawns’ and sometimes itself called ‘scampi’), or a similar lobster such as Metanephrops, as well as shrimp or prawns. Scampi preparation styles vary regionally. While the United Kingdom legally defines scampi specifically as Nephrops norvegicus, other similar lobsters are considered scampi worldwide. Monkfish tail was sometimes illegally used and sold as scampi in the United Kingdom in the past contravening the Fish Labelling (Amendment) England Regulation 2005 and Schedule 1 of the Food Labelling Regulations 1996.",
+                                category: "Dinner",
+                                image_url: "/assets/edible_thumbs/shrimp_scampi.jpg"})
+
+kimchi = Edible.create!({name: "Kimchi",
+                        description: "Kimchi, also spelled kimchee or gimchi, is a traditional fermented Korean side dish made of vegetables with a variety of seasonings. In traditional preparation, kimchi was stored underground in jars to keep cool during the summer months and unfrozen during the winter months. There are hundreds of varieties of kimchi made from napa cabbage, radish, scallion, or cucumber as a main ingredient. ",
+                        category: "Asian",
+                        image_url: "/assets/edible_thumbs/kimchi.jpg"})
+
+southern_fried_chicken = Edible.create!({name: "Southern Fried Chicken",
+                                        description: "Fried chicken (also referred to as Southern fried chicken) is a dish consisting of chicken pieces usually from broiler chickens which have been floured or battered and then pan-fried, deep fried, or pressure fried. The breading adds a crisp coating or crust to the exterior. What separates fried chicken from other fried forms of chicken is that generally the chicken is cut at the joints and the bones and skin are left intact. Crisp well-seasoned skin, rendered of excess fat, is a hallmark of well made fried chicken.",
+                                        category: "Soul Food",
+                                        image_url: "/assets/edible_thumbs/southern_fried_chicken.jpg"})
 
 # Users
 gregory = User.create!({email: "greg@aol.com", name: "Gregory", password_digest: "$2a$10$9CRgBAUVOF2OeytcYz15l.L2zErx7SOBjIwaq7jJJyT1lTggik.4u", session_token: "tUs_0hhW5-xfMQVWTXPoFg"})
@@ -98,5 +122,8 @@ want_to_try2 = List.create!({title: "Want to Try", user_id: harry.id, can_delete
 eat_in_new_orleans = List.create!({title: "Eat in New Orleans", user_id: harry.id, can_delete: true})
 
 
+# Gregory's reviews
+pizza_review_2 = Review.create!(user_id: gregory.id, edible_id: pizza.id, title: "Heaven is a place on earth", body: "What part of heaven did this fall from? This cheesy, saucy, rich food is something the likes of which I have never had the pleasure of putting into my mouth hole. I will never look at anything the same way again!")
+
 # Harry's reviews
-pizza = Review.create!(user_id: harry.id, edible_id: pizza.id, title: "Just tried pizza...", body: "I just had pizza last night for my 21st. It was okay, but a little too cheesy for my taste.")
+pizza_review_1 = Review.create!(user_id: harry.id, edible_id: pizza.id, title: "Not what I expected...", body: "My brother and I, when we were small, we would listen to a BBC Radio program every morning called 'Children's Choice.' And they played records suitable for kids to listen to. My brother and I listened to this seriously — we learned all the lyrics to all the songs, and we sang along. And one of them was a Dean Martin hit called 'Amore.' And the song began, 'When the moon hits your eye like a big pizza pie.' Well, my brother and I had never seen a pizza, didn't know what a pizza was; we had never heard the word before, so it made no sense to us. So I thought that what Dean Martin was actually singing was 'When the moon hits your eye like a big piece of pie.' So for years, whenever I was singing along, I would sing those words, until one day somebody said, 'What are you singing?' And I said, 'A big piece of pie.' And he said, 'Idiot, it's pizza pie.' Because I was actually in my twenties before I saw a pizza. I know that will sound bizarre to you, but I grew up in a small community in northern England.")
