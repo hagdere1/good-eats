@@ -81,17 +81,17 @@
 	  React.createElement(IndexRoute, { component: UsersIndex, onEnter: _ensureLoggedIn }),
 	  React.createElement(Route, { path: 'login', component: SessionForm }),
 	  React.createElement(Route, { path: 'users/new', component: UserForm }),
-	  React.createElement(Route, { path: 'users/:id', componet: UserShow }),
-	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
+	  React.createElement(Route, { path: 'users/:id', componet: UserShow, onEnter: _ensureLoggedIn }),
+	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex, onEnter: _ensureLoggedIn }),
 	  React.createElement(
 	    Route,
-	    { path: 'edibles/:id', component: EdibleShow },
-	    React.createElement(IndexRoute, { component: ReviewIndex })
+	    { path: 'edibles/:id', component: EdibleShow, onEnter: _ensureLoggedIn },
+	    React.createElement(IndexRoute, { component: ReviewIndex, onEnter: _ensureLoggedIn })
 	  ),
 	  React.createElement(
 	    Route,
-	    { path: 'lists', component: ListsIndex },
-	    React.createElement(Route, { path: ':id', component: ListShow })
+	    { path: 'lists', component: ListsIndex, onEnter: _ensureLoggedIn },
+	    React.createElement(Route, { path: ':id', component: ListShow, onEnter: _ensureLoggedIn })
 	  )
 	);
 
@@ -32183,6 +32183,7 @@
 
 	var React = __webpack_require__(1);
 	var CurrentUserStore = __webpack_require__(254);
+	var SessionsApiUtil = __webpack_require__(251);
 
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -32201,7 +32202,10 @@
 	    this.setState({ currentUser: CurrentUserStore.currentUser() });
 	  },
 
-	  logout: function () {},
+	  logout: function (e) {
+	    e.preventDefault();
+	    SessionsApiUtil.logout();
+	  },
 
 	  render: function () {
 	    if (CurrentUserStore.isLoggedIn()) {
@@ -32888,7 +32892,7 @@
 	      React.createElement(
 	        'h1',
 	        { className: 'title' },
-	        'Users'
+	        'Recent Activity'
 	      ),
 	      React.createElement(
 	        'ul',

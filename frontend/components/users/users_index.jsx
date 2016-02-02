@@ -29,7 +29,7 @@ var UsersIndex = React.createClass({
 
     return (
       <div>
-        <h1 className="title">Users</h1>
+        <h1 className="title">Recent Activity</h1>
 
         <ul className="users-index">{ users }</ul>
       </div>
