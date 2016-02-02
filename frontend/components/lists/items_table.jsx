@@ -42,8 +42,28 @@ var ItemsTable = React.createClass({
   },
 
   render: function () {
+    var header = (
+      <thead className="item-detail-table-head">
+        <tr className="item-detail-table-headers-row">
+          <th className="item-heading-image">image</th>
+          <th className="item-heading-name">name</th>
+          <th className="item-heading-category">category</th>
+          <th className="item-heading-date-eaten">date eaten</th>
+          <th className="item-heading-date-added">date added</th>
+          <th className="item-heading-options"></th>
+        </tr>
+      </thead>
+    );
 
-    if (this.state.edibles === undefined) { return <div></div>; }
+    if (this.state.edibles === undefined) {
+      return (
+        <table className="item-detail-table">
+          {header}
+          <tbody className="item-detail-table-body group">
+          </tbody>
+        </table>
+      );
+    }
 
     var tableBody = (
       this.state.edibles.map(function (edible) {
@@ -64,16 +84,7 @@ var ItemsTable = React.createClass({
     return (
 
       <table className="item-detail-table">
-        <thead className="item-detail-table-head">
-          <tr className="item-detail-table-headers-row">
-            <th className="item-heading-image">image</th>
-            <th className="item-heading-name">name</th>
-            <th className="item-heading-category">category</th>
-            <th className="item-heading-date-eaten">date eaten</th>
-            <th className="item-heading-date-added">date added</th>
-            <th className="item-heading-options"></th>
-          </tr>
-        </thead>
+        {header}
 
         <tbody className="item-detail-table-body group">
           {tableBody}

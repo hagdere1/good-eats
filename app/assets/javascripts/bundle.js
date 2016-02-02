@@ -31628,9 +31628,48 @@
 	  },
 
 	  render: function () {
+	    var header = React.createElement(
+	      'thead',
+	      { className: 'item-detail-table-head' },
+	      React.createElement(
+	        'tr',
+	        { className: 'item-detail-table-headers-row' },
+	        React.createElement(
+	          'th',
+	          { className: 'item-heading-image' },
+	          'image'
+	        ),
+	        React.createElement(
+	          'th',
+	          { className: 'item-heading-name' },
+	          'name'
+	        ),
+	        React.createElement(
+	          'th',
+	          { className: 'item-heading-category' },
+	          'category'
+	        ),
+	        React.createElement(
+	          'th',
+	          { className: 'item-heading-date-eaten' },
+	          'date eaten'
+	        ),
+	        React.createElement(
+	          'th',
+	          { className: 'item-heading-date-added' },
+	          'date added'
+	        ),
+	        React.createElement('th', { className: 'item-heading-options' })
+	      )
+	    );
 
 	    if (this.state.edibles === undefined) {
-	      return React.createElement('div', null);
+	      return React.createElement(
+	        'table',
+	        { className: 'item-detail-table' },
+	        header,
+	        React.createElement('tbody', { className: 'item-detail-table-body group' })
+	      );
 	    }
 
 	    var tableBody = this.state.edibles.map(function (edible) {
@@ -31688,40 +31727,7 @@
 	    return React.createElement(
 	      'table',
 	      { className: 'item-detail-table' },
-	      React.createElement(
-	        'thead',
-	        { className: 'item-detail-table-head' },
-	        React.createElement(
-	          'tr',
-	          { className: 'item-detail-table-headers-row' },
-	          React.createElement(
-	            'th',
-	            { className: 'item-heading-image' },
-	            'image'
-	          ),
-	          React.createElement(
-	            'th',
-	            { className: 'item-heading-name' },
-	            'name'
-	          ),
-	          React.createElement(
-	            'th',
-	            { className: 'item-heading-category' },
-	            'category'
-	          ),
-	          React.createElement(
-	            'th',
-	            { className: 'item-heading-date-eaten' },
-	            'date eaten'
-	          ),
-	          React.createElement(
-	            'th',
-	            { className: 'item-heading-date-added' },
-	            'date added'
-	          ),
-	          React.createElement('th', { className: 'item-heading-options' })
-	        )
-	      ),
+	      header,
 	      React.createElement(
 	        'tbody',
 	        { className: 'item-detail-table-body group' },
@@ -31777,7 +31783,7 @@
 	      ),
 	      React.createElement(
 	        'ul',
-	        { className: 'edibles-index-items' },
+	        { className: 'edibles-index-items group' },
 	        indexItems
 	      )
 	    );
@@ -31863,8 +31869,12 @@
 	      React.createElement(
 	        'a',
 	        { href: url },
-	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url }),
-	        this.props.edible.name
+	        React.createElement(
+	          'p',
+	          null,
+	          this.props.edible.name
+	        ),
+	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url })
 	      ),
 	      React.createElement(
 	        'button',
