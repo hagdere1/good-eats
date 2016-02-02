@@ -2,11 +2,19 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.lists-index {
+  font-family: "Lato", Helvetica, Arial, sans-serif;
+}
+
 .heading-main {
+  display: block;
   font-weight: bold;
   font-size: 24px;
-  margin-bottom: 5px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #EBE8D5;
   padding-top: 15px;
+  font-family: georgia;
+  color: #00635d;
 }
 
 .heading-main:hover {
@@ -14,7 +22,7 @@
 }
 
 .heading-sub-main {
-  font-color: gray;
+  font-color: red;
   font-size: 18px;
 }
 
@@ -23,27 +31,24 @@
   height: 300px;
 }
 
-.list-main {
-  display: block;
-  width: 500px;
-  height: 200px;
-  border: 1px solid black;
-  float: right;
-}
-
 .lists-index-nav {
   float: left;
   width: 200px;
+  color: #00635d;
 }
 
 .list-items-table {
+  display: block;
+  margin-top: 10px;
+  border-left: 1px solid #EBE8D5;
   float: right;
-  width: 750px;
+  width: 760px;
+  height: 900px;
 }
 
 .item-detail-image {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }
 
 .heading-add-list {
@@ -51,5 +56,58 @@
 }
 
 .add-list-form {
-  
+
+}
+
+.item-detail-table {
+  width: 100%;
+}
+
+.item-detail-table-body {
+
+}
+
+.item-detail-table-row {
+  color: #00635d;
+}
+
+.item-detail-table-row a {
+  text-decoration: none;
+}
+
+.item-detail-table-headers {
+  border-bottom: 2px solid #EBE8D5;
+  font-size: 14px;
+  text-align: left;
+  vertical-align: top;
+  color: black;
+}
+
+.item-detail-table-row td {
+  padding: 5px;
+  font-size: 14px;
+}
+
+.item-heading-image {
+  width: 110px;
+}
+
+.item-heading-name {
+  width: 140px;
+}
+
+.item-heading-category {
+  width: 150px;
+}
+
+.item-heading-rating {
+  width: 55px;
+}
+
+.item-heading-date-added {
+  width: 110px;
+}
+
+.item-heading-date-eaten {
+  width: 110px;
 }
