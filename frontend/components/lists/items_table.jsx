@@ -15,7 +15,7 @@ var ItemsTable = React.createClass({
         listItems.push(listItem);
       }
     }.bind(this));
-    return { edibles: listItems };
+    return { edibles: listItems};
   },
 
   _onChange: function () {
@@ -35,24 +35,31 @@ var ItemsTable = React.createClass({
     this.listItemListener.remove();
   },
 
+  destroyListItem: function (event) {
+
+    event.preventDefault();
+    ApiUtil.destroyListItem(event.currentTarget.id);
+  },
+
   render: function () {
 
     if (this.state.edibles === undefined) { return <div></div>; }
 
     var tableBody = (
       this.state.edibles.map(function (edible) {
+
         return (
-          <tr className="item-detail-table-row" key={edible.name}>
+          <tr className="item-detail-table-row" key={edible.id}>
             <td><img src={edible.image_url} className="item-detail-image"/></td>
             <td><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
             <td>{edible.category}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
-            <td>Edit Review</td>
-            <td><button>Delete</button></td>
+            <td>Review</td>
+            <td><button id={edible.id} onClick={this.destroyListItem}>Delete</button></td>
           </tr>
         );
-      })
+      }, this)
     );
 
     return (

@@ -41,12 +41,18 @@ var ApiActions = {
       listItem: listItem
     });
   },
+  destroyListItem: function (id) {
+    AppDispatcher.dispatch({
+      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
+      listItemId: id
+    });
+  },
   receiveAllReviews: function (reviews) {
     AppDispatcher.dispatch({
       actionType: ReviewConstants.REVIEWS_RECEIVED,
       reviews: reviews
     });
-  }
+  },
 };
 
 module.exports = ApiActions;

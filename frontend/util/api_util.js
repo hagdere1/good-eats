@@ -67,6 +67,19 @@ ApiUtil = {
       }
     });
   },
+  destroyListItem: function (id) {
+    $.ajax({
+      url: "api/list_items/" + id,
+      method: "DELETE",
+      success: function () {
+        ApiActions.destroyListItem(id);
+        console.log("Deleted list item!");
+      },
+      error: function () {
+        alert("Failed to delete item.");
+      }
+    });
+  },
   fetchAllReviews: function () {
     $.ajax({
       url: "/api/reviews/",

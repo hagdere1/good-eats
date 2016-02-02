@@ -28,6 +28,19 @@ ListItemStore.find = function (id) {
   return _listItems[id];
 };
 
+ListItemStore.destroyListItem = function (id) {
+  // var newListItems = [];
+  // var listItems = ListItemStore.all();
+  // listItems.forEach(function (listItem) {
+  //   if (listItem.id !== id) {
+  //     newListItems.push(listItem);
+  //   }
+  // });
+  // _listItems = newListItems;
+
+  delete _listItems[id];
+};
+
 ListItemStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ListItemConstants.LIST_ITEMS_RECEIVED:
@@ -36,6 +49,10 @@ ListItemStore.__onDispatch = function (payload) {
       break;
     case ListItemConstants.LIST_ITEM_RECEIVED:
       this.resetListItem(payload.listItem);
+      ListItemStore.__emitChange();
+      break;
+    case ListItemConstants.LIST_ITEM_DESTROYED:
+      this.destroyListItem(payload.listItemId);
       ListItemStore.__emitChange();
       break;
   }
