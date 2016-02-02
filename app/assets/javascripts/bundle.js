@@ -65,14 +65,14 @@
 	var ReviewIndex = __webpack_require__(245);
 
 	// React auth
-	var UsersIndex = __webpack_require__(261);
-	var UserShow = __webpack_require__(260);
-	var SessionForm = __webpack_require__(250);
-	var UserForm = __webpack_require__(255);
-	var CurrentUserStore = __webpack_require__(254);
-	var SessionsApiUtil = __webpack_require__(251);
+	var UsersIndex = __webpack_require__(247);
+	var UserShow = __webpack_require__(252);
+	var SessionForm = __webpack_require__(253);
+	var UserForm = __webpack_require__(257);
+	var CurrentUserStore = __webpack_require__(258);
+	var SessionsApiUtil = __webpack_require__(254);
 
-	var App = __webpack_require__(247);
+	var App = __webpack_require__(259);
 
 	//Delete one ensureLoggedIn
 	var routes = React.createElement(
@@ -32161,10 +32161,511 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Header = __webpack_require__(248);
-	var Footer = __webpack_require__(249);
-	var SessionsApiUtil = __webpack_require__(251);
-	var CurrentUserStore = __webpack_require__(254);
+	var UsersStore = __webpack_require__(248);
+	var UsersApiUtil = __webpack_require__(250);
+
+	var UsersIndex = React.createClass({
+	  displayName: 'UsersIndex',
+
+	  getInitialState: function () {
+	    return { users: UsersStore.all() };
+	  },
+
+	  componentDidMount: function () {
+	    this.listener = UsersStore.addListener(this._onChange);
+	    UsersApiUtil.fetchUsers();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+
+	  render: function () {
+	    var users = this.state.users.map(function (user) {
+	      return React.createElement(
+	        'li',
+	        { key: user.id },
+	        React.createElement(
+	          'a',
+	          { href: "#/users/" + user.id },
+	          user.email
+	        )
+	      );
+	    });
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'title' },
+	        'Recent Activity'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'users-index' },
+	        users
+	      )
+	    );
+	  },
+
+	  _onChange: function () {
+	    this.setState({ users: UsersStore.all() });
+	  }
+	});
+
+	module.exports = UsersIndex;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var Dispatcher = __webpack_require__(227);
+	var UserConstants = __webpack_require__(249);
+
+	var _users = [];
+	var CHANGE_EVENT = "change";
+
+	var _addUser = function (newUser) {
+	  _users.unshift(newUser);
+	};
+
+	var UsersStore = new Store(Dispatcher);
+
+	UsersStore.all = function () {
+	  return _users.slice();
+	};
+
+	UsersStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+
+	    case UserConstants.RECEIVE_USERS:
+	      _users = payload.users;
+	      UsersStore.__emitChange();
+	      break;
+
+	    case UserConstants.RECEIVE_USER:
+	      _addUser(payload.user);
+	      UsersStore.__emitChange();
+	      break;
+	  }
+	};
+
+	UsersStore.findUserById = function (id) {
+	  for (var i = 0; i < _users.length; i++) {
+	    if (_users[i].id === id) {
+	      return _users[i];
+	    }
+	  }
+
+	  return;
+	};
+
+	module.exports = UsersStore;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports) {
+
+	var UserConstants = {
+	  RECEIVE_USERS: "RECEIVE_USERS",
+	  RECEIVE_USER: "RECEIVE_USER"
+	};
+
+	module.exports = UserConstants;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var UserActions = __webpack_require__(251);
+
+	var UsersApiUtil = {
+	  fetchUsers: function () {
+	    $.ajax({
+	      url: '/api/users',
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (users) {
+	        UserActions.receiveUsers(users);
+	      }
+	    });
+	  },
+
+	  fetchUser: function (id) {
+	    $.ajax({
+	      url: '/api/users/' + id,
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (user) {
+	        UserActions.receiveUser(user);
+	      }
+	    });
+	  },
+
+	  createUser: function (attrs, callback) {
+	    $.ajax({
+	      url: '/api/users',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: attrs,
+	      success: function (user) {
+	        UserActions.receiveUser(user);
+	        CurrentUserActions.receiveCurrentUser(user);
+	        callback && callback();
+	      }
+	    });
+	  }
+	};
+
+	module.exports = UsersApiUtil;
+
+/***/ },
+/* 251 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(227);
+	var UserConstants = __webpack_require__(249);
+
+	var UserActions = {
+	  receiveUsers: function (users) {
+	    Dispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_USERS,
+	      users: users
+	    });
+	  },
+
+	  receiveUser: function (user) {
+	    Dispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_USER,
+	      user: user
+	    });
+	  }
+	};
+
+	module.exports = UserActions;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var UsersStore = __webpack_require__(248);
+	var UsersApiUtil = __webpack_require__(250);
+
+	var UserShow = React.createClass({
+	  displayName: 'UserShow',
+
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+
+	  getStateFromStore: function () {
+	    return {
+	      user: UsersStore.findUserById(parseInt(this.props.params.id))
+	    };
+	  },
+
+	  componentDidMount: function () {
+	    this.listener = UsersStore.addListener(this._onChange);
+	    UsersApiUtil.fetchUser(this.props.params.id);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+
+	  render: function () {
+	    var user = this.state.user;
+	    if (!user) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        'DONT HAVE A USER TO RENDER'
+	      );
+	    }
+
+	    var reviews = [];
+	    if (user) {
+	      user.reviews && user.reviews.forEach(function (review) {
+	        reviews.push(React.createElement(
+	          'li',
+	          { key: review.id },
+	          review.title
+	        ));
+	      });
+	    }
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'title' },
+	        'UserShow: ',
+	        user.email
+	      ),
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Users posts:'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'users-index' },
+	        posts
+	      ),
+	      React.createElement(
+	        'a',
+	        { href: "#/" },
+	        'All Users'
+	      )
+	    );
+	  },
+
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
+	  }
+	});
+
+	module.exports = UserShow;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var SessionsApiUtil = __webpack_require__(254);
+
+	var SessionForm = React.createClass({
+	  displayName: 'SessionForm',
+
+	  mixins: [History],
+
+	  submit: function (e) {
+	    e.preventDefault();
+
+	    var credentials = $(e.currentTarget).serializeJSON();
+	    SessionsApiUtil.login(credentials, function () {
+	      this.history.pushState({}, "/");
+	    }.bind(this));
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.submit },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Sign in'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Email',
+	        React.createElement('input', { type: 'text', name: 'email' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Password',
+	        React.createElement('input', { type: 'password', name: 'password' })
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Sign in'
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = SessionForm;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var CurrentUserActions = __webpack_require__(255);
+	var SessionsApiUtil = {
+	  login: function (credentials, success) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: credentials,
+	      success: function (currentUser) {
+	        CurrentUserActions.receiveCurrentUser(currentUser);
+	        success && success();
+	      }
+	    });
+	  },
+
+	  logout: function () {
+	    $.ajax({
+	      url: 'api/session',
+	      type: 'DELETE',
+	      dataType: 'json',
+	      success: function () {
+	        console.log("logged out!");
+	      }
+	    });
+	  },
+
+	  fetchCurrentUser: function (cb) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (currentUser) {
+	        console.log("fetched current user!");
+	        CurrentUserActions.receiveCurrentUser(currentUser);
+	        cb && cb(currentUser);
+	      },
+	      error: function () {
+	        console.log("Failed to get session");
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = SessionsApiUtil;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(227);
+	var CurrentUserConstants = __webpack_require__(256);
+
+	var CurrentUserActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    Dispatcher.dispatch({
+	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  }
+	};
+
+	module.exports = CurrentUserActions;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports) {
+
+	var CurrentUserConstants = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	};
+
+	module.exports = CurrentUserConstants;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var UsersStore = __webpack_require__(248);
+	var UsersApiUtil = __webpack_require__(250);
+
+	var UserForm = React.createClass({
+	  displayName: 'UserForm',
+
+	  mixins: [History],
+
+	  submit: function (e) {
+	    e.preventDefault();
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.submit },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Sign Up!'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Name',
+	        React.createElement('input', { type: 'text', name: 'name' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Email',
+	        React.createElement('input', { type: 'text', name: 'email' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Password',
+	        React.createElement('input', { type: 'password', name: 'password' })
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Join!'
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = UserForm;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var Dispatcher = __webpack_require__(227);
+	var CurrentUserConstants = __webpack_require__(256);
+
+	var _currentUser = {};
+	var _currentUserHasBeenFetched = false;
+	var CurrentUserStore = new Store(Dispatcher);
+
+	CurrentUserStore.currentUser = function () {
+	  return $.extend({}, _currentUser);
+	};
+
+	CurrentUserStore.isLoggedIn = function () {
+	  return !!_currentUser.id;
+	};
+
+	CurrentUserStore.userHasBeenFetched = function () {
+	  return _currentUserHasBeenFetched;
+	};
+
+	CurrentUserStore.__onDispatch = function (payload) {
+	  if (payload.actionType === CurrentUserConstants.RECEIVE_CURRENT_USER) {
+	    _currentUserHasBeenFetched = true;
+	    _currentUser = payload.currentUser;
+	    CurrentUserStore.__emitChange();
+	  }
+	};
+
+	module.exports = CurrentUserStore;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Header = __webpack_require__(260);
+	var Footer = __webpack_require__(261);
+	var SessionsApiUtil = __webpack_require__(254);
+	var CurrentUserStore = __webpack_require__(258);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -32200,12 +32701,12 @@
 	module.exports = App;
 
 /***/ },
-/* 248 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(254);
-	var SessionsApiUtil = __webpack_require__(251);
+	var CurrentUserStore = __webpack_require__(258);
+	var SessionsApiUtil = __webpack_require__(254);
 
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -32388,7 +32889,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 249 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32438,507 +32939,6 @@
 	});
 
 	module.exports = Footer;
-
-/***/ },
-/* 250 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var SessionsApiUtil = __webpack_require__(251);
-
-	var SessionForm = React.createClass({
-	  displayName: 'SessionForm',
-
-	  mixins: [History],
-
-	  submit: function (e) {
-	    e.preventDefault();
-
-	    var credentials = $(e.currentTarget).serializeJSON();
-	    SessionsApiUtil.login(credentials, function () {
-	      this.history.pushState({}, "/");
-	    }.bind(this));
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this.submit },
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Sign in'
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Email',
-	        React.createElement('input', { type: 'text', name: 'email' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Password',
-	        React.createElement('input', { type: 'password', name: 'password' })
-	      ),
-	      React.createElement(
-	        'button',
-	        null,
-	        'Sign in'
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = SessionForm;
-
-/***/ },
-/* 251 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var CurrentUserActions = __webpack_require__(252);
-	var SessionsApiUtil = {
-	  login: function (credentials, success) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: credentials,
-	      success: function (currentUser) {
-	        CurrentUserActions.receiveCurrentUser(currentUser);
-	        success && success();
-	      }
-	    });
-	  },
-
-	  logout: function () {
-	    $.ajax({
-	      url: 'api/session',
-	      type: 'DELETE',
-	      dataType: 'json',
-	      success: function () {
-	        console.log("logged out!");
-	      }
-	    });
-	  },
-
-	  fetchCurrentUser: function (cb) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (currentUser) {
-	        console.log("fetched current user!");
-	        CurrentUserActions.receiveCurrentUser(currentUser);
-	        cb && cb(currentUser);
-	      },
-	      error: function () {
-	        console.log("Failed to get session");
-	      }
-	    });
-	  }
-
-	};
-
-	module.exports = SessionsApiUtil;
-
-/***/ },
-/* 252 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(253);
-
-	var CurrentUserActions = {
-	  receiveCurrentUser: function (currentUser) {
-	    Dispatcher.dispatch({
-	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  }
-	};
-
-	module.exports = CurrentUserActions;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports) {
-
-	var CurrentUserConstants = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
-	};
-
-	module.exports = CurrentUserConstants;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(253);
-
-	var _currentUser = {};
-	var _currentUserHasBeenFetched = false;
-	var CurrentUserStore = new Store(Dispatcher);
-
-	CurrentUserStore.currentUser = function () {
-	  return $.extend({}, _currentUser);
-	};
-
-	CurrentUserStore.isLoggedIn = function () {
-	  return !!_currentUser.id;
-	};
-
-	CurrentUserStore.userHasBeenFetched = function () {
-	  return _currentUserHasBeenFetched;
-	};
-
-	CurrentUserStore.__onDispatch = function (payload) {
-	  if (payload.actionType === CurrentUserConstants.RECEIVE_CURRENT_USER) {
-	    _currentUserHasBeenFetched = true;
-	    _currentUser = payload.currentUser;
-	    CurrentUserStore.__emitChange();
-	  }
-	};
-
-	module.exports = CurrentUserStore;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var UsersStore = __webpack_require__(256);
-	var UsersApiUtil = __webpack_require__(258);
-
-	var UserForm = React.createClass({
-	  displayName: 'UserForm',
-
-	  mixins: [History],
-
-	  submit: function (e) {
-	    e.preventDefault();
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this.submit },
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Sign Up!'
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Name',
-	        React.createElement('input', { type: 'text', name: 'name' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Email',
-	        React.createElement('input', { type: 'text', name: 'email' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Password',
-	        React.createElement('input', { type: 'password', name: 'password' })
-	      ),
-	      React.createElement(
-	        'button',
-	        null,
-	        'Join!'
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = UserForm;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(257);
-
-	var _users = [];
-	var CHANGE_EVENT = "change";
-
-	var _addUser = function (newUser) {
-	  _users.unshift(newUser);
-	};
-
-	var UsersStore = new Store(Dispatcher);
-
-	UsersStore.all = function () {
-	  return _users.slice();
-	};
-
-	UsersStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-
-	    case UserConstants.RECEIVE_USERS:
-	      _users = payload.users;
-	      UsersStore.__emitChange();
-	      break;
-
-	    case UserConstants.RECEIVE_USER:
-	      _addUser(payload.user);
-	      UsersStore.__emitChange();
-	      break;
-	  }
-	};
-
-	UsersStore.findUserById = function (id) {
-	  for (var i = 0; i < _users.length; i++) {
-	    if (_users[i].id === id) {
-	      return _users[i];
-	    }
-	  }
-
-	  return;
-	};
-
-	module.exports = UsersStore;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports) {
-
-	var UserConstants = {
-	  RECEIVE_USERS: "RECEIVE_USERS",
-	  RECEIVE_USER: "RECEIVE_USER"
-	};
-
-	module.exports = UserConstants;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var UserActions = __webpack_require__(259);
-
-	var UsersApiUtil = {
-	  fetchUsers: function () {
-	    $.ajax({
-	      url: '/api/users',
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (users) {
-	        UserActions.receiveUsers(users);
-	      }
-	    });
-	  },
-
-	  fetchUser: function (id) {
-	    $.ajax({
-	      url: '/api/users/' + id,
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (user) {
-	        UserActions.receiveUser(user);
-	      }
-	    });
-	  },
-
-	  createUser: function (attrs, callback) {
-	    $.ajax({
-	      url: '/api/users',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: attrs,
-	      success: function (user) {
-	        UserActions.receiveUser(user);
-	        CurrentUserActions.receiveCurrentUser(user);
-	        callback && callback();
-	      }
-	    });
-	  }
-	};
-
-	module.exports = UsersApiUtil;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(257);
-
-	var UserActions = {
-	  receiveUsers: function (users) {
-	    Dispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_USERS,
-	      users: users
-	    });
-	  },
-
-	  receiveUser: function (user) {
-	    Dispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_USER,
-	      user: user
-	    });
-	  }
-	};
-
-	module.exports = UserActions;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(256);
-	var UsersApiUtil = __webpack_require__(258);
-
-	var UserShow = React.createClass({
-	  displayName: 'UserShow',
-
-	  getInitialState: function () {
-	    return this.getStateFromStore();
-	  },
-
-	  getStateFromStore: function () {
-	    return {
-	      user: UsersStore.findUserById(parseInt(this.props.params.id))
-	    };
-	  },
-
-	  componentDidMount: function () {
-	    this.listener = UsersStore.addListener(this._onChange);
-	    UsersApiUtil.fetchUser(this.props.params.id);
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-
-	  render: function () {
-	    var user = this.state.user;
-	    if (!user) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        'DONT HAVE A USER TO RENDER'
-	      );
-	    }
-
-	    var reviews = [];
-	    if (user) {
-	      user.reviews && user.reviews.forEach(function (review) {
-	        reviews.push(React.createElement(
-	          'li',
-	          { key: review.id },
-	          review.title
-	        ));
-	      });
-	    }
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        { className: 'title' },
-	        'UserShow: ',
-	        user.email
-	      ),
-	      React.createElement(
-	        'h3',
-	        null,
-	        'Users posts:'
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'users-index' },
-	        posts
-	      ),
-	      React.createElement(
-	        'a',
-	        { href: "#/" },
-	        'All Users'
-	      )
-	    );
-	  },
-
-	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
-	  }
-	});
-
-	module.exports = UserShow;
-
-/***/ },
-/* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(256);
-	var UsersApiUtil = __webpack_require__(258);
-
-	var UsersIndex = React.createClass({
-	  displayName: 'UsersIndex',
-
-	  getInitialState: function () {
-	    return { users: UsersStore.all() };
-	  },
-
-	  componentDidMount: function () {
-	    this.listener = UsersStore.addListener(this._onChange);
-	    UsersApiUtil.fetchUsers();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-
-	  render: function () {
-	    var users = this.state.users.map(function (user) {
-	      return React.createElement(
-	        'li',
-	        { key: user.id },
-	        React.createElement(
-	          'a',
-	          { href: "#/users/" + user.id },
-	          user.email
-	        )
-	      );
-	    });
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        { className: 'title' },
-	        'Recent Activity'
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'users-index' },
-	        users
-	      )
-	    );
-	  },
-
-	  _onChange: function () {
-	    this.setState({ users: UsersStore.all() });
-	  }
-	});
-
-	module.exports = UsersIndex;
 
 /***/ }
 /******/ ]);
