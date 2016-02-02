@@ -32456,29 +32456,44 @@
 	  render: function () {
 
 	    return React.createElement(
-	      'form',
-	      { onSubmit: this.submit },
+	      'div',
+	      null,
 	      React.createElement(
-	        'h1',
-	        null,
-	        'Sign in'
+	        'form',
+	        { onSubmit: this.submit },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Sign in'
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email',
+	          React.createElement('input', { type: 'text', name: 'email' })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password',
+	          React.createElement('input', { type: 'password', name: 'password' })
+	        ),
+	        React.createElement(
+	          'button',
+	          null,
+	          'Sign in'
+	        )
 	      ),
 	      React.createElement(
-	        'label',
-	        null,
-	        'Email',
-	        React.createElement('input', { type: 'text', name: 'email' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Password',
-	        React.createElement('input', { type: 'password', name: 'password' })
-	      ),
-	      React.createElement(
-	        'button',
-	        null,
-	        'Sign in'
+	        'form',
+	        { onSubmit: this.submit },
+	        React.createElement('input', { type: 'hidden', name: 'email', value: 'harry@aol.com' }),
+	        React.createElement('input', { type: 'hidden', name: 'password', value: '123456' }),
+	        React.createElement(
+	          'button',
+	          null,
+	          'Sign in as Guest'
+	        )
 	      )
 	    );
 	  }
