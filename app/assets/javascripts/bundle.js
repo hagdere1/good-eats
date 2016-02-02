@@ -31689,11 +31689,11 @@
 	      'table',
 	      { className: 'item-detail-table' },
 	      React.createElement(
-	        'tbody',
-	        { className: 'item-detail-table-body group' },
+	        'thead',
+	        { className: 'item-detail-table-head' },
 	        React.createElement(
 	          'tr',
-	          { className: 'item-detail-table-headers' },
+	          { className: 'item-detail-table-headers-row' },
 	          React.createElement(
 	            'th',
 	            { className: 'item-heading-image' },
@@ -31720,7 +31720,11 @@
 	            'date added'
 	          ),
 	          React.createElement('th', { className: 'item-heading-options' })
-	        ),
+	        )
+	      ),
+	      React.createElement(
+	        'tbody',
+	        { className: 'item-detail-table-body group' },
 	        tableBody
 	      )
 	    );
@@ -31765,7 +31769,7 @@
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'edibles-index' },
 	      React.createElement(
 	        'h1',
 	        { className: 'heading-main' },
