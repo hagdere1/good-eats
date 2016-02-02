@@ -37,7 +37,7 @@ var Header = React.createClass({
             <ul className="root-header-list group">
               <li><a href="/">Home</a></li>
               <li><a href="#/edibles">Explore</a></li>
-              <li><a href="#/lists/1">My Lists</a></li>
+              <li><a href="#/lists/">My Lists</a></li>
               <li><a href="#">Groups</a></li>
               <li><a href="#">Recommendations</a></li>
             </ul>
