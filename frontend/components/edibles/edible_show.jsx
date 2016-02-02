@@ -56,6 +56,7 @@ var EdibleShow = React.createClass({
       edibleDescription = <p className="edible-show-description">{this.state.edible.description}</p>;
     }
     return (
+    <div className="edible-show">
       <div className="edible-details group">
 
         <div className="edible-image">
@@ -72,12 +73,14 @@ var EdibleShow = React.createClass({
           {edibleCategory}
           {edibleDescription}
         </div>
-
-        <div className="edible-reviews">
-          {this.props.children}
-        </div>
-
       </div>
+
+      <div className="edible-reviews">
+        <p className="reviews-heading">Community Reviews</p>
+        {this.props.children}
+      </div>
+
+    </div>
     );
   }
 });
