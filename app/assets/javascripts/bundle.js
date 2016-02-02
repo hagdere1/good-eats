@@ -31191,6 +31191,19 @@
 	  return _listItems[id];
 	};
 
+	ListItemStore.destroyListItem = function (id) {
+	  // var newListItems = [];
+	  // var listItems = ListItemStore.all();
+	  // listItems.forEach(function (listItem) {
+	  //   if (listItem.id !== id) {
+	  //     newListItems.push(listItem);
+	  //   }
+	  // });
+	  // _listItems = newListItems;
+
+	  delete _listItems[id];
+	};
+
 	ListItemStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListItemConstants.LIST_ITEMS_RECEIVED:
@@ -31199,6 +31212,10 @@
 	      break;
 	    case ListItemConstants.LIST_ITEM_RECEIVED:
 	      this.resetListItem(payload.listItem);
+	      ListItemStore.__emitChange();
+	      break;
+	    case ListItemConstants.LIST_ITEM_DESTROYED:
+	      this.destroyListItem(payload.listItemId);
 	      ListItemStore.__emitChange();
 	      break;
 	  }
@@ -31292,6 +31309,19 @@
 	      }
 	    });
 	  },
+	  destroyListItem: function (id) {
+	    $.ajax({
+	      url: "api/list_items/" + id,
+	      method: "DELETE",
+	      success: function () {
+	        ApiActions.destroyListItem(id);
+	        console.log("Deleted list item!");
+	      },
+	      error: function () {
+	        alert("Failed to delete item.");
+	      }
+	    });
+	  },
 	  fetchAllReviews: function () {
 	    $.ajax({
 	      url: "/api/reviews/",
@@ -31354,6 +31384,12 @@
 	    AppDispatcher.dispatch({
 	      actionType: ListItemConstants.LIST_ITEM_RECEIVED,
 	      listItem: listItem
+	    });
+	  },
+	  destroyListItem: function (id) {
+	    AppDispatcher.dispatch({
+	      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
+	      listItemId: id
 	    });
 	  },
 	  receiveAllReviews: function (reviews) {
@@ -31571,6 +31607,12 @@
 	    this.listItemListener.remove();
 	  },
 
+	  destroyListItem: function (event) {
+
+	    event.preventDefault();
+	    ApiUtil.destroyListItem(event.currentTarget.id);
+	  },
+
 	  render: function () {
 
 	    if (this.state.edibles === undefined) {
@@ -31578,9 +31620,10 @@
 	    }
 
 	    var tableBody = this.state.edibles.map(function (edible) {
+
 	      return React.createElement(
 	        'tr',
-	        { className: 'item-detail-table-row', key: edible.name },
+	        { className: 'item-detail-table-row', key: edible.id },
 	        React.createElement(
 	          'td',
 	          null,
@@ -31613,19 +31656,19 @@
 	        React.createElement(
 	          'td',
 	          null,
-	          'Edit Review'
+	          'Review'
 	        ),
 	        React.createElement(
 	          'td',
 	          null,
 	          React.createElement(
 	            'button',
-	            null,
+	            { id: edible.id, onClick: this.destroyListItem },
 	            'Delete'
 	          )
 	        )
 	      );
-	    });
+	    }, this);
 
 	    return React.createElement(
 	      'table',
@@ -31978,6 +32021,8 @@
 	    this.reviewListener.remove();
 	  },
 
+	  updateReview: function (e) {},
+
 	  render: function () {
 
 	    if (this.state.reviews === undefined) {
@@ -32007,6 +32052,11 @@
 	          'p',
 	          null,
 	          review.body
+	        ),
+	        React.createElement(
+	          'button',
+	          { onClick: this.updateReview },
+	          'Update'
 	        )
 	      );
 	    });

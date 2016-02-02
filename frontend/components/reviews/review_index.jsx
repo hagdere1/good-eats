@@ -33,6 +33,10 @@ var ReviewIndex = React.createClass({
     this.reviewListener.remove();
   },
 
+  updateReview: function (e) {
+
+  },
+
   render: function () {
 
     if (this.state.reviews === undefined) {
@@ -47,6 +51,7 @@ var ReviewIndex = React.createClass({
             <p>{review.user}</p>
             <p>{review.created_at}</p>
             <p>{review.body}</p>
+            <button onClick={this.updateReview}>Update</button>
           </article>
         );
       })
