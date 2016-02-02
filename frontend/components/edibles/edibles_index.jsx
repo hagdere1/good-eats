@@ -29,7 +29,7 @@ var EdiblesIndex = React.createClass({
     );
 
     return (
-      <div>
+      <div className="edibles-index">
         <h1 className="heading-main">Explore Edibles</h1>
         <ul className="edibles-index-items">
           {indexItems}

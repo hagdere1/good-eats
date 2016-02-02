@@ -64,8 +64,8 @@ var ItemsTable = React.createClass({
     return (
 
       <table className="item-detail-table">
-        <tbody className="item-detail-table-body group">
-          <tr className="item-detail-table-headers">
+        <thead className="item-detail-table-head">
+          <tr className="item-detail-table-headers-row">
             <th className="item-heading-image">image</th>
             <th className="item-heading-name">name</th>
             <th className="item-heading-category">category</th>
@@ -73,9 +73,10 @@ var ItemsTable = React.createClass({
             <th className="item-heading-date-added">date added</th>
             <th className="item-heading-options"></th>
           </tr>
+        </thead>
 
+        <tbody className="item-detail-table-body group">
           {tableBody}
-
         </tbody>
       </table>
     );
