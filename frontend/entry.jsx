@@ -34,13 +34,13 @@ var routes = (
     <IndexRoute component={ UsersIndex } onEnter={_ensureLoggedIn}/>
     <Route path="login" component={ SessionForm } />
     <Route path="users/new" component={ UserForm } />
-    <Route path="users/:id" componet={ UserShow } />
-    <Route path="edibles" component={ EdiblesIndex }/>
-    <Route path="edibles/:id" component={ EdibleShow }>
-      <IndexRoute component={ ReviewIndex }/>
+    <Route path="users/:id" componet={ UserShow } onEnter={_ensureLoggedIn} />
+    <Route path="edibles" component={ EdiblesIndex } onEnter={_ensureLoggedIn} />
+    <Route path="edibles/:id" component={ EdibleShow } onEnter={_ensureLoggedIn}>
+      <IndexRoute component={ ReviewIndex } onEnter={_ensureLoggedIn} />
     </Route>
-    <Route path="lists" component={ ListsIndex }>
-      <Route path=":id" component={ ListShow } />
+    <Route path="lists" component={ ListsIndex } onEnter={_ensureLoggedIn}>
+      <Route path=":id" component={ ListShow } onEnter={_ensureLoggedIn} />
     </Route>
   </Route>
 );

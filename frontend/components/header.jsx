@@ -1,5 +1,6 @@
 var React = require('react');
 var CurrentUserStore = require('./../stores/current_user_store');
+var SessionsApiUtil = require('./../util/sessions_api_util');
 
 var Header = React.createClass({
   getInitialState: function () {
@@ -16,8 +17,9 @@ var Header = React.createClass({
     this.setState({currentUser: CurrentUserStore.currentUser()});
   },
 
-  logout: function () {
-
+  logout: function (e) {
+    e.preventDefault();
+    SessionsApiUtil.logout();
   },
 
   render: function () {
