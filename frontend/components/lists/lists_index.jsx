@@ -34,6 +34,8 @@ var ListsIndex = React.createClass({
                 return <ListsIndexItem key={list.id} list={list} />;
               })}
             </ul>
+            <h3 className="heading-add-list"></h3>
+            <form className="add-list-form"></form>
           </div>
         </div>
 

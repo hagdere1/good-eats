@@ -18,11 +18,23 @@ var EdibleShow = require('./components/edibles/edible_show');
 var ListShow = require('./components/lists/list_show');
 var ReviewIndex = require('./components/reviews/review_index');
 
+// React auth
+var UsersIndex = require('./components/users/users_index');
+var UserShow = require('./components/users/user_show');
+var SessionForm = require('./components/sessions/new');
+var UserForm = require('./components/users/user_form');
+var CurrentUserStore = require('./stores/current_user_store');
+var SessionsApiUtil = require('./util/sessions_api_util');
+
 var App = require('./components/app');
 
+//Delete one ensureLoggedIn
 var routes = (
-  <Route path="/" component={App}>
-    <IndexRoute component={ EdiblesIndex }/>
+  <Route path="/" component={ App } onEnter={_ensureLoggedIn}>
+    <IndexRoute component={ UsersIndex } onEnter={_ensureLoggedIn}/>
+    <Route path="login" component={ SessionForm } />
+    <Route path="users/new" component={ UserForm } />
+    <Route path="users/:id" componet={ UserShow } />
     <Route path="edibles" component={ EdiblesIndex }/>
     <Route path="edibles/:id" component={ EdibleShow }>
       <IndexRoute component={ ReviewIndex }/>
@@ -32,6 +44,21 @@ var routes = (
     </Route>
   </Route>
 );
+
+function _ensureLoggedIn(nextState, replace, callback) {
+  if (CurrentUserStore.userHasBeenFetched()) {
+    _redirectIfNotLoggedIn();
+  } else {
+    SessionsApiUtil.fetchCurrentUser(_redirectIfNotLoggedIn);
+  }
+
+  function _redirectIfNotLoggedIn() {
+    if (!CurrentUserStore.isLoggedIn()) {
+      replace({}, "/login");
+    }
+    callback();
+  }
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   ReactDOM.render(

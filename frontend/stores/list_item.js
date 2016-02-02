@@ -29,15 +29,6 @@ ListItemStore.find = function (id) {
 };
 
 ListItemStore.destroyListItem = function (id) {
-  // var newListItems = [];
-  // var listItems = ListItemStore.all();
-  // listItems.forEach(function (listItem) {
-  //   if (listItem.id !== id) {
-  //     newListItems.push(listItem);
-  //   }
-  // });
-  // _listItems = newListItems;
-
   delete _listItems[id];
 };
 
