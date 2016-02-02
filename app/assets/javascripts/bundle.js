@@ -31476,30 +31476,24 @@
 	      'div',
 	      { className: 'lists-index group' },
 	      React.createElement(
+	        'h1',
+	        { className: 'heading-main' },
+	        'My Edibles'
+	      ),
+	      React.createElement(
 	        'div',
 	        { className: 'lists-index-nav' },
 	        React.createElement(
-	          'h1',
-	          { className: 'heading-main' },
-	          'My Edibles'
-	        ),
-	        React.createElement(
-	          'h2',
+	          'h3',
 	          { className: 'heading-sub-main' },
 	          'Lists'
 	        ),
 	        React.createElement(
-	          'div',
-	          { className: 'lists-content' },
-	          React.createElement(
-	            'ul',
-	            { className: 'lists-index' },
-	            this.state.lists.map(function (list) {
-	              return React.createElement(ListsIndexItem, { key: list.id, list: list });
-	            })
-	          ),
-	          React.createElement('h3', { className: 'heading-add-list' }),
-	          React.createElement('form', { className: 'add-list-form' })
+	          'ul',
+	          { className: 'lists-index' },
+	          this.state.lists.map(function (list) {
+	            return React.createElement(ListsIndexItem, { key: list.id, list: list });
+	          })
 	        )
 	      ),
 	      this.props.children
@@ -31676,11 +31670,12 @@
 	        React.createElement(
 	          'td',
 	          null,
-	          'Review'
-	        ),
-	        React.createElement(
-	          'td',
-	          null,
+	          React.createElement(
+	            'button',
+	            null,
+	            'Review'
+	          ),
+	          React.createElement('br', null),
 	          React.createElement(
 	            'button',
 	            { id: edible.id, onClick: this.destroyListItem },
@@ -31695,40 +31690,36 @@
 	      { className: 'item-detail-table' },
 	      React.createElement(
 	        'tbody',
-	        { className: 'item-detail-table-body' },
+	        { className: 'item-detail-table-body group' },
 	        React.createElement(
 	          'tr',
 	          { className: 'item-detail-table-headers' },
 	          React.createElement(
 	            'th',
-	            null,
-	            'Image'
+	            { className: 'item-heading-image' },
+	            'image'
 	          ),
 	          React.createElement(
 	            'th',
-	            null,
-	            'Name'
+	            { className: 'item-heading-name' },
+	            'name'
 	          ),
 	          React.createElement(
 	            'th',
-	            null,
-	            'Category'
+	            { className: 'item-heading-category' },
+	            'category'
 	          ),
 	          React.createElement(
 	            'th',
-	            null,
-	            'Rating'
+	            { className: 'item-heading-date-eaten' },
+	            'date eaten'
 	          ),
 	          React.createElement(
 	            'th',
-	            null,
-	            'Date Eaten'
+	            { className: 'item-heading-date-added' },
+	            'date added'
 	          ),
-	          React.createElement(
-	            'th',
-	            null,
-	            'Date Added'
-	          )
+	          React.createElement('th', { className: 'item-heading-options' })
 	        ),
 	        tableBody
 	      )
@@ -32233,6 +32224,15 @@
 	          React.createElement(
 	            'ul',
 	            { className: 'root-header-list group' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '/' },
+	                'Home'
+	              )
+	            ),
 	            React.createElement(
 	              'li',
 	              null,

@@ -55,8 +55,7 @@ var ItemsTable = React.createClass({
             <td>{edible.category}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
-            <td>Review</td>
-            <td><button id={edible.id} onClick={this.destroyListItem}>Delete</button></td>
+            <td><button>Review</button><br/><button id={edible.id} onClick={this.destroyListItem}>Delete</button></td>
           </tr>
         );
       }, this)
@@ -65,14 +64,14 @@ var ItemsTable = React.createClass({
     return (
 
       <table className="item-detail-table">
-        <tbody className="item-detail-table-body">
+        <tbody className="item-detail-table-body group">
           <tr className="item-detail-table-headers">
-            <th>Image</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Rating</th>
-            <th>Date Eaten</th>
-            <th>Date Added</th>
+            <th className="item-heading-image">image</th>
+            <th className="item-heading-name">name</th>
+            <th className="item-heading-category">category</th>
+            <th className="item-heading-date-eaten">date eaten</th>
+            <th className="item-heading-date-added">date added</th>
+            <th className="item-heading-options"></th>
           </tr>
 
           {tableBody}
