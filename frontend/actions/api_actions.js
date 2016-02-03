@@ -53,6 +53,12 @@ var ApiActions = {
       reviews: reviews
     });
   },
+  receiveSingleReview: function (review) {
+    AppDispatcher.dispatch({
+      actionType: ReviewConstants.REVIEW_RECEIVED,
+      review: review
+    });
+  },
 };
 
 module.exports = ApiActions;

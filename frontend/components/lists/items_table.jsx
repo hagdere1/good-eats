@@ -1,6 +1,7 @@
 var React = require('react');
 var ApiUtil = require('../../util/api_util');
 var ListItemStore = require('../../stores/list_item');
+var ReviewForm = require('./review_form');
 
 var ItemsTable = React.createClass({
   getInitialState: function () {
@@ -15,7 +16,8 @@ var ItemsTable = React.createClass({
         listItems.push(listItem);
       }
     }.bind(this));
-    return { edibles: listItems};
+    return { edibles: listItems,
+             reviewFormShowing: false};
   },
 
   _onChange: function () {
@@ -39,6 +41,11 @@ var ItemsTable = React.createClass({
 
     event.preventDefault();
     ApiUtil.destroyListItem(event.currentTarget.id);
+  },
+
+  handleReviewClick: function (event) {
+    event.preventDefault();
+    this.setState({reviewFormShowing: !this.state.reviewFormShowing});
   },
 
   render: function () {
@@ -67,7 +74,6 @@ var ItemsTable = React.createClass({
 
     var tableBody = (
       this.state.edibles.map(function (edible) {
-
         return (
           <tr className="item-detail-table-row" key={edible.id}>
             <td><img src={edible.image_url} className="item-detail-image"/></td>
@@ -75,7 +81,11 @@ var ItemsTable = React.createClass({
             <td>{edible.category}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
-            <td><button>Review</button><br/><button id={edible.id} onClick={this.destroyListItem}>Delete</button></td>
+            <td onClick={this.handleReviewClick}>
+              <button>Review</button><br/>
+              <ReviewForm reviewFormShowing={this.state.reviewFormShowing} edible={edible}/>
+              <button id={edible.id} onClick={this.destroyListItem}>Delete</button>
+            </td>
           </tr>
         );
       }, this)

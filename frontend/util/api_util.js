@@ -94,6 +94,18 @@ ApiUtil = {
       }
     });
   },
+  createReview: function (review, cb) {
+    $.ajax({
+      url: "api/reviews",
+      method: "POST",
+      data: {review: review},
+      success: function (reviewData) {
+        console.log("You wrote a review!");
+        ApiActions.receiveSingleReview(reviewData);
+        cb && cb();
+      }
+    });
+  }
 };
 
 
