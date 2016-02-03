@@ -17,7 +17,8 @@ var ItemsTable = React.createClass({
       }
     }.bind(this));
     return { edibles: listItems,
-             reviewFormShowing: false};
+             reviewFormShowing: false,
+             reviewEdible: null};
   },
 
   _onChange: function () {
@@ -43,9 +44,15 @@ var ItemsTable = React.createClass({
     ApiUtil.destroyListItem(event.currentTarget.id);
   },
 
-  handleReviewClick: function (event) {
-    event.preventDefault();
-    this.setState({reviewFormShowing: !this.state.reviewFormShowing});
+  handleReviewClick: function (edible, e) {
+    e.preventDefault();
+    this.setState({reviewFormShowing: true,
+                   reviewEdible: edible});
+  },
+
+  closeReviewForm: function () {
+    this.setState({reviewFormShowing: false,
+                   reviewEdible: null});
   },
 
   render: function () {
@@ -64,11 +71,14 @@ var ItemsTable = React.createClass({
 
     if (this.state.edibles === undefined) {
       return (
-        <table className="item-detail-table">
-          {header}
-          <tbody className="item-detail-table-body group">
-          </tbody>
-        </table>
+        <div>
+          <table className="item-detail-table">
+            {header}
+            <tbody className="item-detail-table-body group">
+            </tbody>
+          </table>
+
+        </div>
       );
     }
 
@@ -81,9 +91,8 @@ var ItemsTable = React.createClass({
             <td>{edible.category}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
-            <td onClick={this.handleReviewClick}>
-              <button>Review</button><br/>
-              <ReviewForm reviewFormShowing={this.state.reviewFormShowing} edible={edible}/>
+            <td>
+              <button onClick={this.handleReviewClick.bind(this, edible)} edible={edible}>Review</button><br/>
               <button id={edible.id} onClick={this.destroyListItem}>Delete</button>
             </td>
           </tr>
@@ -92,14 +101,16 @@ var ItemsTable = React.createClass({
     );
 
     return (
+      <div>
+        <ReviewForm closeForm={this.closeReviewForm} reviewFormShowing={this.state.reviewFormShowing} edible={this.state.reviewEdible}/>
+        <table className="item-detail-table">
+          {header}
 
-      <table className="item-detail-table">
-        {header}
-
-        <tbody className="item-detail-table-body group">
-          {tableBody}
-        </tbody>
-      </table>
+          <tbody className="item-detail-table-body group">
+            {tableBody}
+          </tbody>
+        </table>
+      </div>
     );
   }
 });

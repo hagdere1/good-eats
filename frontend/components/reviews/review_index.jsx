@@ -9,7 +9,7 @@ var ReviewIndex = React.createClass({
 
   getEdibleReviews: function () {
     var allReviews = ReviewStore.all();
-
+    debugger
     var edibleReviews = [];
     allReviews.forEach(function (review) {
       if (review.edible_id == parseInt(this.props.params.id)) {
@@ -33,38 +33,33 @@ var ReviewIndex = React.createClass({
     this.reviewListener.remove();
   },
 
-  updateReview: function (e) {
-
-  },
-
   render: function () {
 
-    if (this.state.reviews === undefined) {
-      return <div></div>;
+  var reviews;
+    if (this.state.reviews) {
+      reviews = (
+        this.state.reviews.map(function (review) {
+          return (
+            <article key={review.id} className="review">
+
+              <div className="review-name-date group">
+                <p className="review-name">{review.user}:</p>
+                <p className="review-date">{review.created_at}</p>
+              </div>
+
+              <div>
+                <p className="review-title">{review.title}</p>
+              </div>
+
+              <div>
+                <p className="review-body">{review.body}</p>
+              </div>
+
+            </article>
+          );
+        })
+      );
     }
-
-    var reviews = (
-      this.state.reviews.map(function (review) {
-        return (
-          <article key={review.id} className="review">
-
-            <div className="review-name-date group">
-              <p className="review-name">{review.user}:</p>
-              <p className="review-date">{review.created_at}</p>
-            </div>
-
-            <div>
-              <p className="review-title">{review.title}</p>
-            </div>
-
-            <div>
-              <p className="review-body">{review.body}</p>
-            </div>
-
-          </article>
-        );
-      })
-    );
 
     return <div>{reviews}</div>;
   }
