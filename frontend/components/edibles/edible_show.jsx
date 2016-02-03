@@ -12,11 +12,6 @@ var EdibleShow = React.createClass({
   },
 
   getInitialValues: function (edible, currentUser) {
-
-    // this.edible = edible || this.edible
-    // this.currentUser = currentUser || this.currentUser
-
-
     this.edible = EdibleStore.find(parseInt(this.props.params.id));
     this.currentUser = CurrentUserStore.currentUser();
     var currentList;

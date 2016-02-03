@@ -31353,6 +31353,18 @@
 	        console.log("Failed to retrieve reviews");
 	      }
 	    });
+	  },
+	  createReview: function (review, cb) {
+	    $.ajax({
+	      url: "api/reviews",
+	      method: "POST",
+	      data: { review: review },
+	      success: function (reviewData) {
+	        console.log("You wrote a review!");
+	        ApiActions.receiveSingleReview(reviewData);
+	        cb && cb();
+	      }
+	    });
 	  }
 	};
 
@@ -31417,6 +31429,12 @@
 	      actionType: ReviewConstants.REVIEWS_RECEIVED,
 	      reviews: reviews
 	    });
+	  },
+	  receiveSingleReview: function (review) {
+	    AppDispatcher.dispatch({
+	      actionType: ReviewConstants.REVIEW_RECEIVED,
+	      review: review
+	    });
 	  }
 	};
 
@@ -31438,7 +31456,8 @@
 /***/ function(module, exports) {
 
 	ReviewConstants = {
-	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED"
+	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED",
+	  REVIEW_RECEIVED: "REVIEW_RECEIVED"
 	};
 
 	module.exports = ReviewConstants;
@@ -31587,6 +31606,7 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
 	var ListItemStore = __webpack_require__(231);
+	var ReviewForm = __webpack_require__(262);
 
 	var ItemsTable = React.createClass({
 	  displayName: 'ItemsTable',
@@ -31603,7 +31623,8 @@
 	        listItems.push(listItem);
 	      }
 	    }.bind(this));
-	    return { edibles: listItems };
+	    return { edibles: listItems,
+	      reviewFormShowing: false };
 	  },
 
 	  _onChange: function () {
@@ -31627,6 +31648,11 @@
 
 	    event.preventDefault();
 	    ApiUtil.destroyListItem(event.currentTarget.id);
+	  },
+
+	  handleReviewClick: function (event) {
+	    event.preventDefault();
+	    this.setState({ reviewFormShowing: !this.state.reviewFormShowing });
 	  },
 
 	  render: function () {
@@ -31675,7 +31701,6 @@
 	    }
 
 	    var tableBody = this.state.edibles.map(function (edible) {
-
 	      return React.createElement(
 	        'tr',
 	        { className: 'item-detail-table-row', key: edible.id },
@@ -31710,13 +31735,14 @@
 	        ),
 	        React.createElement(
 	          'td',
-	          null,
+	          { onClick: this.handleReviewClick },
 	          React.createElement(
 	            'button',
 	            null,
 	            'Review'
 	          ),
 	          React.createElement('br', null),
+	          React.createElement(ReviewForm, { reviewFormShowing: this.state.reviewFormShowing, edible: edible }),
 	          React.createElement(
 	            'button',
 	            { id: edible.id, onClick: this.destroyListItem },
@@ -31908,10 +31934,6 @@
 	  },
 
 	  getInitialValues: function (edible, currentUser) {
-
-	    // this.edible = edible || this.edible
-	    // this.currentUser = currentUser || this.currentUser
-
 	    this.edible = EdibleStore.find(parseInt(this.props.params.id));
 	    this.currentUser = CurrentUserStore.currentUser();
 	    var currentList;
@@ -32212,6 +32234,10 @@
 	  });
 	};
 
+	ReviewStore.resetReview = function (review) {
+	  _reviews[review.id] = review;
+	};
+
 	ReviewStore.find = function (id) {
 	  return _reviews[id];
 	};
@@ -32220,6 +32246,10 @@
 	  switch (payload.actionType) {
 	    case ReviewConstants.REVIEWS_RECEIVED:
 	      this.resetReviews(payload.reviews);
+	      ReviewStore.__emitChange();
+	      break;
+	    case ReviewConstants.REVIEW_RECEIVED:
+	      this.resetReview(payload.review);
 	      ReviewStore.__emitChange();
 	      break;
 	  }
@@ -33026,6 +33056,85 @@
 	});
 
 	module.exports = Footer;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var ApiUtil = __webpack_require__(233);
+
+	var ReviewForm = React.createClass({
+	  displayName: 'ReviewForm',
+
+	  mixins: [History],
+
+	  submit: function (e) {
+	    e.preventDefault();
+
+	    var data = $(e.currentTarget);
+	    ApiUtil.createReview(data);
+	  },
+
+	  doNothing: function (e) {
+	    e.stopPropagation();
+	  },
+
+	  render: function () {
+	    if (!this.props.reviewFormShowing) {
+	      return React.createElement('div', null);
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'modal-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'review-modal group', onClick: this.doNothing },
+	          React.createElement(
+	            'div',
+	            { className: 'review-form-image' },
+	            React.createElement('img', { src: this.props.edible.image_url })
+	          ),
+	          React.createElement(
+	            'form',
+	            { onSubmit: this.submit, className: 'review-form' },
+	            React.createElement(
+	              'div',
+	              { className: 'review-form-details' },
+	              React.createElement(
+	                'h1',
+	                { className: 'review-form-edible' },
+	                this.props.edible.name
+	              ),
+	              React.createElement(
+	                'p',
+	                null,
+	                this.props.edible.category
+	              ),
+	              React.createElement('input', { type: 'hidden', name: 'edible_id', value: this.props.edible.id }),
+	              React.createElement(
+	                'label',
+	                null,
+	                'Title',
+	                React.createElement('input', { type: 'text', name: 'title', className: 'review-form-input-text' })
+	              ),
+	              React.createElement('textarea', { name: 'body', rows: '8', cols: '40', placeholder: 'Your thoughts...', className: 'review-form-input-textarea' }),
+	              React.createElement(
+	                'button',
+	                null,
+	                'Submit'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }
+
+	});
+
+	module.exports = ReviewForm;
 
 /***/ }
 /******/ ]);

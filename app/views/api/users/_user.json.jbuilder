@@ -5,4 +5,8 @@ json.list_items do
     json.partial!('api/list_items/list_item', list_item: list_item)
   end
 end
-json.lists user.lists
+json.lists do
+  json.array!(user.lists) do |list|
+    json.partial!('api/lists/list', list: list)
+  end
+end

@@ -1,3 +1,63 @@
 // Place all the styles related to the Api::Reviews controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.modal-container {
+  background: rgba(0,0,0,0.4);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  right: 1px;
+  bottom: 1px;
+  overflow: hidden;
+}
+
+.review-modal {
+  display: block;
+  background-color: white;
+  font-size: 12px;
+  line-height: 18px;
+  left: 383px;
+  top: 0;
+  width: 850px;
+  height: 623px;
+  border-radius: 4px;
+  margin: auto;
+  overflow: auto;
+  border-top: 1px solid black;
+  padding: 10px 25px 15px 25px;
+}
+
+.review-form-image {
+  float: left;
+}
+
+.review-form-image img {
+  width: 100px;
+  height: 100px;
+  margin-left: 10px;
+}
+
+.review-form {
+  background-color: white;
+  width: 700px;
+  height: 500px;
+  margin: auto;
+  float: right;
+}
+
+.review-form-details {
+  float: right;
+}
+
+.review-form-edible {
+  font-size: 24px;
+}
+
+.review-form-input-text {
+  border: 1px solid #ccc;
+}
+
+.review-form-input-textarea {
+  border: 1px solid #ccc;
+}
