@@ -7,20 +7,19 @@ var ReviewForm = React.createClass({
 
   getInitialState: function () {
     return {title: "",
-            body: "",
-            edible_id: this.props.edible.id,
-            formShowing: this.props.reviewFormShowing};
+            body: ""};
   },
 
   submit: function (e) {
     e.preventDefault();
-
     var review = {};
-    review.edible_id = this.props.edible.id;
+    debugger
+    review.edible_id = this.props.edible.edible_id;
     review.title = this.state.title;
     review.body = this.state.body;
 
     ApiUtil.createReview(review);
+    this.props.closeForm();
   },
 
   doNothing: function (e) {
@@ -36,7 +35,8 @@ var ReviewForm = React.createClass({
   },
 
   render: function() {
-    if (!this.props.reviewFormShowing) {
+
+    if ((!this.props.reviewFormShowing) || (!this.props.edible)) {
       return <div></div>;
     }
     else {
@@ -58,7 +58,7 @@ var ReviewForm = React.createClass({
                   <input type="text" name="title" onChange={this.handleTitleChange} value={this.state.title} className="review-form-input-text"/>
                 </label>
 
-                <textarea name="body" rows="8" cols="40" onChange={this.handleBodyChange} placeholder="What are your thoughts?" value={this.state.change} className="review-form-input-textarea"></textarea>
+                <textarea name="body" rows="8" cols="40" onChange={this.handleBodyChange} placeholder="What are your thoughts?" value={this.state.body} className="review-form-input-textarea"></textarea>
 
                 <button>Submit</button>
               </div>

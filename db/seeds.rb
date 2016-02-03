@@ -109,12 +109,12 @@ harry = User.create!({email: "harry@aol.com", name: "Harry", password_digest: "$
 
   # Gregory's lists
 want_to_try = List.create!({title: "Want to Try", user_id: gregory.id, can_delete: false})
-  item_fois_gras = ListItem.create!({list_id: want_to_try.id, edible_id: 3})
-  item_mixed_nuts = ListItem.create!({list_id: want_to_try.id, edible_id: 7})
+  item_fois_gras = ListItem.create!({list_id: want_to_try.id, edible_id: fois_gras.id})
+  item_mixed_nuts = ListItem.create!({list_id: want_to_try.id, edible_id: mixed_nuts.id})
 eaten = List.create!({title: "Eaten", user_id: gregory.id, can_delete: false})
-  item_pizza = ListItem.create!({list_id: eaten.id, edible_id: 1})
-  item_burger = ListItem.create!({list_id: eaten.id, edible_id: 2})
-  item_pad_thai = ListItem.create!({list_id: eaten.id, edible_id: 4})
+  item_pizza = ListItem.create!({list_id: eaten.id, edible_id: pizza.id})
+  item_burger = ListItem.create!({list_id: eaten.id, edible_id: burger.id})
+  item_pad_thai = ListItem.create!({list_id: eaten.id, edible_id: pad_thai.id})
 
 
   # Harry's lists

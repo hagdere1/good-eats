@@ -58,21 +58,21 @@
 
 	var ListsIndex = __webpack_require__(237);
 	var ListsIndexItem = __webpack_require__(238);
-	var EdiblesIndex = __webpack_require__(241);
-	var Edible = __webpack_require__(243);
-	var EdibleShow = __webpack_require__(244);
+	var EdiblesIndex = __webpack_require__(242);
+	var Edible = __webpack_require__(244);
+	var EdibleShow = __webpack_require__(245);
 	var ListShow = __webpack_require__(239);
-	var ReviewIndex = __webpack_require__(245);
+	var ReviewIndex = __webpack_require__(250);
 
 	// React auth
-	var UsersIndex = __webpack_require__(247);
-	var UserShow = __webpack_require__(252);
-	var SessionForm = __webpack_require__(253);
-	var UserForm = __webpack_require__(257);
-	var CurrentUserStore = __webpack_require__(258);
-	var SessionsApiUtil = __webpack_require__(254);
+	var UsersIndex = __webpack_require__(252);
+	var UserShow = __webpack_require__(257);
+	var SessionForm = __webpack_require__(258);
+	var UserForm = __webpack_require__(259);
+	var CurrentUserStore = __webpack_require__(246);
+	var SessionsApiUtil = __webpack_require__(248);
 
-	var App = __webpack_require__(259);
+	var App = __webpack_require__(260);
 
 	//Delete one ensureLoggedIn
 	var routes = React.createElement(
@@ -31609,7 +31609,7 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
 	var ListItemStore = __webpack_require__(231);
-	var ReviewForm = __webpack_require__(262);
+	var ReviewForm = __webpack_require__(241);
 
 	var ItemsTable = React.createClass({
 	  displayName: 'ItemsTable',
@@ -31627,7 +31627,8 @@
 	      }
 	    }.bind(this));
 	    return { edibles: listItems,
-	      reviewFormShowing: false };
+	      reviewFormShowing: false,
+	      reviewEdible: null };
 	  },
 
 	  _onChange: function () {
@@ -31653,9 +31654,15 @@
 	    ApiUtil.destroyListItem(event.currentTarget.id);
 	  },
 
-	  handleReviewClick: function (event) {
-	    event.preventDefault();
-	    this.setState({ reviewFormShowing: !this.state.reviewFormShowing });
+	  handleReviewClick: function (edible, e) {
+	    e.preventDefault();
+	    this.setState({ reviewFormShowing: true,
+	      reviewEdible: edible });
+	  },
+
+	  closeReviewForm: function () {
+	    this.setState({ reviewFormShowing: false,
+	      reviewEdible: null });
 	  },
 
 	  render: function () {
@@ -31696,10 +31703,14 @@
 
 	    if (this.state.edibles === undefined) {
 	      return React.createElement(
-	        'table',
-	        { className: 'item-detail-table' },
-	        header,
-	        React.createElement('tbody', { className: 'item-detail-table-body group' })
+	        'div',
+	        null,
+	        React.createElement(
+	          'table',
+	          { className: 'item-detail-table' },
+	          header,
+	          React.createElement('tbody', { className: 'item-detail-table-body group' })
+	        )
 	      );
 	    }
 
@@ -31738,14 +31749,13 @@
 	        ),
 	        React.createElement(
 	          'td',
-	          { onClick: this.handleReviewClick },
+	          null,
 	          React.createElement(
 	            'button',
-	            null,
+	            { onClick: this.handleReviewClick.bind(this, edible), edible: edible },
 	            'Review'
 	          ),
 	          React.createElement('br', null),
-	          React.createElement(ReviewForm, { reviewFormShowing: this.state.reviewFormShowing, edible: edible }),
 	          React.createElement(
 	            'button',
 	            { id: edible.id, onClick: this.destroyListItem },
@@ -31756,13 +31766,18 @@
 	    }, this);
 
 	    return React.createElement(
-	      'table',
-	      { className: 'item-detail-table' },
-	      header,
+	      'div',
+	      null,
+	      React.createElement(ReviewForm, { closeForm: this.closeReviewForm, reviewFormShowing: this.state.reviewFormShowing, edible: this.state.reviewEdible }),
 	      React.createElement(
-	        'tbody',
-	        { className: 'item-detail-table-body group' },
-	        tableBody
+	        'table',
+	        { className: 'item-detail-table' },
+	        header,
+	        React.createElement(
+	          'tbody',
+	          { className: 'item-detail-table-body group' },
+	          tableBody
+	        )
 	      )
 	    );
 	  }
@@ -31775,9 +31790,106 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(242);
+	var History = __webpack_require__(159).History;
 	var ApiUtil = __webpack_require__(233);
-	var Edible = __webpack_require__(243);
+
+	var ReviewForm = React.createClass({
+	  displayName: 'ReviewForm',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return { title: "",
+	      body: "" };
+	  },
+
+	  submit: function (e) {
+	    e.preventDefault();
+	    var review = {};
+	    debugger;
+	    review.edible_id = this.props.edible.edible_id;
+	    review.title = this.state.title;
+	    review.body = this.state.body;
+
+	    ApiUtil.createReview(review);
+	    this.props.closeForm();
+	  },
+
+	  doNothing: function (e) {
+	    e.stopPropagation();
+	  },
+
+	  handleTitleChange: function (e) {
+	    this.setState({ title: e.target.value });
+	  },
+
+	  handleBodyChange: function (e) {
+	    this.setState({ body: e.target.value });
+	  },
+
+	  render: function () {
+
+	    if (!this.props.reviewFormShowing || !this.props.edible) {
+	      return React.createElement('div', null);
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { className: 'modal-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'review-modal group', onClick: this.doNothing },
+	          React.createElement(
+	            'div',
+	            { className: 'review-form-image' },
+	            React.createElement('img', { src: this.props.edible.image_url })
+	          ),
+	          React.createElement(
+	            'form',
+	            { onSubmit: this.submit, className: 'review-form' },
+	            React.createElement(
+	              'div',
+	              { className: 'review-form-details' },
+	              React.createElement(
+	                'h1',
+	                { className: 'review-form-edible' },
+	                this.props.edible.name
+	              ),
+	              React.createElement(
+	                'p',
+	                null,
+	                this.props.edible.category
+	              ),
+	              React.createElement(
+	                'label',
+	                null,
+	                'Title',
+	                React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, value: this.state.title, className: 'review-form-input-text' })
+	              ),
+	              React.createElement('textarea', { name: 'body', rows: '8', cols: '40', onChange: this.handleBodyChange, placeholder: 'What are your thoughts?', value: this.state.body, className: 'review-form-input-textarea' }),
+	              React.createElement(
+	                'button',
+	                null,
+	                'Submit'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }
+
+	});
+
+	module.exports = ReviewForm;
+
+/***/ },
+/* 242 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EdibleStore = __webpack_require__(243);
+	var ApiUtil = __webpack_require__(233);
+	var Edible = __webpack_require__(244);
 
 	var EdiblesIndex = React.createClass({
 	  displayName: 'EdiblesIndex',
@@ -31824,7 +31936,7 @@
 	module.exports = EdiblesIndex;
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(209).Store;
@@ -31874,7 +31986,7 @@
 	module.exports = EdibleStore;
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31919,15 +32031,15 @@
 	module.exports = Edible;
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(242);
+	var EdibleStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(233);
-	var CurrentUserStore = __webpack_require__(258);
+	var CurrentUserStore = __webpack_require__(246);
 	var ListItemStore = __webpack_require__(231);
-	var SessionsApiUtil = __webpack_require__(254);
+	var SessionsApiUtil = __webpack_require__(248);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
@@ -32112,12 +32224,124 @@
 	module.exports = EdibleShow;
 
 /***/ },
-/* 245 */
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var Dispatcher = __webpack_require__(227);
+	var CurrentUserConstants = __webpack_require__(247);
+
+	var _currentUser = {};
+	var _currentUserHasBeenFetched = false;
+	var CurrentUserStore = new Store(Dispatcher);
+
+	CurrentUserStore.currentUser = function () {
+	  return $.extend({}, _currentUser);
+	};
+
+	CurrentUserStore.isLoggedIn = function () {
+	  return !!_currentUser.id;
+	};
+
+	CurrentUserStore.userHasBeenFetched = function () {
+	  return _currentUserHasBeenFetched;
+	};
+
+	CurrentUserStore.__onDispatch = function (payload) {
+	  if (payload.actionType === CurrentUserConstants.RECEIVE_CURRENT_USER) {
+	    _currentUserHasBeenFetched = true;
+	    _currentUser = payload.currentUser;
+	    CurrentUserStore.__emitChange();
+	  }
+	};
+
+	module.exports = CurrentUserStore;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	var CurrentUserConstants = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	};
+
+	module.exports = CurrentUserConstants;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var CurrentUserActions = __webpack_require__(249);
+	var SessionsApiUtil = {
+	  login: function (credentials, success) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: credentials,
+	      success: function (currentUser) {
+	        CurrentUserActions.receiveCurrentUser(currentUser);
+	        success && success();
+	      }
+	    });
+	  },
+
+	  logout: function () {
+	    $.ajax({
+	      url: 'api/session',
+	      type: 'DELETE',
+	      dataType: 'json',
+	      success: function () {
+	        console.log("logged out!");
+	      }
+	    });
+	  },
+
+	  fetchCurrentUser: function (cb) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (currentUser) {
+	        console.log("fetched current user!");
+	        CurrentUserActions.receiveCurrentUser(currentUser);
+	        cb && cb(currentUser);
+	      },
+	      error: function () {
+	        console.log("Failed to get session");
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = SessionsApiUtil;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(227);
+	var CurrentUserConstants = __webpack_require__(247);
+
+	var CurrentUserActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    Dispatcher.dispatch({
+	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  }
+	};
+
+	module.exports = CurrentUserActions;
+
+/***/ },
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(233);
-	var ReviewStore = __webpack_require__(246);
+	var ReviewStore = __webpack_require__(251);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32128,7 +32352,7 @@
 
 	  getEdibleReviews: function () {
 	    var allReviews = ReviewStore.all();
-
+	    debugger;
 	    var edibleReviews = [];
 	    allReviews.forEach(function (review) {
 	      if (review.edible_id == parseInt(this.props.params.id)) {
@@ -32152,53 +32376,50 @@
 	    this.reviewListener.remove();
 	  },
 
-	  updateReview: function (e) {},
-
 	  render: function () {
 
-	    if (this.state.reviews === undefined) {
-	      return React.createElement('div', null);
-	    }
-
-	    var reviews = this.state.reviews.map(function (review) {
-	      return React.createElement(
-	        'article',
-	        { key: review.id, className: 'review' },
-	        React.createElement(
-	          'div',
-	          { className: 'review-name-date group' },
+	    var reviews;
+	    if (this.state.reviews) {
+	      reviews = this.state.reviews.map(function (review) {
+	        return React.createElement(
+	          'article',
+	          { key: review.id, className: 'review' },
 	          React.createElement(
-	            'p',
-	            { className: 'review-name' },
-	            review.user,
-	            ':'
+	            'div',
+	            { className: 'review-name-date group' },
+	            React.createElement(
+	              'p',
+	              { className: 'review-name' },
+	              review.user,
+	              ':'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'review-date' },
+	              review.created_at
+	            )
 	          ),
 	          React.createElement(
-	            'p',
-	            { className: 'review-date' },
-	            review.created_at
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
+	            'div',
+	            null,
+	            React.createElement(
+	              'p',
+	              { className: 'review-title' },
+	              review.title
+	            )
+	          ),
 	          React.createElement(
-	            'p',
-	            { className: 'review-title' },
-	            review.title
+	            'div',
+	            null,
+	            React.createElement(
+	              'p',
+	              { className: 'review-body' },
+	              review.body
+	            )
 	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
-	          React.createElement(
-	            'p',
-	            { className: 'review-body' },
-	            review.body
-	          )
-	        )
-	      );
-	    });
+	        );
+	      });
+	    }
 
 	    return React.createElement(
 	      'div',
@@ -32211,7 +32432,7 @@
 	module.exports = ReviewIndex;
 
 /***/ },
-/* 246 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(209).Store;
@@ -32262,12 +32483,12 @@
 	module.exports = ReviewStore;
 
 /***/ },
-/* 247 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(248);
-	var UsersApiUtil = __webpack_require__(250);
+	var UsersStore = __webpack_require__(253);
+	var UsersApiUtil = __webpack_require__(255);
 
 	var UsersIndex = React.createClass({
 	  displayName: 'UsersIndex',
@@ -32322,12 +32543,12 @@
 	module.exports = UsersIndex;
 
 /***/ },
-/* 248 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(209).Store;
 	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(249);
+	var UserConstants = __webpack_require__(254);
 
 	var _users = [];
 	var CHANGE_EVENT = "change";
@@ -32370,7 +32591,7 @@
 	module.exports = UsersStore;
 
 /***/ },
-/* 249 */
+/* 254 */
 /***/ function(module, exports) {
 
 	var UserConstants = {
@@ -32381,10 +32602,10 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 250 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var UserActions = __webpack_require__(251);
+	var UserActions = __webpack_require__(256);
 
 	var UsersApiUtil = {
 	  fetchUsers: function () {
@@ -32427,11 +32648,11 @@
 	module.exports = UsersApiUtil;
 
 /***/ },
-/* 251 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(249);
+	var UserConstants = __webpack_require__(254);
 
 	var UserActions = {
 	  receiveUsers: function (users) {
@@ -32452,12 +32673,12 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 252 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(248);
-	var UsersApiUtil = __webpack_require__(250);
+	var UsersStore = __webpack_require__(253);
+	var UsersApiUtil = __webpack_require__(255);
 
 	var UserShow = React.createClass({
 	  displayName: 'UserShow',
@@ -32537,12 +32758,12 @@
 	module.exports = UserShow;
 
 /***/ },
-/* 253 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
-	var SessionsApiUtil = __webpack_require__(254);
+	var SessionsApiUtil = __webpack_require__(248);
 
 	var SessionForm = React.createClass({
 	  displayName: 'SessionForm',
@@ -32608,91 +32829,13 @@
 	module.exports = SessionForm;
 
 /***/ },
-/* 254 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var CurrentUserActions = __webpack_require__(255);
-	var SessionsApiUtil = {
-	  login: function (credentials, success) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: credentials,
-	      success: function (currentUser) {
-	        CurrentUserActions.receiveCurrentUser(currentUser);
-	        success && success();
-	      }
-	    });
-	  },
-
-	  logout: function () {
-	    $.ajax({
-	      url: 'api/session',
-	      type: 'DELETE',
-	      dataType: 'json',
-	      success: function () {
-	        console.log("logged out!");
-	      }
-	    });
-	  },
-
-	  fetchCurrentUser: function (cb) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (currentUser) {
-	        console.log("fetched current user!");
-	        CurrentUserActions.receiveCurrentUser(currentUser);
-	        cb && cb(currentUser);
-	      },
-	      error: function () {
-	        console.log("Failed to get session");
-	      }
-	    });
-	  }
-
-	};
-
-	module.exports = SessionsApiUtil;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(256);
-
-	var CurrentUserActions = {
-	  receiveCurrentUser: function (currentUser) {
-	    Dispatcher.dispatch({
-	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  }
-	};
-
-	module.exports = CurrentUserActions;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports) {
-
-	var CurrentUserConstants = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
-	};
-
-	module.exports = CurrentUserConstants;
-
-/***/ },
-/* 257 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
-	var UsersStore = __webpack_require__(248);
-	var UsersApiUtil = __webpack_require__(250);
+	var UsersStore = __webpack_require__(253);
+	var UsersApiUtil = __webpack_require__(255);
 
 	var UserForm = React.createClass({
 	  displayName: 'UserForm',
@@ -32744,48 +32887,14 @@
 	module.exports = UserForm;
 
 /***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(256);
-
-	var _currentUser = {};
-	var _currentUserHasBeenFetched = false;
-	var CurrentUserStore = new Store(Dispatcher);
-
-	CurrentUserStore.currentUser = function () {
-	  return $.extend({}, _currentUser);
-	};
-
-	CurrentUserStore.isLoggedIn = function () {
-	  return !!_currentUser.id;
-	};
-
-	CurrentUserStore.userHasBeenFetched = function () {
-	  return _currentUserHasBeenFetched;
-	};
-
-	CurrentUserStore.__onDispatch = function (payload) {
-	  if (payload.actionType === CurrentUserConstants.RECEIVE_CURRENT_USER) {
-	    _currentUserHasBeenFetched = true;
-	    _currentUser = payload.currentUser;
-	    CurrentUserStore.__emitChange();
-	  }
-	};
-
-	module.exports = CurrentUserStore;
-
-/***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Header = __webpack_require__(260);
-	var Footer = __webpack_require__(261);
-	var SessionsApiUtil = __webpack_require__(254);
-	var CurrentUserStore = __webpack_require__(258);
+	var Header = __webpack_require__(261);
+	var Footer = __webpack_require__(262);
+	var SessionsApiUtil = __webpack_require__(248);
+	var CurrentUserStore = __webpack_require__(246);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -32821,12 +32930,12 @@
 	module.exports = App;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(258);
-	var SessionsApiUtil = __webpack_require__(254);
+	var CurrentUserStore = __webpack_require__(246);
+	var SessionsApiUtil = __webpack_require__(248);
 
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -33009,7 +33118,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33059,103 +33168,6 @@
 	});
 
 	module.exports = Footer;
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(233);
-
-	var ReviewForm = React.createClass({
-	  displayName: 'ReviewForm',
-
-	  mixins: [History],
-
-	  getInitialState: function () {
-	    return { title: "",
-	      body: "",
-	      edible_id: this.props.edible.id,
-	      formShowing: this.props.reviewFormShowing };
-	  },
-
-	  submit: function (e) {
-	    e.preventDefault();
-
-	    var review = {};
-	    review.edible_id = this.props.edible.id;
-	    review.title = this.state.title;
-	    review.body = this.state.body;
-
-	    ApiUtil.createReview(review);
-	  },
-
-	  doNothing: function (e) {
-	    e.stopPropagation();
-	  },
-
-	  handleTitleChange: function (e) {
-	    this.setState({ title: e.target.value });
-	  },
-
-	  handleBodyChange: function (e) {
-	    this.setState({ body: e.target.value });
-	  },
-
-	  render: function () {
-	    if (!this.props.reviewFormShowing) {
-	      return React.createElement('div', null);
-	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'modal-container' },
-	        React.createElement(
-	          'div',
-	          { className: 'review-modal group', onClick: this.doNothing },
-	          React.createElement(
-	            'div',
-	            { className: 'review-form-image' },
-	            React.createElement('img', { src: this.props.edible.image_url })
-	          ),
-	          React.createElement(
-	            'form',
-	            { onSubmit: this.submit, className: 'review-form' },
-	            React.createElement(
-	              'div',
-	              { className: 'review-form-details' },
-	              React.createElement(
-	                'h1',
-	                { className: 'review-form-edible' },
-	                this.props.edible.name
-	              ),
-	              React.createElement(
-	                'p',
-	                null,
-	                this.props.edible.category
-	              ),
-	              React.createElement(
-	                'label',
-	                null,
-	                'Title',
-	                React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, value: this.state.title, className: 'review-form-input-text' })
-	              ),
-	              React.createElement('textarea', { name: 'body', rows: '8', cols: '40', onChange: this.handleBodyChange, placeholder: 'What are your thoughts?', value: this.state.change, className: 'review-form-input-textarea' }),
-	              React.createElement(
-	                'button',
-	                null,
-	                'Submit'
-	              )
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }
-
-	});
-
-	module.exports = ReviewForm;
 
 /***/ }
 /******/ ]);
