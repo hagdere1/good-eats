@@ -13,7 +13,7 @@ var ReviewForm = React.createClass({
   submit: function (e) {
     e.preventDefault();
     var review = {};
-    debugger
+
     review.edible_id = this.props.edible.edible_id;
     review.title = this.state.title;
     review.body = this.state.body;
