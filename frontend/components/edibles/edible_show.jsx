@@ -37,22 +37,24 @@ var EdibleShow = React.createClass({
             lists: this.currentUser.lists,
             currentList: currentList,
             currentListItem: currentListItem,
-            loading: false,
             userHasListItem: userHasListItem};
   },
 
-  addToListOrDestroy: function (event) {
+  addToList: function (event) {
     event.preventDefault();
     var listItem = {};
 
     if (!this.state.userHasListItem) {
       listItem.list_id = this.state.currentList.id;
       listItem.edible_id = parseInt(this.props.params.id);
+      var that = this;
       ApiUtil.createListItem(listItem, this.setState({userHasListItem: true}));
     }
-    else {
-      ApiUtil.destroyListItem(this.state.currentListItem.id, this.setState({userHasListItem: false}));
-    }
+  },
+
+  deleteFromList: function (event) {
+    var that = this;
+    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({userHasListItem: false}));
   },
 
   handleChooseList: function (event) {
@@ -112,11 +114,14 @@ var EdibleShow = React.createClass({
     }
 
     var edibleShowButton;
-    if (this.state.loading) {
-      edibleShowButton = <button>Saving...</button>;
+    if (this.state.userHasListItem) {
+      edibleShowButtonClass = "edible-show-button-checked";
+      buttonName = this.state.currentList.title;
+      edibleShowButton = <div className={edibleShowButtonClass}>{buttonName} <mark onClick={this.deleteFromList}>&#10005;</mark></div>;
     }
     else {
-      edibleShowButton = <button className="edible-show-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Add"}</button>;
+      edibleShowButtonClass = "edible-show-button-unselected";
+      edibleShowButton = <button className={edibleShowButtonClass} onClick={this.addToList}>Want to Try</button>;
     }
 
     return (

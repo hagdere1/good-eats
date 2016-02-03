@@ -46,7 +46,6 @@ var Edible = React.createClass({
   },
 
   addToListOrDestroy: function (event) {
-    debugger
     event.preventDefault();
     var listItem = {};
 
