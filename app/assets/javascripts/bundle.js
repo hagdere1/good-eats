@@ -31848,11 +31848,16 @@
 	            { onSubmit: this.submit, className: 'review-form' },
 	            React.createElement(
 	              'div',
-	              { className: 'review-form-details' },
+	              { className: 'review-form-details group' },
 	              React.createElement(
 	                'h1',
 	                { className: 'review-form-edible' },
 	                this.props.edible.name
+	              ),
+	              React.createElement(
+	                'mark',
+	                { onClick: this.props.closeForm },
+	                '✕'
 	              ),
 	              React.createElement(
 	                'p',

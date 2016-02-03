@@ -49,8 +49,9 @@ var ReviewForm = React.createClass({
             </div>
 
             <form onSubmit={ this.submit } className="review-form">
-              <div className="review-form-details">
+              <div className="review-form-details group">
                 <h1 className="review-form-edible">{this.props.edible.name}</h1>
+                <mark onClick={this.props.closeForm}>&#10005;</mark>
                 <p>{this.props.edible.category}</p>
 
                 <label>
