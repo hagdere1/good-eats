@@ -9,7 +9,6 @@ var ReviewIndex = React.createClass({
 
   getEdibleReviews: function () {
     var allReviews = ReviewStore.all();
-    debugger
     var edibleReviews = [];
     allReviews.forEach(function (review) {
       if (review.edible_id == parseInt(this.props.params.id)) {

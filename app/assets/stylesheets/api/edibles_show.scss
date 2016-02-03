@@ -27,7 +27,27 @@
   margin: auto;
 }
 
-.edible-show-button {
+.edible-show-button-checked {
+  background-color: #white;
+  color: black;
+  display: block;
+  border-radius-top-left: 3px;
+  border-radius-bottom-left: 3px;
+  border-right: 1px solid #003300;
+  border-left: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  width: 100px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin: auto;
+  margin-top: 5px;
+  float: left;
+  text-align: center;
+}
+
+.edible-show-button-unselected {
   background-color: #409D69;
   display: block;
   border-radius-top-left: 3px;
