@@ -32158,7 +32158,7 @@
 	      listItem.list_id = this.state.currentList.id;
 	      listItem.edible_id = parseInt(this.props.params.id);
 	      var that = this;
-	      ApiUtil.createListItem(listItem, this.setState({ userHasListItem: true }));
+	      ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
 	    }
 	  },
 
@@ -32167,12 +32167,14 @@
 	    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({ userHasListItem: false }));
 	  },
 
-	  handleChooseList: function (event) {
+	  handleChooseList: function (newList, e) {
 	    var listItem = {};
 
-	    listItem.list_id = event.currentTarget.list.id;
-	    listItem.edible_id = this.props.params.id;
-	    ApiUtil.createListItem(listItem);
+	    listItem.list_id = newList.id;
+	    listItem.edible_id = parseInt(this.props.params.id);
+	    var that = this;
+	    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({ userHasListItem: false }));
+	    ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
 
 	    this.setState({ loading: true });
 	  },
@@ -32207,7 +32209,7 @@
 	      lists = this.state.lists.map(function (list) {
 	        return React.createElement(
 	          'li',
-	          { onClick: this.handleChooseList, list: list, key: list.id },
+	          { onClick: this.handleChooseList.bind(this, list), list: list, key: list.id },
 	          list.title
 	        );
 	      }.bind(this));
@@ -32273,15 +32275,15 @@
 	            { className: 'edible-show-buttons group' },
 	            edibleShowButton,
 	            React.createElement(
-	              'button',
+	              'div',
 	              { className: 'edible-show-button-select-list' },
-	              '▼'
+	              '▼',
+	              React.createElement(
+	                'ul',
+	                { className: 'edible-select-list' },
+	                lists
+	              )
 	            )
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'edible-select-list' },
-	            lists
 	          )
 	        ),
 	        React.createElement(

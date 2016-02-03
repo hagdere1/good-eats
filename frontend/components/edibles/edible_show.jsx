@@ -48,7 +48,7 @@ var EdibleShow = React.createClass({
       listItem.list_id = this.state.currentList.id;
       listItem.edible_id = parseInt(this.props.params.id);
       var that = this;
-      ApiUtil.createListItem(listItem, this.setState({userHasListItem: true}));
+      ApiUtil.createListItem(listItem, that.setState({userHasListItem: true}));
     }
   },
 
@@ -57,12 +57,14 @@ var EdibleShow = React.createClass({
     ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({userHasListItem: false}));
   },
 
-  handleChooseList: function (event) {
+  handleChooseList: function (newList, e) {
     var listItem = {};
 
-    listItem.list_id = event.currentTarget.list.id;
-    listItem.edible_id = this.props.params.id;
-    ApiUtil.createListItem(listItem);
+    listItem.list_id = newList.id;
+    listItem.edible_id = parseInt(this.props.params.id);
+    var that = this;
+    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({userHasListItem: false}));
+    ApiUtil.createListItem(listItem, that.setState({userHasListItem: true}));
 
     this.setState({loading: true});
   },
@@ -96,7 +98,7 @@ var EdibleShow = React.createClass({
     if (this.state.lists) {
       lists = (
         this.state.lists.map(function(list) {
-          return <li onClick={this.handleChooseList} list={list} key={list.id}>{list.title}</li>;
+          return <li onClick={this.handleChooseList.bind(this, list)} list={list} key={list.id}>{list.title}</li>;
         }.bind(this))
       );
     }
@@ -132,9 +134,12 @@ var EdibleShow = React.createClass({
             {edibleImage}
             <div className="edible-show-buttons group">
               {edibleShowButton}
-              <button className="edible-show-button-select-list">&#9660;</button>
+              <div className="edible-show-button-select-list">
+                &#9660;
+                <ul className="edible-select-list">{lists}</ul>
+              </div>
             </div>
-            <ul className="edible-select-list">{lists}</ul>
+
           </div>
 
           <div className="edible-show-info">
