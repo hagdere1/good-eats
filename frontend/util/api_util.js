@@ -103,6 +103,9 @@ ApiUtil = {
         console.log("You wrote a review!");
         ApiActions.receiveSingleReview(reviewData);
         cb && cb();
+      },
+      error: function () {
+        console.log("We regret to inform you that your review submission has been denied.");
       }
     });
   }
