@@ -31363,6 +31363,9 @@
 	        console.log("You wrote a review!");
 	        ApiActions.receiveSingleReview(reviewData);
 	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("We regret to inform you that your review submission has been denied.");
 	      }
 	    });
 	  }
@@ -33070,15 +33073,34 @@
 
 	  mixins: [History],
 
+	  getInitialState: function () {
+	    return { title: "",
+	      body: "",
+	      edible_id: this.props.edible.id,
+	      formShowing: this.props.reviewFormShowing };
+	  },
+
 	  submit: function (e) {
 	    e.preventDefault();
 
-	    var data = $(e.currentTarget);
-	    ApiUtil.createReview(data);
+	    var review = {};
+	    review.edible_id = this.props.edible.id;
+	    review.title = this.state.title;
+	    review.body = this.state.body;
+
+	    ApiUtil.createReview(review);
 	  },
 
 	  doNothing: function (e) {
 	    e.stopPropagation();
+	  },
+
+	  handleTitleChange: function (e) {
+	    this.setState({ title: e.target.value });
+	  },
+
+	  handleBodyChange: function (e) {
+	    this.setState({ body: e.target.value });
 	  },
 
 	  render: function () {
@@ -33112,14 +33134,13 @@
 	                null,
 	                this.props.edible.category
 	              ),
-	              React.createElement('input', { type: 'hidden', name: 'edible_id', value: this.props.edible.id }),
 	              React.createElement(
 	                'label',
 	                null,
 	                'Title',
-	                React.createElement('input', { type: 'text', name: 'title', className: 'review-form-input-text' })
+	                React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, value: this.state.title, className: 'review-form-input-text' })
 	              ),
-	              React.createElement('textarea', { name: 'body', rows: '8', cols: '40', placeholder: 'Your thoughts...', className: 'review-form-input-textarea' }),
+	              React.createElement('textarea', { name: 'body', rows: '8', cols: '40', onChange: this.handleBodyChange, placeholder: 'What are your thoughts?', value: this.state.change, className: 'review-form-input-textarea' }),
 	              React.createElement(
 	                'button',
 	                null,

@@ -5,15 +5,34 @@ var ApiUtil = require('./../../util/api_util');
 var ReviewForm = React.createClass({
   mixins: [History],
 
+  getInitialState: function () {
+    return {title: "",
+            body: "",
+            edible_id: this.props.edible.id,
+            formShowing: this.props.reviewFormShowing};
+  },
+
   submit: function (e) {
     e.preventDefault();
 
-    var data = $(e.currentTarget);
-    ApiUtil.createReview(data);
+    var review = {};
+    review.edible_id = this.props.edible.id;
+    review.title = this.state.title;
+    review.body = this.state.body;
+
+    ApiUtil.createReview(review);
   },
 
   doNothing: function (e) {
     e.stopPropagation();
+  },
+
+  handleTitleChange: function (e) {
+    this.setState({title: e.target.value});
+  },
+
+  handleBodyChange: function (e) {
+    this.setState({body: e.target.value});
   },
 
   render: function() {
@@ -33,14 +52,13 @@ var ReviewForm = React.createClass({
               <div className="review-form-details">
                 <h1 className="review-form-edible">{this.props.edible.name}</h1>
                 <p>{this.props.edible.category}</p>
-                <input type="hidden" name="edible_id" value={this.props.edible.id} />
 
                 <label>
                   Title
-                  <input type="text" name="title" className="review-form-input-text"/>
+                  <input type="text" name="title" onChange={this.handleTitleChange} value={this.state.title} className="review-form-input-text"/>
                 </label>
 
-                <textarea name="body" rows="8" cols="40" placeholder="Your thoughts..." className="review-form-input-textarea"></textarea>
+                <textarea name="body" rows="8" cols="40" onChange={this.handleBodyChange} placeholder="What are your thoughts?" value={this.state.change} className="review-form-input-textarea"></textarea>
 
                 <button>Submit</button>
               </div>

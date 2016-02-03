@@ -8,9 +8,9 @@ class Api::ReviewsController < ApplicationController
   def create
     @review = Review.new(review_params)
     @review.user_id = current_user.id
-    
+
     if @review.save
-      render json: @list_item
+      render json: @review
     else
       render json: "Failed to create review."
     end
@@ -34,6 +34,6 @@ class Api::ReviewsController < ApplicationController
   end
 
   def review_params
-    params.require(:review).permit(:user_id, :edible_id, :title, :description)
+    params.require(:review).permit(:user_id, :edible_id, :title, :body)
   end
 end

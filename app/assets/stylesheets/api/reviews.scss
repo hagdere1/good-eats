@@ -15,7 +15,7 @@
 .review-modal {
   display: block;
   background-color: white;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 18px;
   left: 383px;
   top: 0;
@@ -47,17 +47,28 @@
 }
 
 .review-form-details {
+  margin-right: 60px;
   float: right;
 }
 
 .review-form-edible {
   font-size: 24px;
+  display: block;
 }
 
 .review-form-input-text {
   border: 1px solid #ccc;
+  display: block;
+  width: 640px;
+  height: auto;
+  border-radius: 3px;
 }
 
 .review-form-input-textarea {
+  margin-top: 10px;
+  display: block;
+  width: 640px;
+  height: 300px;
   border: 1px solid #ccc;
+  border-radius: 3px;
 }

@@ -10,3 +10,8 @@ json.lists do
     json.partial!('api/lists/list', list: list)
   end
 end
+json.reviews do
+  json.array!(user.reviews) do |review|
+    json.partial!('api/reviews/review', review: review)
+  end
+end
