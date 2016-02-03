@@ -31806,7 +31806,7 @@
 	  submit: function (e) {
 	    e.preventDefault();
 	    var review = {};
-	    debugger;
+
 	    review.edible_id = this.props.edible.edible_id;
 	    review.title = this.state.title;
 	    review.body = this.state.body;
@@ -31992,6 +31992,8 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var ApiUtil = __webpack_require__(233);
+	var CurrentUserStore = __webpack_require__(246);
+	var SessionsApiUtil = __webpack_require__(248);
 
 	var Edible = React.createClass({
 	  displayName: 'Edible',
@@ -32004,7 +32006,74 @@
 	    ApiUtil.createListItem(listItem);
 	  },
 
+	  getInitialState: function () {
+	    return this.getInitialValues();
+	  },
+
+	  getInitialValues: function () {
+	    this.currentUser = CurrentUserStore.currentUser();
+	    var currentList;
+	    var currentListItem;
+	    var userItems = this.currentUser.list_items;
+	    var userHasListItem = false;
+	    var inList = false;
+
+	    for (i = 0; i < userItems.length; i++) {
+	      if (userItems[i].edible_id == this.props.edible.id) {
+	        userHasListItem = true;
+	        currentList = userItems[i].list;
+	        currentListItem = userItems[i];
+	      }
+	    }
+
+	    if (!userHasListItem) {
+	      currentList = this.currentUser.lists[0];
+	      currentListItem = null;
+	    }
+
+	    return { edible: this.props.edible,
+	      lists: this.currentUser.lists,
+	      currentList: currentList,
+	      currentListItem: currentListItem,
+	      userHasListItem: userHasListItem };
+	  },
+
+	  addToListOrDestroy: function (event) {
+	    debugger;
+	    event.preventDefault();
+	    var listItem = {};
+
+	    if (!this.state.userHasListItem) {
+	      listItem.list_id = this.state.currentList.id;
+	      listItem.edible_id = parseInt(this.props.edible.id);
+	      ApiUtil.createListItem(listItem, this.setState({ userHasListItem: true }));
+	    } else {
+	      ApiUtil.destroyListItem(this.state.currentListItem.id, this.setState({ userHasListItem: false }));
+	    }
+	  },
+
+	  _onChange: function () {
+	    var state = this.getInitialValues();
+	    this.setState(state);
+	  },
+
+	  _onCurrentUserChange: function () {
+	    var state = this.getInitialValues();
+	    this.setState(state);
+	  },
+
+	  componentDidMount: function () {
+	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
+	    ApiUtil.fetchAllLists();
+	    SessionsApiUtil.fetchCurrentUser();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.currentUserListener.remove();
+	  },
+
 	  render: function () {
+
 	    var url = "#/edibles/" + this.props.edible.id;
 	    return React.createElement(
 	      'li',
@@ -32021,8 +32090,8 @@
 	      ),
 	      React.createElement(
 	        'button',
-	        { className: 'edible-list-item-button', onClick: this.addToList },
-	        'Want to Try'
+	        { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
+	        this.state.userHasListItem ? "Remove" : "Add"
 	      )
 	    );
 	  }
