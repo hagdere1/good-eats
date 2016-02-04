@@ -14,8 +14,8 @@ var EdibleShow = React.createClass({
   getInitialValues: function (edible, currentUser) {
     this.edible = EdibleStore.find(parseInt(this.props.params.id));
     this.currentUser = CurrentUserStore.currentUser();
-    var currentList;
-    var currentListItem;
+    var currentList = (this.currentList || null);
+    var currentListItem = (this.currentListItem || null);
     var userItems = this.currentUser.list_items;
     var userHasListItem = false;
     var inList = false;
@@ -63,13 +63,22 @@ var EdibleShow = React.createClass({
     listItem.list_id = newList.id;
     listItem.edible_id = parseInt(this.props.params.id);
     var that = this;
-    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({userHasListItem: false}));
-    ApiUtil.createListItem(listItem, that.setState({userHasListItem: true}));
 
-    this.setState({loading: true});
+    if (this.state.userHasListItem) {
+      ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({userHasListItem: false}));
+      ApiUtil.createListItem(listItem, that.setState({userHasListItem: true}));
+    }
+    else {
+      ApiUtil.createListItem(listItem, that.setState({userHasListItem: true}));
+    }
   },
 
   _onChange: function () {
+    var state = this.getInitialValues();
+    this.setState(state);
+  },
+
+  _onListItemChange: function () {
     var state = this.getInitialValues();
     this.setState(state);
   },
@@ -82,6 +91,7 @@ var EdibleShow = React.createClass({
   componentDidMount: function () {
     this.edibleListener = EdibleStore.addListener(this._onChange);
     this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
+    this.listItemListener = ListItemStore.addListener(this._onListItemChange);
     ApiUtil.fetchSingleEdible(this.props.params.id);
     ApiUtil.fetchAllLists();
     SessionsApiUtil.fetchCurrentUser();
@@ -90,6 +100,7 @@ var EdibleShow = React.createClass({
   componentWillUnmount: function () {
     this.edibleListener.remove();
     this.currentUserListener.remove();
+    this.listItemListener.remove();
   },
 
   render: function () {
