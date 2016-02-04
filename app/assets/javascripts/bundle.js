@@ -60,17 +60,18 @@
 	var ListsIndexItem = __webpack_require__(238);
 	var EdiblesIndex = __webpack_require__(242);
 	var Edible = __webpack_require__(244);
-	var EdibleShow = __webpack_require__(245);
+	var EdibleShow = __webpack_require__(249);
 	var ListShow = __webpack_require__(239);
 	var ReviewIndex = __webpack_require__(250);
+	var Profile = __webpack_require__(263);
 
 	// React auth
 	var UsersIndex = __webpack_require__(252);
 	var UserShow = __webpack_require__(257);
 	var SessionForm = __webpack_require__(258);
 	var UserForm = __webpack_require__(259);
-	var CurrentUserStore = __webpack_require__(246);
-	var SessionsApiUtil = __webpack_require__(248);
+	var CurrentUserStore = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(247);
 
 	var App = __webpack_require__(260);
 
@@ -92,7 +93,8 @@
 	    Route,
 	    { path: 'lists', component: ListsIndex, onEnter: _ensureLoggedIn },
 	    React.createElement(Route, { path: ':id', component: ListShow, onEnter: _ensureLoggedIn })
-	  )
+	  ),
+	  React.createElement(Route, { path: 'profile', component: Profile })
 	);
 
 	function _ensureLoggedIn(nextState, replace, callback) {
@@ -25689,7 +25691,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule invariant
 	 */
 
 	'use strict';
@@ -25745,7 +25746,6 @@
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 *
-	 * @providesModule emptyFunction
 	 */
 
 	"use strict";
@@ -31997,8 +31997,8 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var ApiUtil = __webpack_require__(233);
-	var CurrentUserStore = __webpack_require__(246);
-	var SessionsApiUtil = __webpack_require__(248);
+	var CurrentUserStore = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(247);
 
 	var Edible = React.createClass({
 	  displayName: 'Edible',
@@ -32107,12 +32107,124 @@
 /* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(209).Store;
+	var Dispatcher = __webpack_require__(227);
+	var CurrentUserConstants = __webpack_require__(246);
+
+	var _currentUser = {};
+	var _currentUserHasBeenFetched = false;
+	var CurrentUserStore = new Store(Dispatcher);
+
+	CurrentUserStore.currentUser = function () {
+	  return $.extend({}, _currentUser);
+	};
+
+	CurrentUserStore.isLoggedIn = function () {
+	  return !!_currentUser.id;
+	};
+
+	CurrentUserStore.userHasBeenFetched = function () {
+	  return _currentUserHasBeenFetched;
+	};
+
+	CurrentUserStore.__onDispatch = function (payload) {
+	  if (payload.actionType === CurrentUserConstants.RECEIVE_CURRENT_USER) {
+	    _currentUserHasBeenFetched = true;
+	    _currentUser = payload.currentUser;
+	    CurrentUserStore.__emitChange();
+	  }
+	};
+
+	module.exports = CurrentUserStore;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports) {
+
+	var CurrentUserConstants = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	};
+
+	module.exports = CurrentUserConstants;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var CurrentUserActions = __webpack_require__(248);
+	var SessionsApiUtil = {
+	  login: function (credentials, success) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: credentials,
+	      success: function (currentUser) {
+	        CurrentUserActions.receiveCurrentUser(currentUser);
+	        success && success();
+	      }
+	    });
+	  },
+
+	  logout: function () {
+	    $.ajax({
+	      url: 'api/session',
+	      type: 'DELETE',
+	      dataType: 'json',
+	      success: function () {
+	        console.log("logged out!");
+	      }
+	    });
+	  },
+
+	  fetchCurrentUser: function (cb) {
+	    $.ajax({
+	      url: '/api/session',
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (currentUser) {
+	        console.log("fetched current user!");
+	        CurrentUserActions.receiveCurrentUser(currentUser);
+	        cb && cb(currentUser);
+	      },
+	      error: function () {
+	        console.log("Failed to get session");
+	      }
+	    });
+	  }
+
+	};
+
+	module.exports = SessionsApiUtil;
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(227);
+	var CurrentUserConstants = __webpack_require__(246);
+
+	var CurrentUserActions = {
+	  receiveCurrentUser: function (currentUser) {
+	    Dispatcher.dispatch({
+	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  }
+	};
+
+	module.exports = CurrentUserActions;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(233);
-	var CurrentUserStore = __webpack_require__(246);
+	var CurrentUserStore = __webpack_require__(245);
 	var ListItemStore = __webpack_require__(231);
-	var SessionsApiUtil = __webpack_require__(248);
+	var SessionsApiUtil = __webpack_require__(247);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
@@ -32124,8 +32236,8 @@
 	  getInitialValues: function (edible, currentUser) {
 	    this.edible = EdibleStore.find(parseInt(this.props.params.id));
 	    this.currentUser = CurrentUserStore.currentUser();
-	    var currentList;
-	    var currentListItem;
+	    var currentList = this.currentList || null;
+	    var currentListItem = this.currentListItem || null;
 	    var userItems = this.currentUser.list_items;
 	    var userHasListItem = false;
 	    var inList = false;
@@ -32173,13 +32285,21 @@
 	    listItem.list_id = newList.id;
 	    listItem.edible_id = parseInt(this.props.params.id);
 	    var that = this;
-	    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({ userHasListItem: false }));
-	    ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
 
-	    this.setState({ loading: true });
+	    if (this.state.userHasListItem) {
+	      ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({ userHasListItem: false }));
+	      ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
+	    } else {
+	      ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
+	    }
 	  },
 
 	  _onChange: function () {
+	    var state = this.getInitialValues();
+	    this.setState(state);
+	  },
+
+	  _onListItemChange: function () {
 	    var state = this.getInitialValues();
 	    this.setState(state);
 	  },
@@ -32192,6 +32312,7 @@
 	  componentDidMount: function () {
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
 	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
+	    this.listItemListener = ListItemStore.addListener(this._onListItemChange);
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
 	    ApiUtil.fetchAllLists();
 	    SessionsApiUtil.fetchCurrentUser();
@@ -32200,6 +32321,7 @@
 	  componentWillUnmount: function () {
 	    this.edibleListener.remove();
 	    this.currentUserListener.remove();
+	    this.listItemListener.remove();
 	  },
 
 	  render: function () {
@@ -32309,118 +32431,6 @@
 	});
 
 	module.exports = EdibleShow;
-
-/***/ },
-/* 246 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(247);
-
-	var _currentUser = {};
-	var _currentUserHasBeenFetched = false;
-	var CurrentUserStore = new Store(Dispatcher);
-
-	CurrentUserStore.currentUser = function () {
-	  return $.extend({}, _currentUser);
-	};
-
-	CurrentUserStore.isLoggedIn = function () {
-	  return !!_currentUser.id;
-	};
-
-	CurrentUserStore.userHasBeenFetched = function () {
-	  return _currentUserHasBeenFetched;
-	};
-
-	CurrentUserStore.__onDispatch = function (payload) {
-	  if (payload.actionType === CurrentUserConstants.RECEIVE_CURRENT_USER) {
-	    _currentUserHasBeenFetched = true;
-	    _currentUser = payload.currentUser;
-	    CurrentUserStore.__emitChange();
-	  }
-	};
-
-	module.exports = CurrentUserStore;
-
-/***/ },
-/* 247 */
-/***/ function(module, exports) {
-
-	var CurrentUserConstants = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
-	};
-
-	module.exports = CurrentUserConstants;
-
-/***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var CurrentUserActions = __webpack_require__(249);
-	var SessionsApiUtil = {
-	  login: function (credentials, success) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: credentials,
-	      success: function (currentUser) {
-	        CurrentUserActions.receiveCurrentUser(currentUser);
-	        success && success();
-	      }
-	    });
-	  },
-
-	  logout: function () {
-	    $.ajax({
-	      url: 'api/session',
-	      type: 'DELETE',
-	      dataType: 'json',
-	      success: function () {
-	        console.log("logged out!");
-	      }
-	    });
-	  },
-
-	  fetchCurrentUser: function (cb) {
-	    $.ajax({
-	      url: '/api/session',
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (currentUser) {
-	        console.log("fetched current user!");
-	        CurrentUserActions.receiveCurrentUser(currentUser);
-	        cb && cb(currentUser);
-	      },
-	      error: function () {
-	        console.log("Failed to get session");
-	      }
-	    });
-	  }
-
-	};
-
-	module.exports = SessionsApiUtil;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(247);
-
-	var CurrentUserActions = {
-	  receiveCurrentUser: function (currentUser) {
-	    Dispatcher.dispatch({
-	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  }
-	};
-
-	module.exports = CurrentUserActions;
 
 /***/ },
 /* 250 */
@@ -32849,7 +32859,7 @@
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
-	var SessionsApiUtil = __webpack_require__(248);
+	var SessionsApiUtil = __webpack_require__(247);
 
 	var SessionForm = React.createClass({
 	  displayName: 'SessionForm',
@@ -32979,8 +32989,8 @@
 	var React = __webpack_require__(1);
 	var Header = __webpack_require__(261);
 	var Footer = __webpack_require__(262);
-	var SessionsApiUtil = __webpack_require__(248);
-	var CurrentUserStore = __webpack_require__(246);
+	var SessionsApiUtil = __webpack_require__(247);
+	var CurrentUserStore = __webpack_require__(245);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -33020,8 +33030,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(246);
-	var SessionsApiUtil = __webpack_require__(248);
+	var CurrentUserStore = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(247);
 
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -33143,7 +33153,7 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { href: '#' },
+	                { href: '#/profile' },
 	                React.createElement('i', { className: 'fa fa-user fa-1.5x' })
 	              )
 	            ),
@@ -33254,6 +33264,170 @@
 	});
 
 	module.exports = Footer;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var CurrentUserStore = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(247);
+
+	var Profile = React.createClass({
+	  displayName: 'Profile',
+
+	  getInitialState: function () {
+	    var currentUser = CurrentUserStore.currentUser();
+	    return { currentUser: currentUser,
+	      reviews: currentUser.reviews,
+	      lists: currentUser.lists };
+	  },
+
+	  _onChange: function () {
+	    var currentUser = CurrentUserStore.currentUser();
+	    this.setState({ currentUser: currentUser,
+	      reviews: currentUser.reviews,
+	      lists: currentUser.lists });
+	  },
+
+	  componentDidMount: function () {
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	    ApiUtil.fetchAllLists();
+	    SessionsApiUtil.fetchCurrentUser();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.currentUserListener.remove();
+	  },
+
+	  render: function () {
+
+	    if (this.state.currentUser === "undefined") {
+	      return React.createElement('div', null);
+	    }
+
+	    var ownerName = this.state.currentUser.name + "'s";
+
+	    var lists = this.state.currentUser.lists.map(function (list) {
+	      return React.createElement(
+	        'li',
+	        { key: list.id },
+	        React.createElement(
+	          'a',
+	          { href: "#/lists/" + list.id },
+	          list.title
+	        )
+	      );
+	    });
+
+	    var currentDate = new Date();
+
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-container' },
+	      React.createElement(
+	        'div',
+	        { className: 'profile-header group' },
+	        React.createElement('img', { className: 'profile-picture', src: 'https://31.media.tumblr.com/avatar_11da9b9a0c30_128.png' }),
+	        React.createElement(
+	          'div',
+	          { className: 'profile-details' },
+	          React.createElement(
+	            'h1',
+	            { className: 'heading-main' },
+	            this.state.currentUser.name
+	          ),
+	          React.createElement(
+	            'table',
+	            { className: 'profile-details-table' },
+	            React.createElement(
+	              'tbody',
+	              null,
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  { className: 'profile-detail' },
+	                  'Email'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.state.currentUser.email
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  { className: 'profile-detail' },
+	                  'Joined'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.state.currentUser.created_at
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  { className: 'profile-detail' },
+	                  'Last Active'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  currentDate.toString()
+	                )
+	              )
+	            )
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-lists' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          ownerName,
+	          ' Lists'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'profile-list-items' },
+	          React.createElement(
+	            'ul',
+	            null,
+	            lists
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-reviews' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          ownerName,
+	          ' Recent Reviews'
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          'Three reviews here'
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Profile;
 
 /***/ }
 /******/ ]);

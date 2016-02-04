@@ -17,6 +17,7 @@ var Edible = require('./components/edibles/edible');
 var EdibleShow = require('./components/edibles/edible_show');
 var ListShow = require('./components/lists/list_show');
 var ReviewIndex = require('./components/reviews/review_index');
+var Profile = require('./components/profile/profile');
 
 // React auth
 var UsersIndex = require('./components/users/users_index');
@@ -42,6 +43,7 @@ var routes = (
     <Route path="lists" component={ ListsIndex } onEnter={_ensureLoggedIn}>
       <Route path=":id" component={ ListShow } onEnter={_ensureLoggedIn} />
     </Route>
+    <Route path="profile" component={ Profile } />
   </Route>
 );
 
