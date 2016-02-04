@@ -1,6 +1,7 @@
 ListConstants = {
   LISTS_RECEIVED: "LISTS_RECEIVED",
-  LIST_RECEIVED: "LIST_RECEIVED"
+  LIST_RECEIVED: "LIST_RECEIVED",
+  LIST_DESTROYED: "LIST_DESTROYED"
 };
 
 module.exports = ListConstants;

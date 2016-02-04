@@ -8,11 +8,25 @@ var ListsIndexItem = React.createClass({
     this.history.pushState(null, '/lists/' + this.props.list.id, {});
   },
 
+  destroyList: function (event) {
+    event.preventDefault();
+    ApiUtil.destroyList(this.props.list.id);
+  },
+
   render: function () {
+    var deleteButton;
+    if (this.props.list.can_delete === true) {
+      deleteButton = <td onClick={this.destroyList}>&#x00D7;</td>;
+    }
+    else {
+      deleteButton = <td></td>;
+    }
+
     return (
-      <li onClick={this.showList} className="lists-index-item">
-        {this.props.list.title}
-      </li>
+      <tr className="lists-index-item">
+        <td onClick={this.showList}>{this.props.list.title}</td>
+        {deleteButton}
+      </tr>
     );
   }
 });

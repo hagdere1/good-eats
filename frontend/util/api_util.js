@@ -82,6 +82,21 @@ ApiUtil = {
       }
     });
   },
+  updateListItem: function (listItem, cb) {
+    $.ajax({
+      url: "api/list_items/" + listItem.id,
+      method: "PATCH",
+      data: {list_item: listItem},
+      success: function (listItem) {
+        ApiActions.receiveSingleListItem(listItem);
+        console.log("Successfully updated list item!");
+        cb && cb();
+      },
+      error: function () {
+        console.log("Failed to create list item.");
+      }
+    });
+  },
   fetchAllReviews: function () {
     $.ajax({
       url: "/api/reviews/",
@@ -108,7 +123,36 @@ ApiUtil = {
         console.log("We regret to inform you that your review submission has been denied.");
       }
     });
-  }
+  },
+  createList: function (list, cb) {
+    $.ajax({
+      url: "api/lists",
+      method: "POST",
+      data: {list: list},
+      success: function (listData) {
+        console.log("You created a list!");
+        ApiActions.receiveSingleList(listData);
+        cb && cb();
+      },
+      error: function () {
+        console.log("Failed to create list");
+      }
+    });
+  },
+  destroyList: function (id, cb) {
+    $.ajax({
+      url: "api/lists/" + id,
+      method: "DELETE",
+      success: function () {
+        ApiActions.destroyList(id);
+        console.log("Deleted list!");
+        cb && cb();
+      },
+      error: function () {
+        console.log("Failed to delete list.");
+      }
+    });
+  },
 };
 
 
