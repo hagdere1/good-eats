@@ -57,9 +57,9 @@ var Profile = React.createClass({
     var reviews = (
       this.state.currentUser.reviews.reverse().map(function (review) {
         return (
-          <div key={review.id} className="profile-review">
+          <div key={review.id} className="review">
             <div className="review-name-date group">
-              <p className="review-name">{review.user}:</p>
+              <p className="review-name"><span className="profile-review-name">{review.user} reviewed</span> <a className="profile-edible-link" href={"#/edibles/" + review.edible.id}>{review.edible.name}</a>:</p>
               <p className="review-date">{review.created_at}</p>
             </div>
 
