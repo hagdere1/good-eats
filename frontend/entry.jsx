@@ -29,21 +29,20 @@ var SessionsApiUtil = require('./util/sessions_api_util');
 
 var App = require('./components/app');
 
-//Delete one ensureLoggedIn
 var routes = (
   <Route path="/" component={ App }>
     <IndexRoute component={ UsersIndex } onEnter={_ensureLoggedIn}/>
     <Route path="login" component={ SessionForm } />
     <Route path="users/new" component={ UserForm } />
-    <Route path="users/:id" componet={ UserShow } onEnter={_ensureLoggedIn} />
-    <Route path="edibles" component={ EdiblesIndex } onEnter={_ensureLoggedIn} />
-    <Route path="edibles/:id" component={ EdibleShow } onEnter={_ensureLoggedIn}>
-      <IndexRoute component={ ReviewIndex } onEnter={_ensureLoggedIn} />
+    <Route path="users/:id" componet={ UserShow } />
+    <Route path="edibles" component={ EdiblesIndex } />
+    <Route path="edibles/:id" component={ EdibleShow }>
+      <IndexRoute component={ ReviewIndex } />
     </Route>
-    <Route path="lists" component={ ListsIndex } onEnter={_ensureLoggedIn}>
-      <Route path=":id" component={ ListShow } onEnter={_ensureLoggedIn} />
+    <Route path="lists" component={ ListsIndex }>
+      <Route path=":id" component={ ListShow } />
     </Route>
-    <Route path="profile" component={ Profile } />
+    <Route path="profile" component={ Profile } onEnter={_ensureLoggedIn} />
   </Route>
 );
 
