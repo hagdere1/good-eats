@@ -33331,14 +33331,25 @@
 	    var reviews = this.state.currentUser.reviews.reverse().map(function (review) {
 	      return React.createElement(
 	        'div',
-	        { key: review.id, className: 'profile-review' },
+	        { key: review.id, className: 'review' },
 	        React.createElement(
 	          'div',
 	          { className: 'review-name-date group' },
 	          React.createElement(
 	            'p',
 	            { className: 'review-name' },
-	            review.user,
+	            React.createElement(
+	              'span',
+	              { className: 'profile-review-name' },
+	              review.user,
+	              ' reviewed'
+	            ),
+	            ' ',
+	            React.createElement(
+	              'a',
+	              { className: 'profile-edible-link', href: "#/edibles/" + review.edible.id },
+	              review.edible.name
+	            ),
 	            ':'
 	          ),
 	          React.createElement(
