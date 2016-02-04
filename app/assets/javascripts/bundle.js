@@ -33060,6 +33060,7 @@
 	      return React.createElement(
 	        'header',
 	        { className: 'root-header' },
+	        React.createElement('img', { className: 'root-header-banner', src: '/assets/banner/banner.jpg' }),
 	        React.createElement(
 	          'nav',
 	          { className: 'root-header-nav group' },
@@ -33069,12 +33070,12 @@
 	            React.createElement(
 	              'a',
 	              { href: '/' },
-	              'good',
 	              React.createElement(
-	                'span',
+	                'div',
 	                null,
-	                'eats'
-	              )
+	                'good'
+	              ),
+	              'eats'
 	            )
 	          ),
 	          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Edible / Group / Tag / Person', value: '' }),
@@ -33306,16 +33307,63 @@
 	      return React.createElement('div', null);
 	    }
 
+	    var ediblesEaten;
+	    var numReviews;
+	    if (this.state.currentUser) {
+	      numEdiblesEaten = this.state.currentUser.lists[1].list_items.length;
+	      numReviews = this.state.currentUser.reviews.length;
+	    }
+
 	    var ownerName = this.state.currentUser.name + "'s";
 
 	    var lists = this.state.currentUser.lists.map(function (list) {
 	      return React.createElement(
 	        'li',
-	        { key: list.id },
+	        { key: list.id, className: 'profile-list' },
 	        React.createElement(
 	          'a',
 	          { href: "#/lists/" + list.id },
 	          list.title
+	        )
+	      );
+	    });
+
+	    var reviews = this.state.currentUser.reviews.reverse().map(function (review) {
+	      return React.createElement(
+	        'div',
+	        { key: review.id, className: 'profile-review' },
+	        React.createElement(
+	          'div',
+	          { className: 'review-name-date group' },
+	          React.createElement(
+	            'p',
+	            { className: 'review-name' },
+	            review.user,
+	            ':'
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'review-date' },
+	            review.created_at
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          React.createElement(
+	            'p',
+	            { className: 'review-title' },
+	            review.title
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          React.createElement(
+	            'p',
+	            { className: 'review-body' },
+	            review.body
+	          )
 	        )
 	      );
 	    });
@@ -33328,7 +33376,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'profile-header group' },
-	        React.createElement('img', { className: 'profile-picture', src: 'https://31.media.tumblr.com/avatar_11da9b9a0c30_128.png' }),
+	        React.createElement('img', { className: 'profile-picture', src: 'http://coolspotters.com/files/photos/442638/harry-potter-profile.jpg?1357465539' }),
 	        React.createElement(
 	          'div',
 	          { className: 'profile-details' },
@@ -33391,6 +33439,22 @@
 	      ),
 	      React.createElement(
 	        'div',
+	        { className: 'profile-stats' },
+	        React.createElement(
+	          'p',
+	          null,
+	          numReviews,
+	          ' reviews'
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          numEdiblesEaten,
+	          ' edibles eaten'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
 	        { className: 'profile-lists' },
 	        React.createElement(
 	          'h2',
@@ -33420,7 +33484,7 @@
 	        React.createElement(
 	          'div',
 	          null,
-	          'Three reviews here'
+	          reviews
 	        )
 	      )
 	    );
