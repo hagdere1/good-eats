@@ -1,16 +1,23 @@
 var React = require('react');
 var CurrentUserStore = require('./../stores/current_user_store');
 var SessionsApiUtil = require('./../util/sessions_api_util');
+var History = require('react-router').History;
 
 var Header = React.createClass({
+  mixins: [History],
+
   getInitialState: function () {
     return {
-      currentUser: {}
+      currentUser: CurrentUserStore.currentUser()
     };
   },
 
   componentDidMount: function () {
-    CurrentUserStore.addListener(this._onChange);
+    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+  },
+
+  componentWillUnmount: function () {
+    this.currentUserListener.remove();
   },
 
   _onChange: function () {
@@ -19,7 +26,9 @@ var Header = React.createClass({
 
   logout: function (e) {
     e.preventDefault();
-    SessionsApiUtil.logout();
+    SessionsApiUtil.logout(function () {
+      this.history.pushState({}, "/login");
+    }.bind(this));
   },
 
   render: function () {

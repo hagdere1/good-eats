@@ -63,38 +63,37 @@
 	var EdibleShow = __webpack_require__(249);
 	var ListShow = __webpack_require__(239);
 	var ReviewIndex = __webpack_require__(250);
-	var Profile = __webpack_require__(263);
+	var Profile = __webpack_require__(252);
 
 	// React auth
-	var UsersIndex = __webpack_require__(252);
-	var UserShow = __webpack_require__(257);
-	var SessionForm = __webpack_require__(258);
-	var UserForm = __webpack_require__(259);
+	var UsersIndex = __webpack_require__(253);
+	var UserShow = __webpack_require__(258);
+	var SessionForm = __webpack_require__(259);
+	var UserForm = __webpack_require__(260);
 	var CurrentUserStore = __webpack_require__(245);
 	var SessionsApiUtil = __webpack_require__(247);
 
-	var App = __webpack_require__(260);
+	var App = __webpack_require__(261);
 
-	//Delete one ensureLoggedIn
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
 	  React.createElement(IndexRoute, { component: UsersIndex, onEnter: _ensureLoggedIn }),
 	  React.createElement(Route, { path: 'login', component: SessionForm }),
 	  React.createElement(Route, { path: 'users/new', component: UserForm }),
-	  React.createElement(Route, { path: 'users/:id', componet: UserShow, onEnter: _ensureLoggedIn }),
-	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex, onEnter: _ensureLoggedIn }),
+	  React.createElement(Route, { path: 'users/:id', componet: UserShow }),
+	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
 	  React.createElement(
 	    Route,
-	    { path: 'edibles/:id', component: EdibleShow, onEnter: _ensureLoggedIn },
-	    React.createElement(IndexRoute, { component: ReviewIndex, onEnter: _ensureLoggedIn })
+	    { path: 'edibles/:id', component: EdibleShow },
+	    React.createElement(IndexRoute, { component: ReviewIndex })
 	  ),
 	  React.createElement(
 	    Route,
-	    { path: 'lists', component: ListsIndex, onEnter: _ensureLoggedIn },
-	    React.createElement(Route, { path: ':id', component: ListShow, onEnter: _ensureLoggedIn })
+	    { path: 'lists', component: ListsIndex },
+	    React.createElement(Route, { path: ':id', component: ListShow })
 	  ),
-	  React.createElement(Route, { path: 'profile', component: Profile })
+	  React.createElement(Route, { path: 'profile', component: Profile, onEnter: _ensureLoggedIn })
 	);
 
 	function _ensureLoggedIn(nextState, replace, callback) {
@@ -32108,12 +32107,12 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
+	var AppDispatcher = __webpack_require__(227);
 	var CurrentUserConstants = __webpack_require__(246);
 
 	var _currentUser = {};
 	var _currentUserHasBeenFetched = false;
-	var CurrentUserStore = new Store(Dispatcher);
+	var CurrentUserStore = new Store(AppDispatcher);
 
 	CurrentUserStore.currentUser = function () {
 	  return $.extend({}, _currentUser);
@@ -32121,6 +32120,11 @@
 
 	CurrentUserStore.isLoggedIn = function () {
 	  return !!_currentUser.id;
+	};
+
+	CurrentUserStore.signOut = function () {
+	  _currentUser = {};
+	  CurrentUserStore.__emitChange();
 	};
 
 	CurrentUserStore.userHasBeenFetched = function () {
@@ -32132,6 +32136,8 @@
 	    _currentUserHasBeenFetched = true;
 	    _currentUser = payload.currentUser;
 	    CurrentUserStore.__emitChange();
+	  } else if (payload.actionType === CurrentUserConstants.LOG_OUT) {
+	    CurrentUserStore.signOut();
 	  }
 	};
 
@@ -32142,7 +32148,8 @@
 /***/ function(module, exports) {
 
 	var CurrentUserConstants = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER"
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER",
+	  LOG_OUT: "LOG_OUT"
 	};
 
 	module.exports = CurrentUserConstants;
@@ -32166,13 +32173,14 @@
 	    });
 	  },
 
-	  logout: function () {
+	  logout: function (cb) {
 	    $.ajax({
 	      url: 'api/session',
 	      type: 'DELETE',
 	      dataType: 'json',
 	      success: function () {
 	        console.log("logged out!");
+	        cb && cb();
 	      }
 	    });
 	  },
@@ -32201,14 +32209,19 @@
 /* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(227);
+	var AppDispatcher = __webpack_require__(227);
 	var CurrentUserConstants = __webpack_require__(246);
 
 	var CurrentUserActions = {
 	  receiveCurrentUser: function (currentUser) {
-	    Dispatcher.dispatch({
+	    AppDispatcher.dispatch({
 	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
 	      currentUser: currentUser
+	    });
+	  },
+	  logOut: function () {
+	    AppDispatcher.dispatch({
+	      actionType: CurrentUserConstants.LOG_OUT
 	    });
 	  }
 	};
@@ -32583,694 +32596,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(253);
-	var UsersApiUtil = __webpack_require__(255);
-
-	var UsersIndex = React.createClass({
-	  displayName: 'UsersIndex',
-
-	  getInitialState: function () {
-	    return { users: UsersStore.all() };
-	  },
-
-	  componentDidMount: function () {
-	    this.listener = UsersStore.addListener(this._onChange);
-	    UsersApiUtil.fetchUsers();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-
-	  render: function () {
-	    var users = this.state.users.map(function (user) {
-	      return React.createElement(
-	        'li',
-	        { key: user.id },
-	        React.createElement(
-	          'a',
-	          { href: "#/users/" + user.id },
-	          user.email
-	        )
-	      );
-	    });
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        { className: 'title' },
-	        'Recent Activity'
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'users-index' },
-	        users
-	      )
-	    );
-	  },
-
-	  _onChange: function () {
-	    this.setState({ users: UsersStore.all() });
-	  }
-	});
-
-	module.exports = UsersIndex;
-
-/***/ },
-/* 253 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(254);
-
-	var _users = [];
-	var CHANGE_EVENT = "change";
-
-	var _addUser = function (newUser) {
-	  _users.unshift(newUser);
-	};
-
-	var UsersStore = new Store(Dispatcher);
-
-	UsersStore.all = function () {
-	  return _users.slice();
-	};
-
-	UsersStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-
-	    case UserConstants.RECEIVE_USERS:
-	      _users = payload.users;
-	      UsersStore.__emitChange();
-	      break;
-
-	    case UserConstants.RECEIVE_USER:
-	      _addUser(payload.user);
-	      UsersStore.__emitChange();
-	      break;
-	  }
-	};
-
-	UsersStore.findUserById = function (id) {
-	  for (var i = 0; i < _users.length; i++) {
-	    if (_users[i].id === id) {
-	      return _users[i];
-	    }
-	  }
-
-	  return;
-	};
-
-	module.exports = UsersStore;
-
-/***/ },
-/* 254 */
-/***/ function(module, exports) {
-
-	var UserConstants = {
-	  RECEIVE_USERS: "RECEIVE_USERS",
-	  RECEIVE_USER: "RECEIVE_USER"
-	};
-
-	module.exports = UserConstants;
-
-/***/ },
-/* 255 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var UserActions = __webpack_require__(256);
-
-	var UsersApiUtil = {
-	  fetchUsers: function () {
-	    $.ajax({
-	      url: '/api/users',
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (users) {
-	        UserActions.receiveUsers(users);
-	      }
-	    });
-	  },
-
-	  fetchUser: function (id) {
-	    $.ajax({
-	      url: '/api/users/' + id,
-	      type: 'GET',
-	      dataType: 'json',
-	      success: function (user) {
-	        UserActions.receiveUser(user);
-	      }
-	    });
-	  },
-
-	  createUser: function (attrs, callback) {
-	    $.ajax({
-	      url: '/api/users',
-	      type: 'POST',
-	      dataType: 'json',
-	      data: attrs,
-	      success: function (user) {
-	        UserActions.receiveUser(user);
-	        CurrentUserActions.receiveCurrentUser(user);
-	        callback && callback();
-	      }
-	    });
-	  }
-	};
-
-	module.exports = UsersApiUtil;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(254);
-
-	var UserActions = {
-	  receiveUsers: function (users) {
-	    Dispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_USERS,
-	      users: users
-	    });
-	  },
-
-	  receiveUser: function (user) {
-	    Dispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_USER,
-	      user: user
-	    });
-	  }
-	};
-
-	module.exports = UserActions;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(253);
-	var UsersApiUtil = __webpack_require__(255);
-
-	var UserShow = React.createClass({
-	  displayName: 'UserShow',
-
-	  getInitialState: function () {
-	    return this.getStateFromStore();
-	  },
-
-	  getStateFromStore: function () {
-	    return {
-	      user: UsersStore.findUserById(parseInt(this.props.params.id))
-	    };
-	  },
-
-	  componentDidMount: function () {
-	    this.listener = UsersStore.addListener(this._onChange);
-	    UsersApiUtil.fetchUser(this.props.params.id);
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listener.remove();
-	  },
-
-	  render: function () {
-	    var user = this.state.user;
-	    if (!user) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        'DONT HAVE A USER TO RENDER'
-	      );
-	    }
-
-	    var reviews = [];
-	    if (user) {
-	      user.reviews && user.reviews.forEach(function (review) {
-	        reviews.push(React.createElement(
-	          'li',
-	          { key: review.id },
-	          review.title
-	        ));
-	      });
-	    }
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'h1',
-	        { className: 'title' },
-	        'UserShow: ',
-	        user.email
-	      ),
-	      React.createElement(
-	        'h3',
-	        null,
-	        'Users posts:'
-	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'users-index' },
-	        posts
-	      ),
-	      React.createElement(
-	        'a',
-	        { href: "#/" },
-	        'All Users'
-	      )
-	    );
-	  },
-
-	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
-	  }
-	});
-
-	module.exports = UserShow;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var SessionsApiUtil = __webpack_require__(247);
-
-	var SessionForm = React.createClass({
-	  displayName: 'SessionForm',
-
-	  mixins: [History],
-
-	  submit: function (e) {
-	    e.preventDefault();
-
-	    var credentials = $(e.currentTarget).serializeJSON();
-	    SessionsApiUtil.login(credentials, function () {
-	      this.history.pushState({}, "/");
-	    }.bind(this));
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.submit },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Sign in'
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Email',
-	          React.createElement('input', { type: 'text', name: 'email' })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Password',
-	          React.createElement('input', { type: 'password', name: 'password' })
-	        ),
-	        React.createElement(
-	          'button',
-	          null,
-	          'Sign in'
-	        )
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.submit },
-	        React.createElement('input', { type: 'hidden', name: 'email', value: 'harry@aol.com' }),
-	        React.createElement('input', { type: 'hidden', name: 'password', value: '123456' }),
-	        React.createElement(
-	          'button',
-	          null,
-	          'Sign in as Guest'
-	        )
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = SessionForm;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
-	var UsersStore = __webpack_require__(253);
-	var UsersApiUtil = __webpack_require__(255);
-
-	var UserForm = React.createClass({
-	  displayName: 'UserForm',
-
-	  mixins: [History],
-
-	  submit: function (e) {
-	    e.preventDefault();
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this.submit },
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Sign Up!'
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Name',
-	        React.createElement('input', { type: 'text', name: 'name' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Email',
-	        React.createElement('input', { type: 'text', name: 'email' })
-	      ),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Password',
-	        React.createElement('input', { type: 'password', name: 'password' })
-	      ),
-	      React.createElement(
-	        'button',
-	        null,
-	        'Join!'
-	      )
-	    );
-	  }
-
-	});
-
-	module.exports = UserForm;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Header = __webpack_require__(261);
-	var Footer = __webpack_require__(262);
-	var SessionsApiUtil = __webpack_require__(247);
-	var CurrentUserStore = __webpack_require__(245);
-
-	var App = React.createClass({
-	  displayName: 'App',
-
-	  componentDidMount: function () {
-	    CurrentUserStore.addListener(this.forceUpdate.bind(this));
-	    SessionsApiUtil.fetchCurrentUser();
-	  },
-
-	  render: function () {
-	    if (!CurrentUserStore.userHasBeenFetched()) {
-	      return React.createElement(
-	        'p',
-	        null,
-	        'PLEASE WAIT'
-	      );
-	    }
-
-	    return React.createElement(
-	      'div',
-	      { className: 'wrapper' },
-	      React.createElement(Header, null),
-	      React.createElement(
-	        'div',
-	        { className: 'main' },
-	        this.props.children
-	      ),
-	      React.createElement(Footer, null)
-	    );
-	  }
-	});
-
-	module.exports = App;
-
-/***/ },
-/* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(245);
-	var SessionsApiUtil = __webpack_require__(247);
-
-	var Header = React.createClass({
-	  displayName: 'Header',
-
-	  getInitialState: function () {
-	    return {
-	      currentUser: {}
-	    };
-	  },
-
-	  componentDidMount: function () {
-	    CurrentUserStore.addListener(this._onChange);
-	  },
-
-	  _onChange: function () {
-	    this.setState({ currentUser: CurrentUserStore.currentUser() });
-	  },
-
-	  logout: function (e) {
-	    e.preventDefault();
-	    SessionsApiUtil.logout();
-	  },
-
-	  render: function () {
-	    if (CurrentUserStore.isLoggedIn()) {
-	      return React.createElement(
-	        'header',
-	        { className: 'root-header' },
-	        React.createElement('img', { className: 'root-header-banner', src: '/assets/banner/banner.jpg' }),
-	        React.createElement(
-	          'nav',
-	          { className: 'root-header-nav group' },
-	          React.createElement(
-	            'h1',
-	            { className: 'root-header-logo' },
-	            React.createElement(
-	              'a',
-	              { href: '/' },
-	              React.createElement(
-	                'div',
-	                null,
-	                'good'
-	              ),
-	              'eats'
-	            )
-	          ),
-	          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Edible / Group / Tag / Person', value: '' }),
-	          React.createElement(
-	            'ul',
-	            { className: 'root-header-list group' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '/' },
-	                'Home'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#/edibles' },
-	                'Explore'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#/lists/' },
-	                'My Lists'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Groups'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Recommendations'
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'ul',
-	            { className: 'root-header-icons group' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-envelope' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-users' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#/profile' },
-	                React.createElement('i', { className: 'fa fa-user fa-1.5x' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              'Logged in as ',
-	              this.state.currentUser.name
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'button',
-	                { onClick: this.logout },
-	                'Sign out'
-	              )
-	            )
-	          )
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'header',
-	        { className: 'root-header' },
-	        React.createElement(
-	          'nav',
-	          { className: 'root-header-nav group' },
-	          React.createElement(
-	            'h1',
-	            { className: 'root-header-logo' },
-	            React.createElement(
-	              'a',
-	              { href: '/' },
-	              'good',
-	              React.createElement(
-	                'span',
-	                null,
-	                'eats'
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            React.createElement(
-	              'a',
-	              { href: '#/login' },
-	              'Sign in'
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }
-	});
-
-	module.exports = Header;
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var Footer = React.createClass({
-	  displayName: "Footer",
-
-	  render: function () {
-	    return React.createElement(
-	      "footer",
-	      { className: "root-footer" },
-	      React.createElement(
-	        "nav",
-	        { className: "root-footer-nav group" },
-	        React.createElement(
-	          "small",
-	          { className: "root-footer-copy" },
-	          "© 2016 Goodeats Inc"
-	        ),
-	        React.createElement(
-	          "ul",
-	          { className: "root-footer-links group" },
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          ),
-	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement("a", { href: "#" })
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Footer;
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
 	var CurrentUserStore = __webpack_require__(245);
 	var SessionsApiUtil = __webpack_require__(247);
 
@@ -33503,6 +32828,703 @@
 	});
 
 	module.exports = Profile;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
+
+	var UsersIndex = React.createClass({
+	  displayName: 'UsersIndex',
+
+	  getInitialState: function () {
+	    return { users: UsersStore.all() };
+	  },
+
+	  componentDidMount: function () {
+	    this.listener = UsersStore.addListener(this._onChange);
+	    UsersApiUtil.fetchUsers();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+
+	  render: function () {
+	    var users = this.state.users.map(function (user) {
+	      return React.createElement(
+	        'li',
+	        { key: user.id },
+	        React.createElement(
+	          'a',
+	          { href: "#/users/" + user.id },
+	          user.email
+	        )
+	      );
+	    });
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'title' },
+	        'Recent Activity'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'users-index' },
+	        users
+	      )
+	    );
+	  },
+
+	  _onChange: function () {
+	    this.setState({ users: UsersStore.all() });
+	  }
+	});
+
+	module.exports = UsersIndex;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(209).Store;
+	var Dispatcher = __webpack_require__(227);
+	var UserConstants = __webpack_require__(255);
+
+	var _users = [];
+	var CHANGE_EVENT = "change";
+
+	var _addUser = function (newUser) {
+	  _users.unshift(newUser);
+	};
+
+	var UsersStore = new Store(Dispatcher);
+
+	UsersStore.all = function () {
+	  return _users.slice();
+	};
+
+	UsersStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+
+	    case UserConstants.RECEIVE_USERS:
+	      _users = payload.users;
+	      UsersStore.__emitChange();
+	      break;
+
+	    case UserConstants.RECEIVE_USER:
+	      _addUser(payload.user);
+	      UsersStore.__emitChange();
+	      break;
+	  }
+	};
+
+	UsersStore.findUserById = function (id) {
+	  for (var i = 0; i < _users.length; i++) {
+	    if (_users[i].id === id) {
+	      return _users[i];
+	    }
+	  }
+
+	  return;
+	};
+
+	module.exports = UsersStore;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports) {
+
+	var UserConstants = {
+	  RECEIVE_USERS: "RECEIVE_USERS",
+	  RECEIVE_USER: "RECEIVE_USER"
+	};
+
+	module.exports = UserConstants;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var UserActions = __webpack_require__(257);
+
+	var UsersApiUtil = {
+	  fetchUsers: function () {
+	    $.ajax({
+	      url: '/api/users',
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (users) {
+	        UserActions.receiveUsers(users);
+	      }
+	    });
+	  },
+
+	  fetchUser: function (id) {
+	    $.ajax({
+	      url: '/api/users/' + id,
+	      type: 'GET',
+	      dataType: 'json',
+	      success: function (user) {
+	        UserActions.receiveUser(user);
+	      }
+	    });
+	  },
+
+	  createUser: function (attrs, callback) {
+	    $.ajax({
+	      url: '/api/users',
+	      type: 'POST',
+	      dataType: 'json',
+	      data: attrs,
+	      success: function (user) {
+	        UserActions.receiveUser(user);
+	        CurrentUserActions.receiveCurrentUser(user);
+	        callback && callback();
+	      }
+	    });
+	  }
+	};
+
+	module.exports = UsersApiUtil;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(227);
+	var UserConstants = __webpack_require__(255);
+
+	var UserActions = {
+	  receiveUsers: function (users) {
+	    Dispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_USERS,
+	      users: users
+	    });
+	  },
+
+	  receiveUser: function (user) {
+	    Dispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_USER,
+	      user: user
+	    });
+	  }
+	};
+
+	module.exports = UserActions;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
+
+	var UserShow = React.createClass({
+	  displayName: 'UserShow',
+
+	  getInitialState: function () {
+	    return this.getStateFromStore();
+	  },
+
+	  getStateFromStore: function () {
+	    return {
+	      user: UsersStore.findUserById(parseInt(this.props.params.id))
+	    };
+	  },
+
+	  componentDidMount: function () {
+	    this.listener = UsersStore.addListener(this._onChange);
+	    UsersApiUtil.fetchUser(this.props.params.id);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+
+	  render: function () {
+	    var user = this.state.user;
+	    if (!user) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        'DONT HAVE A USER TO RENDER'
+	      );
+	    }
+
+	    var reviews = [];
+	    if (user) {
+	      user.reviews && user.reviews.forEach(function (review) {
+	        reviews.push(React.createElement(
+	          'li',
+	          { key: review.id },
+	          review.title
+	        ));
+	      });
+	    }
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'h1',
+	        { className: 'title' },
+	        'UserShow: ',
+	        user.email
+	      ),
+	      React.createElement(
+	        'h3',
+	        null,
+	        'Users posts:'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'users-index' },
+	        posts
+	      ),
+	      React.createElement(
+	        'a',
+	        { href: "#/" },
+	        'All Users'
+	      )
+	    );
+	  },
+
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
+	  }
+	});
+
+	module.exports = UserShow;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var SessionsApiUtil = __webpack_require__(247);
+
+	var SessionForm = React.createClass({
+	  displayName: 'SessionForm',
+
+	  mixins: [History],
+
+	  submit: function (e) {
+	    e.preventDefault();
+
+	    var credentials = $(e.currentTarget).serializeJSON();
+	    SessionsApiUtil.login(credentials, function () {
+	      this.history.pushState({}, "/");
+	    }.bind(this));
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.submit },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Sign in'
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Email',
+	          React.createElement('input', { type: 'text', name: 'email' })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password',
+	          React.createElement('input', { type: 'password', name: 'password' })
+	        ),
+	        React.createElement(
+	          'button',
+	          null,
+	          'Sign in'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.submit },
+	        React.createElement('input', { type: 'hidden', name: 'email', value: 'harry@aol.com' }),
+	        React.createElement('input', { type: 'hidden', name: 'password', value: '123456' }),
+	        React.createElement(
+	          'button',
+	          null,
+	          'Sign in as Guest'
+	        )
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = SessionForm;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
+
+	var UserForm = React.createClass({
+	  displayName: 'UserForm',
+
+	  mixins: [History],
+
+	  submit: function (e) {
+	    e.preventDefault();
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.submit },
+	      React.createElement(
+	        'h1',
+	        null,
+	        'Sign Up!'
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Name',
+	        React.createElement('input', { type: 'text', name: 'name' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Email',
+	        React.createElement('input', { type: 'text', name: 'email' })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Password',
+	        React.createElement('input', { type: 'password', name: 'password' })
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Join!'
+	      )
+	    );
+	  }
+
+	});
+
+	module.exports = UserForm;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Header = __webpack_require__(262);
+	var Footer = __webpack_require__(263);
+	var SessionsApiUtil = __webpack_require__(247);
+	var CurrentUserStore = __webpack_require__(245);
+
+	var App = React.createClass({
+	  displayName: 'App',
+
+	  componentDidMount: function () {
+	    CurrentUserStore.addListener(this.forceUpdate.bind(this));
+	    SessionsApiUtil.fetchCurrentUser();
+	  },
+
+	  render: function () {
+	    if (!CurrentUserStore.userHasBeenFetched()) {
+	      return React.createElement(
+	        'p',
+	        null,
+	        'PLEASE WAIT'
+	      );
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: 'wrapper' },
+	      React.createElement(Header, null),
+	      React.createElement(
+	        'div',
+	        { className: 'main' },
+	        this.props.children
+	      ),
+	      React.createElement(Footer, null)
+	    );
+	  }
+	});
+
+	module.exports = App;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var CurrentUserStore = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(247);
+	var History = __webpack_require__(159).History;
+
+	var Header = React.createClass({
+	  displayName: 'Header',
+
+	  mixins: [History],
+
+	  getInitialState: function () {
+	    return {
+	      currentUser: CurrentUserStore.currentUser()
+	    };
+	  },
+
+	  componentDidMount: function () {
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.currentUserListener.remove();
+	  },
+
+	  _onChange: function () {
+	    this.setState({ currentUser: CurrentUserStore.currentUser() });
+	  },
+
+	  logout: function (e) {
+	    e.preventDefault();
+	    SessionsApiUtil.logout(function () {
+	      this.history.pushState({}, "/login");
+	    }.bind(this));
+	  },
+
+	  render: function () {
+	    if (CurrentUserStore.isLoggedIn()) {
+	      return React.createElement(
+	        'header',
+	        { className: 'root-header' },
+	        React.createElement('img', { className: 'root-header-banner', src: '/assets/banner/banner.jpg' }),
+	        React.createElement(
+	          'nav',
+	          { className: 'root-header-nav group' },
+	          React.createElement(
+	            'h1',
+	            { className: 'root-header-logo' },
+	            React.createElement(
+	              'a',
+	              { href: '/' },
+	              React.createElement(
+	                'div',
+	                null,
+	                'good'
+	              ),
+	              'eats'
+	            )
+	          ),
+	          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Edible / Group / Tag / Person', value: '' }),
+	          React.createElement(
+	            'ul',
+	            { className: 'root-header-list group' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '/' },
+	                'Home'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#/edibles' },
+	                'Explore'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#/lists/' },
+	                'My Lists'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#' },
+	                'Groups'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#' },
+	                'Recommendations'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'ul',
+	            { className: 'root-header-icons group' },
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#' },
+	                React.createElement('i', { className: 'fa fa-envelope' })
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#' },
+	                React.createElement('i', { className: 'fa fa-users' })
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'a',
+	                { href: '#/profile' },
+	                React.createElement('i', { className: 'fa fa-user fa-1.5x' })
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              'Logged in as ',
+	              this.state.currentUser.name
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
+	              React.createElement(
+	                'button',
+	                { onClick: this.logout },
+	                'Sign out'
+	              )
+	            )
+	          )
+	        )
+	      );
+	    } else {
+	      return React.createElement(
+	        'header',
+	        { className: 'root-header' },
+	        React.createElement(
+	          'nav',
+	          { className: 'root-header-nav group' },
+	          React.createElement(
+	            'h1',
+	            { className: 'root-header-logo' },
+	            React.createElement(
+	              'a',
+	              { href: '/' },
+	              'good',
+	              React.createElement(
+	                'span',
+	                null,
+	                'eats'
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'a',
+	              { href: '#/login' },
+	              'Sign in'
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }
+	});
+
+	module.exports = Header;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var Footer = React.createClass({
+	  displayName: "Footer",
+
+	  render: function () {
+	    return React.createElement(
+	      "footer",
+	      { className: "root-footer" },
+	      React.createElement(
+	        "nav",
+	        { className: "root-footer-nav group" },
+	        React.createElement(
+	          "small",
+	          { className: "root-footer-copy" },
+	          "© 2016 Goodeats Inc"
+	        ),
+	        React.createElement(
+	          "ul",
+	          { className: "root-footer-links group" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement("a", { href: "#" })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Footer;
 
 /***/ }
 /******/ ]);
