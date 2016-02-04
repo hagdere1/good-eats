@@ -33,16 +33,44 @@ var Profile = React.createClass({
       return <div></div>;
     }
 
+    var ediblesEaten;
+    var numReviews;
+    if (this.state.currentUser) {
+      numEdiblesEaten = this.state.currentUser.lists[1].list_items.length;
+      numReviews = this.state.currentUser.reviews.length;
+    }
+
     var ownerName = this.state.currentUser.name + "'s";
 
     var lists = (
       this.state.currentUser.lists.map(function (list) {
         return (
-          <li key={list.id}>
+          <li key={list.id} className="profile-list">
             <a href={"#/lists/" + list.id}>
               {list.title}
             </a>
           </li>
+        );
+      })
+    );
+
+    var reviews = (
+      this.state.currentUser.reviews.reverse().map(function (review) {
+        return (
+          <div key={review.id} className="profile-review">
+            <div className="review-name-date group">
+              <p className="review-name">{review.user}:</p>
+              <p className="review-date">{review.created_at}</p>
+            </div>
+
+            <div>
+              <p className="review-title">{review.title}</p>
+            </div>
+
+            <div>
+              <p className="review-body">{review.body}</p>
+            </div>
+          </div>
         );
       })
     );
@@ -53,7 +81,7 @@ var Profile = React.createClass({
       <div className="profile-container">
         <div className="profile-header group">
 
-          <img className="profile-picture" src="https://31.media.tumblr.com/avatar_11da9b9a0c30_128.png" />
+          <img className="profile-picture" src="http://coolspotters.com/files/photos/442638/harry-potter-profile.jpg?1357465539" />
 
           <div className="profile-details">
             <h1 className="heading-main">{this.state.currentUser.name}</h1>
@@ -77,6 +105,11 @@ var Profile = React.createClass({
           </div>
         </div>
 
+        <div className="profile-stats">
+          <p>{numReviews} reviews</p>
+          <p>{numEdiblesEaten} edibles eaten</p>
+        </div>
+
         <div className="profile-lists">
           <h2>{ownerName} Lists</h2>
           <div className="profile-list-items">
@@ -88,7 +121,7 @@ var Profile = React.createClass({
           <h2>{ownerName} Recent Reviews</h2>
 
           <div>
-            Three reviews here
+            {reviews}
           </div>
         </div>
 
