@@ -24395,6 +24395,10 @@
 	  return _lists[id];
 	};
 
+	ListStore.destroyList = function (id) {
+	  delete _lists[id];
+	};
+
 	ListStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListConstants.LISTS_RECEIVED:
@@ -24403,6 +24407,10 @@
 	      break;
 	    case ListConstants.LIST_RECEIVED:
 	      this.resetList(payload.list);
+	      ListStore.__emitChange();
+	      break;
+	    case ListConstants.LIST_DESTROYED:
+	      this.destroyList(payload.id);
 	      ListStore.__emitChange();
 	      break;
 	  }
@@ -31178,7 +31186,8 @@
 
 	ListConstants = {
 	  LISTS_RECEIVED: "LISTS_RECEIVED",
-	  LIST_RECEIVED: "LIST_RECEIVED"
+	  LIST_RECEIVED: "LIST_RECEIVED",
+	  LIST_DESTROYED: "LIST_DESTROYED"
 	};
 
 	module.exports = ListConstants;
@@ -31341,6 +31350,21 @@
 	      }
 	    });
 	  },
+	  updateListItem: function (listItem, cb) {
+	    $.ajax({
+	      url: "api/list_items/" + listItem.id,
+	      method: "PATCH",
+	      data: { list_item: listItem },
+	      success: function (listItem) {
+	        ApiActions.receiveSingleListItem(listItem);
+	        console.log("Successfully updated list item!");
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to create list item.");
+	      }
+	    });
+	  },
 	  fetchAllReviews: function () {
 	    $.ajax({
 	      url: "/api/reviews/",
@@ -31365,6 +31389,35 @@
 	      },
 	      error: function () {
 	        console.log("We regret to inform you that your review submission has been denied.");
+	      }
+	    });
+	  },
+	  createList: function (list, cb) {
+	    $.ajax({
+	      url: "api/lists",
+	      method: "POST",
+	      data: { list: list },
+	      success: function (listData) {
+	        console.log("You created a list!");
+	        ApiActions.receiveSingleList(listData);
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to create list");
+	      }
+	    });
+	  },
+	  destroyList: function (id, cb) {
+	    $.ajax({
+	      url: "api/lists/" + id,
+	      method: "DELETE",
+	      success: function () {
+	        ApiActions.destroyList(id);
+	        console.log("Deleted list!");
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to delete list.");
 	      }
 	    });
 	  }
@@ -31406,6 +31459,12 @@
 	    AppDispatcher.dispatch({
 	      actionType: ListConstants.LIST_RECEIVED,
 	      list: list
+	    });
+	  },
+	  destroyList: function (id) {
+	    AppDispatcher.dispatch({
+	      actionType: ListConstants.LIST_DESTROYED,
+	      id: id
 	    });
 	  },
 	  receiveAllListItems: function (listItems) {
@@ -31470,9 +31529,12 @@
 
 	var React = __webpack_require__(1);
 	var ListStore = __webpack_require__(208);
+	var CurrentUserStore = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(233);
 	var ListsIndexItem = __webpack_require__(238);
 	var ListShow = __webpack_require__(239);
+	var ListForm = __webpack_require__(264);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31495,6 +31557,7 @@
 	  },
 
 	  render: function () {
+
 	    return React.createElement(
 	      'div',
 	      { className: 'lists-index group' },
@@ -31512,12 +31575,17 @@
 	          'Lists'
 	        ),
 	        React.createElement(
-	          'ul',
+	          'table',
 	          { className: 'lists-index' },
-	          this.state.lists.map(function (list) {
-	            return React.createElement(ListsIndexItem, { key: list.id, list: list });
-	          })
-	        )
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.state.lists.map(function (list) {
+	              return React.createElement(ListsIndexItem, { key: list.id, list: list });
+	            })
+	          )
+	        ),
+	        React.createElement(ListForm, null)
 	      ),
 	      this.props.children
 	    );
@@ -31542,11 +31610,32 @@
 	    this.history.pushState(null, '/lists/' + this.props.list.id, {});
 	  },
 
+	  destroyList: function (event) {
+	    event.preventDefault();
+	    ApiUtil.destroyList(this.props.list.id);
+	  },
+
 	  render: function () {
+	    var deleteButton;
+	    if (this.props.list.can_delete === true) {
+	      deleteButton = React.createElement(
+	        'td',
+	        { onClick: this.destroyList },
+	        '×'
+	      );
+	    } else {
+	      deleteButton = React.createElement('td', null);
+	    }
+
 	    return React.createElement(
-	      'li',
-	      { onClick: this.showList, className: 'lists-index-item' },
-	      this.props.list.title
+	      'tr',
+	      { className: 'lists-index-item' },
+	      React.createElement(
+	        'td',
+	        { onClick: this.showList },
+	        this.props.list.title
+	      ),
+	      deleteButton
 	    );
 	  }
 	});
@@ -31648,7 +31737,6 @@
 	  },
 
 	  destroyListItem: function (event) {
-
 	    event.preventDefault();
 	    ApiUtil.destroyListItem(event.currentTarget.id);
 	  },
@@ -32243,112 +32331,23 @@
 	  displayName: 'EdibleShow',
 
 	  getInitialState: function () {
-	    return this.getInitialValues();
-	  },
-
-	  getInitialValues: function (edible, currentUser) {
-	    this.edible = EdibleStore.find(parseInt(this.props.params.id));
-	    this.currentUser = CurrentUserStore.currentUser();
-	    var currentList = this.currentList || null;
-	    var currentListItem = this.currentListItem || null;
-	    var userItems = this.currentUser.list_items;
-	    var userHasListItem = false;
-	    var inList = false;
-
-	    for (i = 0; i < userItems.length; i++) {
-	      if (userItems[i].edible_id == this.props.params.id) {
-	        userHasListItem = true;
-	        currentList = userItems[i].list;
-	        currentListItem = userItems[i];
-	      }
-	    }
-
-	    if (!userHasListItem) {
-	      currentList = this.currentUser.lists[0];
-	      currentListItem = null;
-	    }
-
-	    return { edible: this.edible,
-	      lists: this.currentUser.lists,
-	      currentList: currentList,
-	      currentListItem: currentListItem,
-	      userHasListItem: userHasListItem };
-	  },
-
-	  addToList: function (event) {
-	    event.preventDefault();
-	    var listItem = {};
-
-	    if (!this.state.userHasListItem) {
-	      listItem.list_id = this.state.currentList.id;
-	      listItem.edible_id = parseInt(this.props.params.id);
-	      var that = this;
-	      ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
-	    }
-	  },
-
-	  deleteFromList: function (event) {
-	    var that = this;
-	    ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({ userHasListItem: false }));
-	  },
-
-	  handleChooseList: function (newList, e) {
-	    var listItem = {};
-
-	    listItem.list_id = newList.id;
-	    listItem.edible_id = parseInt(this.props.params.id);
-	    var that = this;
-
-	    if (this.state.userHasListItem) {
-	      ApiUtil.destroyListItem(this.state.currentListItem.id, that.setState({ userHasListItem: false }));
-	      ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
-	    } else {
-	      ApiUtil.createListItem(listItem, that.setState({ userHasListItem: true }));
-	    }
+	    return { edible: EdibleStore.find(parseInt(this.props.params.id)) };
 	  },
 
 	  _onChange: function () {
-	    var state = this.getInitialValues();
-	    this.setState(state);
-	  },
-
-	  _onListItemChange: function () {
-	    var state = this.getInitialValues();
-	    this.setState(state);
-	  },
-
-	  _onCurrentUserChange: function () {
-	    var state = this.getInitialValues();
-	    this.setState(state);
+	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
 	  },
 
 	  componentDidMount: function () {
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
-	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
-	    this.listItemListener = ListItemStore.addListener(this._onListItemChange);
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
-	    ApiUtil.fetchAllLists();
-	    SessionsApiUtil.fetchCurrentUser();
 	  },
 
 	  componentWillUnmount: function () {
 	    this.edibleListener.remove();
-	    this.currentUserListener.remove();
-	    this.listItemListener.remove();
 	  },
 
 	  render: function () {
-	    var lists;
-
-	    if (this.state.lists) {
-	      lists = this.state.lists.map(function (list) {
-	        return React.createElement(
-	          'li',
-	          { onClick: this.handleChooseList.bind(this, list), list: list, key: list.id },
-	          list.title
-	        );
-	      }.bind(this));
-	    }
 
 	    var edibleImage, edibleName, edibleCategory, edibleDescription;
 
@@ -32371,30 +32370,6 @@
 	      );
 	    }
 
-	    var edibleShowButton;
-	    if (this.state.userHasListItem) {
-	      edibleShowButtonClass = "edible-show-button-checked";
-	      buttonName = this.state.currentList.title;
-	      edibleShowButton = React.createElement(
-	        'div',
-	        { className: edibleShowButtonClass },
-	        buttonName,
-	        ' ',
-	        React.createElement(
-	          'mark',
-	          { onClick: this.deleteFromList },
-	          '✕'
-	        )
-	      );
-	    } else {
-	      edibleShowButtonClass = "edible-show-button-unselected";
-	      edibleShowButton = React.createElement(
-	        'button',
-	        { className: edibleShowButtonClass, onClick: this.addToList },
-	        'Want to Try'
-	      );
-	    }
-
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-show' },
@@ -32404,22 +32379,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'edible-image' },
-	          edibleImage,
-	          React.createElement(
-	            'div',
-	            { className: 'edible-show-buttons group' },
-	            edibleShowButton,
-	            React.createElement(
-	              'div',
-	              { className: 'edible-show-button-select-list' },
-	              '▼',
-	              React.createElement(
-	                'ul',
-	                { className: 'edible-select-list' },
-	                lists
-	              )
-	            )
-	          )
+	          edibleImage
 	        ),
 	        React.createElement(
 	          'div',
@@ -33525,6 +33485,49 @@
 	});
 
 	module.exports = Footer;
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(233);
+
+	var ListForm = React.createClass({
+	  displayName: 'ListForm',
+
+	  getInitialState: function () {
+	    return { title: "" };
+	  },
+
+	  submit: function (e) {
+	    e.preventDefault();
+	    list = {};
+	    list.title = this.state.title;
+	    list.can_delete = true;
+	    that = this;
+	    ApiUtil.createList(list, that.setState({ title: "" }));
+	  },
+
+	  handleTitleChange: function (e) {
+	    this.setState({ title: e.target.value });
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.submit, className: 'form-add-list' },
+	      React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, value: this.state.title, className: 'add-list-input-text' }),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Add List'
+	      )
+	    );
+	  }
+	});
+
+	module.exports = ListForm;
 
 /***/ }
 /******/ ]);

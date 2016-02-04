@@ -9,6 +9,7 @@ class Api::ListsController < ApplicationController
 
   def create
     @list = List.new(list_params)
+    @list.user_id = current_user.id;
     if @list.save
       render :show
     else
