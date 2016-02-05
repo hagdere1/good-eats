@@ -37,7 +37,7 @@ var Header = React.createClass({
     if (CurrentUserStore.isLoggedIn()) {
       return (
         <header className="root-header">
-          <img className="root-header-banner" src="/assets/banner/Dollarphotoclub_72620313.jpg" />
+          <img className="root-header-banner" src={window.goodeatsAssets.logo} />
           <nav className="root-header-nav group">
 
             <h1 className="root-header-logo group">
