@@ -1,4 +1,4 @@
-json.extract! user, :id, :name, :email, :created_at
+json.extract! user, :id, :name, :email, :created_at, :image_url
 json.created_at user.created_at.strftime("%B %d, %Y")
 json.reviews user.reviews
 json.list_items do

@@ -110,22 +110,25 @@ jonathan = User.create!(email: "john@aol.com", name: "Jonathan T.", password_dig
 
   # Gregory's lists
 want_to_try = List.create!({title: "Want to Try", user_id: gregory.id, can_delete: false})
-  item_fois_gras = ListItem.create!({list_id: want_to_try.id, edible_id: fois_gras.id})
-  item_mixed_nuts = ListItem.create!({list_id: want_to_try.id, edible_id: mixed_nuts.id})
 eaten = List.create!({title: "Eaten", user_id: gregory.id, can_delete: false})
   item_pizza = ListItem.create!({list_id: eaten.id, edible_id: pizza.id})
   item_burger = ListItem.create!({list_id: eaten.id, edible_id: burger.id})
   item_pad_thai = ListItem.create!({list_id: eaten.id, edible_id: pad_thai.id})
+  item_mixed_nuts = ListItem.create!({list_id: eaten.id, edible_id: mixed_nuts.id}) #needs review
+  item_bagel_with_lox = ListItem.create!({list_id: eaten.id, edible_id: bagel_with_lox.id}) #needs review
+  item_fois_gras = ListItem.create!({list_id: eaten.id, edible_id: fois_gras.id}) #needs review
+  item_turtle_soup = ListItem.create!({list_id: eaten.id, edible_id: turtle_soup.id}) #needs review
 
 
   # Harry's lists
 want_to_try2 = List.create!({title: "Want to Try", user_id: harry.id, can_delete: false})
-  item_pizza2 = ListItem.create!({list_id: want_to_try2.id, edible_id: pizza.id})
   item_burger2 = ListItem.create!({list_id: want_to_try2.id, edible_id: burger.id})
   item_pad_thai2 = ListItem.create!({list_id: want_to_try2.id, edible_id: pad_thai.id})
 eaten2 = List.create!({title: "Eaten", user_id: harry.id, can_delete: false})
   item_mixed_nuts2 = ListItem.create!({list_id: eaten2.id, edible_id: mixed_nuts.id})
   item_kimchi = ListItem.create!({list_id: eaten2.id, edible_id: kimchi.id})
+  item_pizza2 = ListItem.create!({list_id: eaten2.id, edible_id: pizza.id})
+  item_bagel_with_lox2 = ListItem.create!({list_id: eaten2.id, edible_id: bagel_with_lox.id}) #needs review
 new_orleans = List.create!({title: "Eat in New Orleans", user_id: harry.id, can_delete: true})
   item_turtle_soup = ListItem.create!({list_id: new_orleans.id, edible_id: turtle_soup.id})
   item_scampi = ListItem.create!({list_id: new_orleans.id, edible_id: scampi.id})
@@ -133,8 +136,33 @@ new_orleans = List.create!({title: "Eat in New Orleans", user_id: harry.id, can_
   item_fried_chicken = ListItem.create!({list_id: new_orleans.id, edible_id: southern_fried_chicken.id})
 
 
+
+# Jonathan's lists
+want_to_try3 = List.create!({title: "Want to Try", user_id: jonathan.id, can_delete: false})
+  item_kimchi2 = ListItem.create!({list_id: want_to_try3.id, edible_id: kimchi.id})
+  item_gelato = ListItem.create!({list_id: want_to_try3.id, edible_id: gelato.id})
+eaten3 = List.create!({title: "Eaten", user_id: jonathan.id, can_delete: false})
+  item_mixed_nuts3 = ListItem.create!({list_id: eaten3.id, edible_id: mixed_nuts.id})
+  item_bagel_with_lox = ListItem.create!({list_id: eaten3.id, edible_id: bagel_with_lox.id})
+  item_fois_gras3 = ListItem.create!({list_id: eaten3.id, edible_id: fois_gras.id})
+  item_turtle_soup = ListItem.create!({list_id: eaten3.id, edible_id: turtle_soup.id})
+  item_pizza3 = ListItem.create!({list_id: eaten3.id, edible_id: pizza.id})
+
 # Gregory's reviews
 pizza_review_2 = Review.create!(user_id: gregory.id, edible_id: pizza.id, title: "Heaven is a place on earth", body: "What part of heaven did this fall from? This cheesy, saucy, rich food is something the likes of which I have never had the pleasure of putting into my mouth hole. I will never look at anything the same way again!")
+burger_review = Review.create!(user_id: gregory.id, edible_id: burger.id, title: "Triple beef patty", body: "I had a cheeseburger with three meats and it was so much meats but I had a great time because it was delicious and this is my review of burger.")
+pad_thai_review = Review.create!(user_id: gregory.id, edible_id: pad_thai.id, title: "Thailand noodles are delicious", body: "I went to Thailand and then ate the noodles there and I thought to myself the noodles in Thailand are very good Thai noodles. Then I tried it in American and it was still good noodles too.")
+gregory_nuts_review = Review.create!(user_id: gregory.id, edible_id: mixed_nuts.id, title: "So cool!", body: "Holy smokes! So I go to the store the other day and notice an edible I've never noticed before: mixed nuts the bag says. So I say, hey it can't hurt to try something new. Turns out this is one of the most delicious inventions of humankind. Especially tasty with ketchup.")
 
 # Harry's reviews
 pizza_review_1 = Review.create!(user_id: harry.id, edible_id: pizza.id, title: "Not what I expected...", body: "My brother and I, when we were small, we would listen to a BBC Radio program every morning called 'Children's Choice.' And they played records suitable for kids to listen to. My brother and I listened to this seriously — we learned all the lyrics to all the songs, and we sang along. And one of them was a Dean Martin hit called 'Amore.' And the song began, 'When the moon hits your eye like a big pizza pie.' Well, my brother and I had never seen a pizza, didn't know what a pizza was; we had never heard the word before, so it made no sense to us. So I thought that what Dean Martin was actually singing was 'When the moon hits your eye like a big piece of pie.' So for years, whenever I was singing along, I would sing those words, until one day somebody said, 'What are you singing?' And I said, 'A big piece of pie.' And he said, 'Idiot, it's pizza pie.' Because I was actually in my twenties before I saw a pizza. I know that will sound bizarre to you, but I grew up in a small community in northern England.")
+mixed_nuts_review = Review.create!(user_id: harry.id, edible_id: mixed_nuts.id, title: "I'm nuts for nuts!", body: "Dang, mixed nuts are such a healthy alternative to pizza. But I still like pizza.")
+kimchi_review = Review.create!(user_id: harry.id, edible_id: kimchi.id, title: "I never eat Korean food", body: "But when I do I make sure it's kimchi!!!")
+harry_bagel = Review.create!(user_id: harry.id, edible_id: bagel_with_lox.id, title: "Meh", body: "Bagels are so hit or miss. Sometimes they're okay but a lot more often they're chewy and get stuck to your teeth. I can't endorse this food product.")
+
+# Jonathan's reviews
+pizza_review_3 = Review.create!(user_id: jonathan.id, edible_id: pizza.id, title: "Dangerously cheesey", body: "There was so much cheese on this one slice of pizza I thought myself if serious trouble. But then I took a bite and all my fears were assuaged. Happy to report that pizza is a safe item for consumption.")
+mixed_nuts_review2 = Review.create!(user_id: jonathan.id, edible_id: mixed_nuts.id, title: "Crunchy", body: "Mixed nuts are quite crunchy.")
+bagel_with_lox_review = Review.create!(user_id: jonathan.id, edible_id: bagel_with_lox.id, title: "Nothing like a NYC bagel with lox", body: "I eat bagel with loxes whenever I get the opportunity and what better place in the world than NYC! Bagel with lox is my favorite bagel with a fish.")
+turtle_soup_review = Review.create!(user_id: jonathan.id, edible_id: turtle_soup.id, title: "A long forgotten delicacy", body: "Not sure what's going on lately with people not eating turtle soup that much. It's a great way to keep warm in the cold NY winter.")
+fois_gras_review = Review.create!(user_id: jonathan.id, edible_id: fois_gras.id, title: "No", body: "I will never eat this ever again. It was not only too soft, but smelled funky and tasted like dog food. Consider this a one word review: DISGUSTING.")
