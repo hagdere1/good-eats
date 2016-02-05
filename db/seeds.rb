@@ -102,8 +102,8 @@ southern_fried_chicken = Edible.create!({name: "Southern Fried Chicken",
                                         image_url: "/assets/edible_thumbs/southern_fried_chicken.jpg"})
 
 # Users
-gregory = User.create!({email: "greg@aol.com", name: "Gregory", password_digest: "$2a$10$9CRgBAUVOF2OeytcYz15l.L2zErx7SOBjIwaq7jJJyT1lTggik.4u", session_token: "tUs_0hhW5-xfMQVWTXPoFg", image_url: "/assets/profile_pics/Joffrey.jpg"})
-harry = User.create!({email: "harry@aol.com", name: "Harry", password_digest: "$2a$10$okYSGm3I/ah6rOLMFjNsaeb4m0wIngp2nmgYuLmx8WrHLCfogVDU2", session_token: "S4FDctdUEIQ2q41j-aA-Nw", image_url: "/assets/profile_pics/harry-potter-profile.jpg"})
+gregory = User.create!({email: "greg@aol.com", name: "Gregory", password_digest: "$2a$10$9CRgBAUVOF2OeytcYz15l.L2zErx7SOBjIwaq7jJJyT1lTggik.4u", session_token: "tUs_0hhW5-xfMQVWTXPoFg", image_url: "assets/profile_pics/stevejobsbig.jpg"})
+harry = User.create!({email: "harry@aol.com", name: "Harry", password_digest: "$2a$10$okYSGm3I/ah6rOLMFjNsaeb4m0wIngp2nmgYuLmx8WrHLCfogVDU2", session_token: "S4FDctdUEIQ2q41j-aA-Nw", image_url: "http://coolspotters.com/files/photos/442638/harry-potter-profile.jpg?1357465539"})
 jonathan = User.create!(email: "john@aol.com", name: "Jonathan T.", password_digest: "$2a$10$P.mVZAz958HcO6QqRomYBene9Va2mKpeGY8NIVN8nxFLnWegoj7rG", session_token: "gBMo8fgTIDifuXkHsetPaA", image_url: "https://lh3.googleusercontent.com/-Xbx9FZzAB0k/AAAAAAAAAAI/AAAAAAAAAGk/hH4JT8CLYt4/photo.jpg")
 
 # Lists

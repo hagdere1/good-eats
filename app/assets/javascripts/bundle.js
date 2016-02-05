@@ -32631,7 +32631,7 @@
 	  },
 
 	  render: function () {
-
+	    debugger;
 	    if (this.state.currentUser === "undefined") {
 	      return React.createElement('div', null);
 	    }
@@ -32708,6 +32708,8 @@
 	      );
 	    });
 
+	    var profilePicture = React.createElement('img', { className: 'profile-picture', src: this.state.currentUser.image_url });
+
 	    var currentDate = new Date();
 
 	    return React.createElement(
@@ -32716,7 +32718,11 @@
 	      React.createElement(
 	        'div',
 	        { className: 'profile-header group' },
-	        React.createElement('img', { className: 'profile-picture', src: this.state.currentUser.image_url }),
+	        React.createElement(
+	          'div',
+	          { className: 'profile-picture-container' },
+	          profilePicture
+	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'profile-details' },
@@ -33507,28 +33513,24 @@
 	            )
 	          ),
 	          React.createElement(
-	            'div',
-	            null,
+	            'ul',
+	            { className: 'auth-header-list' },
 	            React.createElement(
-	              'ul',
-	              { 'class': 'auth-header-list group' },
+	              'li',
+	              null,
 	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'a',
-	                  { 'class': 'auth-alternate-link', href: '#/login' },
-	                  'Sign in'
-	                )
-	              ),
+	                'a',
+	                { className: 'auth-alternate-link', href: '#/login' },
+	                'Sign in'
+	              )
+	            ),
+	            React.createElement(
+	              'li',
+	              null,
 	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'a',
-	                  { 'class': 'auth-alternate-link', href: '#/users/new' },
-	                  'Sign up'
-	                )
+	                'a',
+	                { className: 'auth-alternate-link', href: '#/users/new' },
+	                'Sign up'
 	              )
 	            )
 	          )

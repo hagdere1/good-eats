@@ -73,24 +73,23 @@ var Header = React.createClass({
           <img className="root-header-banner" src="/assets/banner/Dollarphotoclub_72620313.jpg" />
           <nav className="root-header-nav group">
 
-              <h1 className="root-header-logo group">
-                <a href="/">
-                  <div className="root-header-logo-good">good</div>
-                  <div className="root-header-logo-eats">eats</div>
-                </a>
-              </h1>
+            <h1 className="root-header-logo group">
+              <a href="/">
+                <div className="root-header-logo-good">good</div>
+                <div className="root-header-logo-eats">eats</div>
+              </a>
+            </h1>
 
-            <div>
-              <ul class="auth-header-list group">
-                <li>
-                  <a class="auth-alternate-link" href="#/login">Sign in</a>
-                </li>
-                <li>
-                  <a class="auth-alternate-link" href="#/users/new">Sign up</a>
-                </li>
+            <ul className="auth-header-list">
+              <li>
+                <a className="auth-alternate-link" href="#/login">Sign in</a>
+              </li>
+              <li>
+                <a className="auth-alternate-link" href="#/users/new">Sign up</a>
+              </li>
 
-              </ul>
-            </div>
+            </ul>
+
           </nav>
         </header>
       );
