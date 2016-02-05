@@ -27,6 +27,7 @@ var Header = React.createClass({
   logout: function (e) {
     e.preventDefault();
     SessionsApiUtil.logout(function () {
+      debugger
       this.history.pushState({}, "/login");
     }.bind(this));
   },

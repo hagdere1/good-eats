@@ -97,6 +97,7 @@
 	);
 
 	function _ensureLoggedIn(nextState, replace, callback) {
+
 	  if (CurrentUserStore.userHasBeenFetched()) {
 	    _redirectIfNotLoggedIn();
 	  } else {
@@ -31672,8 +31673,8 @@
 	      dataType: 'json',
 	      success: function () {
 	        console.log("logged out!");
-	        CurrentUserActions.receiveCurrentUser({});
 	        cb && cb();
+	        CurrentUserActions.receiveCurrentUser({});
 	      }
 	    });
 	  },
@@ -32551,38 +32552,47 @@
 	      reviews = this.state.reviews.map(function (review) {
 	        return React.createElement(
 	          'article',
-	          { key: review.id, className: 'review' },
+	          { key: review.id, className: 'review group' },
 	          React.createElement(
 	            'div',
-	            { className: 'review-name-date group' },
+	            null,
+	            React.createElement('img', { className: 'review-image', src: review.user_image_url })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'review-content' },
 	            React.createElement(
-	              'p',
-	              { className: 'review-name' },
-	              review.user,
-	              ':'
+	              'div',
+	              { className: 'review-name-date group' },
+	              React.createElement(
+	                'p',
+	                { className: 'review-name' },
+	                review.user,
+	                ':'
+	              ),
+	              React.createElement(
+	                'p',
+	                { className: 'review-date' },
+	                review.created_at
+	              )
 	            ),
 	            React.createElement(
-	              'p',
-	              { className: 'review-date' },
-	              review.created_at
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
+	              'div',
+	              null,
+	              React.createElement(
+	                'p',
+	                { className: 'review-title' },
+	                review.title
+	              )
+	            ),
 	            React.createElement(
-	              'p',
-	              { className: 'review-title' },
-	              review.title
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            React.createElement(
-	              'p',
-	              { className: 'review-body' },
-	              review.body
+	              'div',
+	              null,
+	              React.createElement(
+	                'p',
+	                { className: 'review-body' },
+	                review.body
+	              )
 	            )
 	          )
 	        );
@@ -33639,6 +33649,7 @@
 	  logout: function (e) {
 	    e.preventDefault();
 	    SessionsApiUtil.logout(function () {
+	      debugger;
 	      this.history.pushState({}, "/login");
 	    }.bind(this));
 	  },

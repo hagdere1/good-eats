@@ -79,9 +79,6 @@ var Edible = React.createClass({
     this.currentUserListener.remove();
   },
 
-
-
-
   render: function () {
 
     var url = "#/edibles/" + this.props.edible.id;
