@@ -18,29 +18,30 @@ var SessionForm = React.createClass({
   render: function() {
 
     return (
-      <div>
-        <form onSubmit={ this.submit }>
+      <div className="auth-body">
+        <section className="auth-form">
+          <form onSubmit={ this.submit }>
+            <fieldset className="auth-form-fieldset">
+              <label>
+                Email Address
+                <input type="text" name="email" placeholder="you@yours.com"/>
+              </label>
 
-          <h1>Sign in</h1>
+              <label>
+                Password
+                <input type="password" name="password" />
+              </label>
 
-          <label>
-            Email
-            <input type="text" name="email" />
-          </label>
+              <button className="auth-form-button">Sign in</button>
+            </fieldset>
+          </form>
 
-          <label>
-            Password
-            <input type="password" name="password" />
-          </label>
-
-          <button>Sign in</button>
-        </form>
-
-        <form onSubmit={ this.submit }>
-          <input type="hidden" name="email" value="harry@aol.com" />
-          <input type="hidden" name="password" value="123456" />
-          <button>Sign in as Guest</button>
-        </form>
+          <form onSubmit={ this.submit }>
+            <input type="hidden" name="email" value="harry@aol.com" />
+            <input type="hidden" name="password" value="123456" />
+            <button className="auth-form-button">Sign in as Guest</button>
+          </form>
+        </section>
       </div>
     );
   },
