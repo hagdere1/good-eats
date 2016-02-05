@@ -86,7 +86,7 @@ gummy_bears = Edible.create!({name: "Gummy Bears",
                               category: "Candy",
                               image_url: "/assets/edible_thumbs/gummy_bears.png"})
 
-shrimp_scampi = Edible.create!({name: "Scampi",
+scampi = Edible.create!({name: "Scampi",
                                 description: "Scampi includes various culinary preparations of certain crustaceans, commonly Nephrops norvegicus (the Norway lobster, also known as ‘Langoustine’ or ‘Dublin Bay Prawns’ and sometimes itself called ‘scampi’), or a similar lobster such as Metanephrops, as well as shrimp or prawns. Scampi preparation styles vary regionally. While the United Kingdom legally defines scampi specifically as Nephrops norvegicus, other similar lobsters are considered scampi worldwide. Monkfish tail was sometimes illegally used and sold as scampi in the United Kingdom in the past contravening the Fish Labelling (Amendment) England Regulation 2005 and Schedule 1 of the Food Labelling Regulations 1996.",
                                 category: "Dinner",
                                 image_url: "/assets/edible_thumbs/shrimp_scampi.jpg"})
@@ -102,8 +102,9 @@ southern_fried_chicken = Edible.create!({name: "Southern Fried Chicken",
                                         image_url: "/assets/edible_thumbs/southern_fried_chicken.jpg"})
 
 # Users
-gregory = User.create!({email: "greg@aol.com", name: "Gregory", password_digest: "$2a$10$9CRgBAUVOF2OeytcYz15l.L2zErx7SOBjIwaq7jJJyT1lTggik.4u", session_token: "tUs_0hhW5-xfMQVWTXPoFg"})
-harry = User.create!({email: "harry@aol.com", name: "Harry", password_digest: "$2a$10$okYSGm3I/ah6rOLMFjNsaeb4m0wIngp2nmgYuLmx8WrHLCfogVDU2", session_token: "S4FDctdUEIQ2q41j-aA-Nw"})
+gregory = User.create!({email: "greg@aol.com", name: "Gregory", password_digest: "$2a$10$9CRgBAUVOF2OeytcYz15l.L2zErx7SOBjIwaq7jJJyT1lTggik.4u", session_token: "tUs_0hhW5-xfMQVWTXPoFg", image_url: "/assets/profile_pics/Joffrey.jpg"})
+harry = User.create!({email: "harry@aol.com", name: "Harry", password_digest: "$2a$10$okYSGm3I/ah6rOLMFjNsaeb4m0wIngp2nmgYuLmx8WrHLCfogVDU2", session_token: "S4FDctdUEIQ2q41j-aA-Nw", image_url: "/assets/profile_pics/harry-potter-profile.jpg"})
+jonathan = User.create!(email: "john@aol.com", name: "Jonathan T.", password_digest: "$2a$10$P.mVZAz958HcO6QqRomYBene9Va2mKpeGY8NIVN8nxFLnWegoj7rG", session_token: "gBMo8fgTIDifuXkHsetPaA", image_url: "https://lh3.googleusercontent.com/-Xbx9FZzAB0k/AAAAAAAAAAI/AAAAAAAAAGk/hH4JT8CLYt4/photo.jpg")
 
 # Lists
 
@@ -119,8 +120,17 @@ eaten = List.create!({title: "Eaten", user_id: gregory.id, can_delete: false})
 
   # Harry's lists
 want_to_try2 = List.create!({title: "Want to Try", user_id: harry.id, can_delete: false})
+  item_pizza2 = ListItem.create!({list_id: want_to_try2.id, edible_id: pizza.id})
+  item_burger2 = ListItem.create!({list_id: want_to_try2.id, edible_id: burger.id})
+  item_pad_thai2 = ListItem.create!({list_id: want_to_try2.id, edible_id: pad_thai.id})
 eaten2 = List.create!({title: "Eaten", user_id: harry.id, can_delete: false})
-
+  item_mixed_nuts2 = ListItem.create!({list_id: eaten2.id, edible_id: mixed_nuts.id})
+  item_kimchi = ListItem.create!({list_id: eaten2.id, edible_id: kimchi.id})
+new_orleans = List.create!({title: "Eat in New Orleans", user_id: harry.id, can_delete: true})
+  item_turtle_soup = ListItem.create!({list_id: new_orleans.id, edible_id: turtle_soup.id})
+  item_scampi = ListItem.create!({list_id: new_orleans.id, edible_id: scampi.id})
+  item_fois_gras2 = ListItem.create!({list_id: new_orleans.id, edible_id: fois_gras.id})
+  item_fried_chicken = ListItem.create!({list_id: new_orleans.id, edible_id: southern_fried_chicken.id})
 
 
 # Gregory's reviews

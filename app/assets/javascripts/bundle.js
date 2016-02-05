@@ -32716,7 +32716,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'profile-header group' },
-	        React.createElement('img', { className: 'profile-picture', src: 'http://coolspotters.com/files/photos/442638/harry-potter-profile.jpg?1357465539' }),
+	        React.createElement('img', { className: 'profile-picture', src: this.state.currentUser.image_url }),
 	        React.createElement(
 	          'div',
 	          { className: 'profile-details' },
