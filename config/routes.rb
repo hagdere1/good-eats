@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :reviews, except: :new
     resources :lists, except: :new
     resources :list_items, except: :new
-    resources :users, only: [:index, :show]
+    resources :users, only: [:index, :create, :show]
     resource :session, only: [:create, :destroy, :show]
   end
 end
