@@ -28,7 +28,6 @@ var Profile = React.createClass({
   },
 
   render: function () {
-    debugger
     if (this.state.currentUser === "undefined") {
       return <div></div>;
     }
