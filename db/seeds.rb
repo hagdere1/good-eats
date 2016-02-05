@@ -149,6 +149,9 @@ eaten3 = List.create!({title: "Eaten", user_id: jonathan.id, can_delete: false})
   item_turtle_soup = ListItem.create!({list_id: eaten3.id, edible_id: turtle_soup.id})
   item_pizza3 = ListItem.create!({list_id: eaten3.id, edible_id: pizza.id})
 
+# Thomas' lists
+thomas_want_to_try = List.create!({title: "Want to Try", user_id: thomas.id, can_delete: false})
+thomas_eaten = List.create!({title: "Eaten", user_id: thomas.id, can_delete: false})
 
 
 # Gregory's reviews
