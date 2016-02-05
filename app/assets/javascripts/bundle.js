@@ -33775,7 +33775,7 @@
 	      return React.createElement(
 	        'header',
 	        { className: 'root-header' },
-	        React.createElement('img', { className: 'root-header-banner', src: '/assets/banner/Dollarphotoclub_72620313.jpg' }),
+	        React.createElement('img', { className: 'root-header-banner', src: window.goodeatsAssets.logo }),
 	        React.createElement(
 	          'nav',
 	          { className: 'root-header-nav group' },
