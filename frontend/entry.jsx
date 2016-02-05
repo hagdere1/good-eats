@@ -31,7 +31,7 @@ var App = require('./components/app');
 
 var routes = (
   <Route path="/" component={ App }>
-    <IndexRoute component={ UsersIndex } onEnter={_ensureLoggedIn}/>
+    <IndexRoute component={ EdiblesIndex } onEnter={_ensureLoggedIn}/>
     <Route path="login" component={ SessionForm } />
     <Route path="users/new" component={ UserForm } />
     <Route path="users/:id" componet={ UserShow } />

@@ -16,7 +16,7 @@ var ListsIndexItem = React.createClass({
   render: function () {
     var deleteButton;
     if (this.props.list.can_delete === true) {
-      deleteButton = <td onClick={this.destroyList}>&#x00D7;</td>;
+      deleteButton = <td onClick={this.destroyList} className="delete-list-button">&#x00D7;</td>;
     }
     else {
       deleteButton = <td></td>;
@@ -24,7 +24,7 @@ var ListsIndexItem = React.createClass({
 
     return (
       <tr className="lists-index-item">
-        <td onClick={this.showList}>{this.props.list.title}</td>
+        <td className="list-index-item-title" onClick={this.showList}>{this.props.list.title}</td>
         {deleteButton}
       </tr>
     );

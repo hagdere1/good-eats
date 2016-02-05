@@ -78,7 +78,7 @@
 	var routes = React.createElement(
 	  Route,
 	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: UsersIndex, onEnter: _ensureLoggedIn }),
+	  React.createElement(IndexRoute, { component: EdiblesIndex, onEnter: _ensureLoggedIn }),
 	  React.createElement(Route, { path: 'login', component: SessionForm }),
 	  React.createElement(Route, { path: 'users/new', component: UserForm }),
 	  React.createElement(Route, { path: 'users/:id', componet: UserShow }),
@@ -31747,7 +31747,7 @@
 	    if (this.props.list.can_delete === true) {
 	      deleteButton = React.createElement(
 	        'td',
-	        { onClick: this.destroyList },
+	        { onClick: this.destroyList, className: 'delete-list-button' },
 	        '×'
 	      );
 	    } else {
@@ -31759,7 +31759,7 @@
 	      { className: 'lists-index-item' },
 	      React.createElement(
 	        'td',
-	        { onClick: this.showList },
+	        { className: 'list-index-item-title', onClick: this.showList },
 	        this.props.list.title
 	      ),
 	      deleteButton
@@ -32132,7 +32132,7 @@
 	    return React.createElement(
 	      'form',
 	      { onSubmit: this.submit, className: 'form-add-list' },
-	      React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, value: this.state.title, className: 'add-list-input-text' }),
+	      React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, maxLength: '20', value: this.state.title, className: 'add-list-input-text' }),
 	      React.createElement(
 	        'button',
 	        null,
@@ -33143,7 +33143,7 @@
 	          { onSubmit: this.submit },
 	          React.createElement(
 	            'fieldset',
-	            { className: 'auth-form-fieldset' },
+	            { className: 'auth-form-fieldset group' },
 	            React.createElement(
 	              'label',
 	              null,
@@ -33161,7 +33161,8 @@
 	              { className: 'auth-form-button' },
 	              'Sign in'
 	            )
-	          )
+	          ),
+	          React.createElement('img', { className: 'sign-in-image', src: '/assets/banner/burger_background.png' })
 	        ),
 	        React.createElement(
 	          'form',
@@ -33232,6 +33233,58 @@
 	        'button',
 	        null,
 	        'Join!'
+	      )
+	    );
+
+	    React.createElement(
+	      'div',
+	      { className: 'auth-body' },
+	      React.createElement(
+	        'section',
+	        { className: 'auth-form' },
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.submit },
+	          React.createElement(
+	            'fieldset',
+	            { className: 'auth-form-fieldset group' },
+	            React.createElement(
+	              'label',
+	              null,
+	              'Name',
+	              React.createElement('input', { type: 'text', name: 'name', placeholder: 'Name' })
+	            ),
+	            React.createElement(
+	              'label',
+	              null,
+	              'Email Address',
+	              React.createElement('input', { type: 'text', name: 'email', placeholder: 'you@yours.com' })
+	            ),
+	            React.createElement(
+	              'label',
+	              null,
+	              'Password',
+	              React.createElement('input', { type: 'password', name: 'password' })
+	            ),
+	            React.createElement(
+	              'button',
+	              { className: 'auth-form-button' },
+	              'Sign in'
+	            )
+	          ),
+	          React.createElement('img', { className: 'sign-up-image', src: '/assets/banner/lobster.jpg' })
+	        ),
+	        React.createElement(
+	          'form',
+	          { onSubmit: this.submit },
+	          React.createElement('input', { type: 'hidden', name: 'email', value: 'harry@aol.com' }),
+	          React.createElement('input', { type: 'hidden', name: 'password', value: '123456' }),
+	          React.createElement(
+	            'button',
+	            { className: 'auth-form-button' },
+	            'Sign in as Guest'
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -33323,6 +33376,7 @@
 	  },
 
 	  render: function () {
+
 	    if (CurrentUserStore.isLoggedIn()) {
 	      return React.createElement(
 	        'header',
@@ -33451,19 +33505,24 @@
 	      return React.createElement(
 	        'header',
 	        { className: 'root-header' },
+	        React.createElement('img', { className: 'root-header-banner', src: '/assets/banner/Dollarphotoclub_72620313.jpg' }),
 	        React.createElement(
 	          'nav',
 	          { className: 'root-header-nav group' },
 	          React.createElement(
 	            'h1',
-	            { className: 'root-header-logo' },
+	            { className: 'root-header-logo group' },
 	            React.createElement(
 	              'a',
 	              { href: '/' },
-	              'good',
 	              React.createElement(
-	                'span',
-	                null,
+	                'div',
+	                { className: 'root-header-logo-good' },
+	                'good'
+	              ),
+	              React.createElement(
+	                'div',
+	                { className: 'root-header-logo-eats' },
 	                'eats'
 	              )
 	            )
@@ -33472,9 +33531,26 @@
 	            'div',
 	            null,
 	            React.createElement(
-	              'a',
-	              { href: '#/login' },
-	              'Sign in'
+	              'ul',
+	              { 'class': 'auth-header-list group' },
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'a',
+	                  { 'class': 'auth-alternate-link', href: '#/login' },
+	                  'Sign in'
+	                )
+	              ),
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'a',
+	                  { 'class': 'auth-alternate-link', href: '#/users/new' },
+	                  'Sign up'
+	                )
+	              )
 	            )
 	          )
 	        )
