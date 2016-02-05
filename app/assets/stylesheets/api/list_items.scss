@@ -50,6 +50,14 @@
   padding-bottom: 2px;
 }
 
+.lists-index-item:hover {
+  cursor: pointer;
+}
+
+td.list-index-item-title:hover {
+  text-decoration: underline;
+}
+
 .add-list-input-text {
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -59,7 +67,6 @@
 }
 
 .delete-list-button {
-  border: 1px solid #ccc;
   height: auto;
 }
 
@@ -149,4 +156,19 @@
 
 .item-heading-options {
   width: 75px;
+}
+
+td.list-table-name a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button.list-table-button-delete:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+button.list-table-button-review:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }

@@ -31939,7 +31939,7 @@
 	        ),
 	        React.createElement(
 	          'td',
-	          null,
+	          { className: 'list-table-name' },
 	          React.createElement(
 	            'a',
 	            { href: "#/edibles/" + edible.edible_id },
@@ -31963,16 +31963,16 @@
 	        ),
 	        React.createElement(
 	          'td',
-	          null,
+	          { className: 'list-table-buttons' },
 	          React.createElement(
 	            'button',
-	            { onClick: this.handleReviewClick.bind(this, edible), edible: edible },
+	            { onClick: this.handleReviewClick.bind(this, edible), edible: edible, className: 'list-table-button-review' },
 	            'Review'
 	          ),
 	          React.createElement('br', null),
 	          React.createElement(
 	            'button',
-	            { id: edible.id, onClick: this.destroyListItem },
+	            { id: edible.id, onClick: this.destroyListItem, className: 'list-table-button-delete' },
 	            'Delete'
 	          )
 	        )
@@ -33398,15 +33398,6 @@
 	              React.createElement(
 	                'a',
 	                { href: '/' },
-	                'Home'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#/edibles' },
 	                'Explore'
 	              )
 	            ),
@@ -33479,7 +33470,7 @@
 	              null,
 	              React.createElement(
 	                'button',
-	                { onClick: this.logout },
+	                { className: 'sign-out-button', onClick: this.logout },
 	                'Sign out'
 	              )
 	            )

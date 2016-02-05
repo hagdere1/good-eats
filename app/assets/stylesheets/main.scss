@@ -109,6 +109,10 @@ ul {
   text-decoration: none;
 }
 
+ul.root-header-list li:hover {
+    text-decoration: underline;
+}
+
 .root-header-logo div {
   display: block;
   float: left;
@@ -179,6 +183,11 @@ ul {
   background-color: #FFF8DC;
   margin-right: 20px;
   margin-top: 15px;
+}
+
+button.sign-out-button:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .root-form {
