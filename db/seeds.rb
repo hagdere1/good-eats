@@ -104,7 +104,8 @@ southern_fried_chicken = Edible.create!({name: "Southern Fried Chicken",
 # Users
 gregory = User.create!({email: "greg@aol.com", name: "Gregory", password_digest: "$2a$10$9CRgBAUVOF2OeytcYz15l.L2zErx7SOBjIwaq7jJJyT1lTggik.4u", session_token: "tUs_0hhW5-xfMQVWTXPoFg", image_url: "assets/profile_pics/stevejobsbig.jpg"})
 harry = User.create!({email: "harry@aol.com", name: "Harry", password_digest: "$2a$10$okYSGm3I/ah6rOLMFjNsaeb4m0wIngp2nmgYuLmx8WrHLCfogVDU2", session_token: "S4FDctdUEIQ2q41j-aA-Nw", image_url: "http://coolspotters.com/files/photos/442638/harry-potter-profile.jpg?1357465539"})
-jonathan = User.create!(email: "john@aol.com", name: "Jonathan T.", password_digest: "$2a$10$P.mVZAz958HcO6QqRomYBene9Va2mKpeGY8NIVN8nxFLnWegoj7rG", session_token: "gBMo8fgTIDifuXkHsetPaA", image_url: "https://lh3.googleusercontent.com/-Xbx9FZzAB0k/AAAAAAAAAAI/AAAAAAAAAGk/hH4JT8CLYt4/photo.jpg")
+jonathan = User.create!(email: "john@aol.com", name: "Jonathan T", password_digest: "$2a$10$P.mVZAz958HcO6QqRomYBene9Va2mKpeGY8NIVN8nxFLnWegoj7rG", session_token: "gBMo8fgTIDifuXkHsetPaA", image_url: "https://lh3.googleusercontent.com/-Xbx9FZzAB0k/AAAAAAAAAAI/AAAAAAAAAGk/hH4JT8CLYt4/photo.jpg")
+thomas = User.create!(email: "tom@aol.com", name: "Thomas D", password_digest: "$2a$10$oSO46Xd58LN1aaocmVZoi.1KTMjZQ4ShsXB5Lz7tEQLz/941Rufii", session_token: "tKmr3O53QbmvaaA4r5ChbQ", image_url: "https://qph.is.quoracdn.net/main-thumb-14611353-200-tyrbfenauxizmrvuptzsketlrtxpxhil.jpeg")
 
 # Lists
 
@@ -148,6 +149,8 @@ eaten3 = List.create!({title: "Eaten", user_id: jonathan.id, can_delete: false})
   item_turtle_soup = ListItem.create!({list_id: eaten3.id, edible_id: turtle_soup.id})
   item_pizza3 = ListItem.create!({list_id: eaten3.id, edible_id: pizza.id})
 
+
+
 # Gregory's reviews
 pizza_review_2 = Review.create!(user_id: gregory.id, edible_id: pizza.id, title: "Heaven is a place on earth", body: "What part of heaven did this fall from? This cheesy, saucy, rich food is something the likes of which I have never had the pleasure of putting into my mouth hole. I will never look at anything the same way again!")
 burger_review = Review.create!(user_id: gregory.id, edible_id: burger.id, title: "Triple beef patty", body: "I had a cheeseburger with three meats and it was so much meats but I had a great time because it was delicious and this is my review of burger.")
@@ -166,3 +169,13 @@ mixed_nuts_review2 = Review.create!(user_id: jonathan.id, edible_id: mixed_nuts.
 bagel_with_lox_review = Review.create!(user_id: jonathan.id, edible_id: bagel_with_lox.id, title: "Nothing like a NYC bagel with lox", body: "I eat bagel with loxes whenever I get the opportunity and what better place in the world than NYC! Bagel with lox is my favorite bagel with a fish.")
 turtle_soup_review = Review.create!(user_id: jonathan.id, edible_id: turtle_soup.id, title: "A long forgotten delicacy", body: "Not sure what's going on lately with people not eating turtle soup that much. It's a great way to keep warm in the cold NY winter.")
 fois_gras_review = Review.create!(user_id: jonathan.id, edible_id: fois_gras.id, title: "No", body: "I will never eat this ever again. It was not only too soft, but smelled funky and tasted like dog food. Consider this a one word review: DISGUSTING.")
+
+# Thomas's reviews
+
+thomas_pizza_review = Review.create!(user_id: thomas.id, edible_id: pizza.id, title: "All day and all night", body: "All day and all night, Pizza, I dream of thee. Thou art my Muse and thou art my Saviour.")
+thomas_burger_review = Review.create!(user_id: thomas.id, edible_id: burger.id, title: "Mickey D's vs. Burger King", body: "BK WINS GET OUT OF HERE!!!!!!!!!!!! Homeboy.")
+thomas_pad_thai_review = Review.create!(user_id: thomas.id, edible_id: pad_thai.id, title: "Deez noodles", body: "I like these noodles but I've had better noodles, for example spaghetti with meatballs.")
+thomas_nuts_review = Review.create!(user_id: thomas.id, edible_id: mixed_nuts.id, title: "Reminds me of my childhood", body: "In my youth my siblings and I would tread the fields of Patagonia, searching for the best walnut trees. We'd build ladders from the sticks of the forest floor to climb them, collect the walnuts until our burlap sacks were tearing at the seams, and live off our harvest for the winter season. Nostalgia... what a cruel disease of mankind!")
+thomas_bagel_with_lox_review = Review.create!(user_id: thomas.id, edible_id: bagel_with_lox.id, title: "Don't care for it", body: "Tried it, too salty.")
+thomas_turtle_soup_review = Review.create!(user_id: thomas.id, edible_id: turtle_soup.id, title: "Wow. That's all I can say.", body: "Often in life we shy away from things that give us the creeps. I'm glad I fought against my instinct this time and tried me a bowl of turtle soup. That flavor... So rich. So creamy. So good chunks of snapping turtle breaking between my teeth. Would eat again.")
+thomas_fois_gras_review = Review.create!(user_id: thomas.id, edible_id: fois_gras.id, title: "3/5", body: "On one hand, it's made out of ducks, which are cute and tasty. On the other hand, I don't like the color.")
