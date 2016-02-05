@@ -36,7 +36,7 @@ var SessionForm = React.createClass({
               <button className="auth-form-button">Sign in</button>
             </fieldset>
 
-            <img className="auth-image" src="/assets/banner/burger_background.png"/>
+            <img className="auth-image" src={window.goodeatsAssets.auth_photo_burger}/>
           </form>
 
           <form onSubmit={ this.submit }>

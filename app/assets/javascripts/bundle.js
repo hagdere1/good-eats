@@ -33233,7 +33233,7 @@
 	              'Sign in'
 	            )
 	          ),
-	          React.createElement('img', { className: 'auth-image', src: '/assets/banner/burger_background.png' })
+	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_burger })
 	        ),
 	        React.createElement(
 	          'form',
@@ -33322,7 +33322,7 @@
 	              'Sign up'
 	            )
 	          ),
-	          React.createElement('img', { className: 'auth-image', src: '/assets/banner/lobster.jpg' })
+	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_lobster })
 	        ),
 	        React.createElement(
 	          'form',
@@ -33649,7 +33649,7 @@
 	  logout: function (e) {
 	    e.preventDefault();
 	    SessionsApiUtil.logout(function () {
-	      debugger;
+
 	      this.history.pushState({}, "/login");
 	    }.bind(this));
 	  },
