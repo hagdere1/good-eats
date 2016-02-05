@@ -9,20 +9,86 @@ var SessionsApiUtil = require('./../../util/sessions_api_util');
 var EdibleShow = React.createClass({
 
   getInitialState: function () {
-    return {edible: EdibleStore.find(parseInt(this.props.params.id))};
+    return this.getInitialValues();
   },
 
-  _onChange: function () {
-    this.setState({edible: EdibleStore.find(parseInt(this.props.params.id))});
+  getInitialValues: function () {
+    this.currentUser = CurrentUserStore.currentUser();
+    var currentList;
+    var currentListItem;
+    var userItems = this.currentUser.list_items;
+    var userHasListItem = false;
+    var inList = false;
+
+    for (i = 0; i < userItems.length; i++) {
+      if (userItems[i].edible_id == this.props.params.id) {
+        userHasListItem = true;
+        currentList = userItems[i].list;
+        currentListItem = userItems[i];
+      }
+    }
+
+    if (!userHasListItem) {
+      currentList = this.currentUser.lists[0];
+      currentListItem = null;
+    }
+
+    return {edible: EdibleStore.find(parseInt(this.props.params.id)),
+            lists: this.currentUser.lists,
+            currentList: currentList,
+            currentListItem: currentListItem,
+            userHasListItem: userHasListItem};
   },
+
+
+
+
+
+  addToListOrDestroy: function (event) {
+    event.preventDefault();
+    var listItem = {};
+
+    if (!this.state.userHasListItem) {
+      listItem.list_id = this.state.currentList.id;
+      listItem.edible_id = parseInt(this.props.params.id);
+      ApiUtil.createListItem(listItem, this.setState({userHasListItem: true}));
+    }
+    else {
+      ApiUtil.destroyListItem(this.state.currentListItem.id, this.setState({userHasListItem: false}));
+    }
+  },
+
+
+
+
+
+
+
+
+
+  _onChange: function () {
+    var state = this.getInitialValues();
+    this.setState(state);
+  },
+
+  _onCurrentUserChange: function () {
+    var state = this.getInitialValues();
+    this.setState(state);
+  },
+
+
+
 
   componentDidMount: function () {
     this.edibleListener = EdibleStore.addListener(this._onChange);
+    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
+    SessionsApiUtil.fetchCurrentUser();
     ApiUtil.fetchSingleEdible(this.props.params.id);
   },
 
   componentWillUnmount: function () {
     this.edibleListener.remove();
+    this.currentUserListener.remove();
   },
 
   render: function () {
@@ -48,7 +114,7 @@ var EdibleShow = React.createClass({
 
           <div className="edible-image">
             {edibleImage}
-            <button>Add Remove</button>
+            <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Want To Try"}</button>
           </div>
 
           <div className="edible-show-info">
