@@ -9,8 +9,8 @@ class Api::UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       sign_in!(@user)
-      List.create!(title: "Want to Try", user_id: current_user.id, can_delete: false)
-      List.create!(title: "Eaten", user_id: current_user.id, can_delete: false)
+      List.create!(title: "Want to Try", user_id: @user.id, can_delete: false)
+      List.create!(title: "Eaten", user_id: @user.id, can_delete: false)
       render :show
     else
       render json: "Login failed."

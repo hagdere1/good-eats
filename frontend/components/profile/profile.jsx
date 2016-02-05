@@ -81,7 +81,7 @@ var Profile = React.createClass({
       <div className="profile-container">
         <div className="profile-header group">
 
-          <img className="profile-picture" src="http://coolspotters.com/files/photos/442638/harry-potter-profile.jpg?1357465539" />
+          <img className="profile-picture" src={this.state.currentUser.image_url}/>
 
           <div className="profile-details">
             <h1 className="heading-main">{this.state.currentUser.name}</h1>
