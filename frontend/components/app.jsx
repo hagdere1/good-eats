@@ -19,7 +19,7 @@ var App = React.createClass({
       <div className="wrapper">
         <Header />
         <div className="main">{this.props.children}</div>
-        <Footer />
+
       </div>
     );
   }

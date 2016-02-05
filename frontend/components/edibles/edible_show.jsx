@@ -48,7 +48,7 @@ var EdibleShow = React.createClass({
 
           <div className="edible-image">
             {edibleImage}
-
+            <button>Add Remove</button>
           </div>
 
           <div className="edible-show-info">

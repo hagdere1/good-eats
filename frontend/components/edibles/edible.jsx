@@ -8,7 +8,7 @@ var Edible = React.createClass({
   addToList: function (event) {
     event.preventDefault();
     var listItem = {};
-    listItem.list_id = 4;
+    listItem.list_id = this.currentUser.lists[1];
     listItem.edible_id = parseInt(this.props.edible.id);
     ApiUtil.createListItem(listItem);
   },

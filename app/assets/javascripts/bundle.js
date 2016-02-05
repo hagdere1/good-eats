@@ -32263,7 +32263,7 @@
 	  addToList: function (event) {
 	    event.preventDefault();
 	    var listItem = {};
-	    listItem.list_id = 4;
+	    listItem.list_id = this.currentUser.lists[1];
 	    listItem.edible_id = parseInt(this.props.edible.id);
 	    ApiUtil.createListItem(listItem);
 	  },
@@ -32423,7 +32423,12 @@
 	        React.createElement(
 	          'div',
 	          { className: 'edible-image' },
-	          edibleImage
+	          edibleImage,
+	          React.createElement(
+	            'button',
+	            null,
+	            'Add Remove'
+	          )
 	        ),
 	        React.createElement(
 	          'div',
@@ -32631,7 +32636,6 @@
 	  },
 
 	  render: function () {
-	    debugger;
 	    if (this.state.currentUser === "undefined") {
 	      return React.createElement('div', null);
 	    }
@@ -33543,8 +33547,7 @@
 	        'div',
 	        { className: 'main' },
 	        this.props.children
-	      ),
-	      React.createElement(Footer, null)
+	      )
 	    );
 	  }
 	});
