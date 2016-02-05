@@ -91,7 +91,7 @@ var Edible = React.createClass({
           <p>{this.props.edible.name}</p>
           <img className="edible-list-item-image" src={this.props.edible.image_url} />
         </a>
-        <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Add"}</button>
+        <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Want To Try"}</button>
       </li>
     );
   }
