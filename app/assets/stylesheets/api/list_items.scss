@@ -38,6 +38,7 @@
 .lists-index-nav {
   float: left;
   width: 200px;
+  height: 100%;
   color: #00635d;
   font-size: 14px;
 }
@@ -45,6 +46,19 @@
 .lists-index-item {
   padding-top: 2px;
   padding-bottom: 2px;
+}
+
+.add-list-input-text {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 120px;
+  margin-right: 10px;
+  background-color: #EBE8D5;
+}
+
+.delete-list-button {
+  border: 1px solid #ccc;
+  height: auto;
 }
 
 .list-items-table {

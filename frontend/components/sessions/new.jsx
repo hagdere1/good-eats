@@ -19,9 +19,10 @@ var SessionForm = React.createClass({
 
     return (
       <div className="auth-body">
+
         <section className="auth-form">
           <form onSubmit={ this.submit }>
-            <fieldset className="auth-form-fieldset">
+            <fieldset className="auth-form-fieldset group">
               <label>
                 Email Address
                 <input type="text" name="email" placeholder="you@yours.com"/>
@@ -34,6 +35,8 @@ var SessionForm = React.createClass({
 
               <button className="auth-form-button">Sign in</button>
             </fieldset>
+
+            <img className="sign-in-image" src="/assets/banner/burger_background.png"/>
           </form>
 
           <form onSubmit={ this.submit }>

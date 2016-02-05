@@ -32,6 +32,7 @@ var Header = React.createClass({
   },
 
   render: function () {
+
     if (CurrentUserStore.isLoggedIn()) {
       return (
         <header className="root-header">
@@ -69,14 +70,26 @@ var Header = React.createClass({
     else {
       return (
         <header className="root-header">
+          <img className="root-header-banner" src="/assets/banner/Dollarphotoclub_72620313.jpg" />
           <nav className="root-header-nav group">
 
-            <h1 className="root-header-logo">
-              <a href="/">good<span>eats</span></a>
-            </h1>
+              <h1 className="root-header-logo group">
+                <a href="/">
+                  <div className="root-header-logo-good">good</div>
+                  <div className="root-header-logo-eats">eats</div>
+                </a>
+              </h1>
 
             <div>
-              <a href="#/login">Sign in</a>
+              <ul class="auth-header-list group">
+                <li>
+                  <a class="auth-alternate-link" href="#/login">Sign in</a>
+                </li>
+                <li>
+                  <a class="auth-alternate-link" href="#/users/new">Sign up</a>
+                </li>
+
+              </ul>
             </div>
           </nav>
         </header>
