@@ -14,14 +14,15 @@
 
 .review-modal {
   display: block;
-  background-color: white;
+  background-color: #EEE8AA;
   font-size: 13px;
   line-height: 18px;
   left: 383px;
   top: 0;
   width: 850px;
-  height: 623px;
-  border-radius: 4px;
+  height: 535px;
+  border-radius: 5px;
+  border-bottom: 2px solid #aaa;
   margin: auto;
   overflow: auto;
   border-top: 1px solid black;
@@ -33,13 +34,14 @@
 }
 
 .review-form-image img {
+  margin-top: 20px;
   width: 100px;
   height: 100px;
   margin-left: 10px;
 }
 
 .review-form {
-  background-color: white;
+  background-color: #EEE8AA;
   width: 700px;
   height: 500px;
   margin: auto;
@@ -47,28 +49,60 @@
 }
 
 .review-form-details {
+  margin-top: 20px;
   margin-right: 60px;
   float: right;
+}
+
+.review-modal mark {
+  position: absolute;
+  right: 290px;
+  font-size: 26px;
+}
+
+.review-modal mark:hover {
+  cursor: pointer;
 }
 
 .review-form-edible {
   font-size: 24px;
   display: block;
+  margin-bottom: 5px;
+}
+
+.review-form-edible-category {
+  margin-bottom: 25px;
 }
 
 .review-form-input-text {
-  border: 1px solid #ccc;
+  padding: 5px;
+  background-color: white;
   display: block;
-  width: 640px;
+  width: 635px;
   height: auto;
   border-radius: 3px;
+  border: 1px solid #aaa;
 }
 
 .review-form-input-textarea {
+  background-color: white;
+  padding: 5px;
+  border-radius: 3px;
   margin-top: 10px;
   display: block;
-  width: 640px;
-  height: 300px;
-  border: 1px solid #ccc;
+  width: 635px;
+  height: 295px;
+  border: 1px solid #aaa;
+}
+
+.review-modal button {
+  background-color: #F4F1EA;
+  margin-top: 10px;
+  padding: 5px;
+  font-weight: bold;
+  border-right: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
   border-radius: 3px;
 }

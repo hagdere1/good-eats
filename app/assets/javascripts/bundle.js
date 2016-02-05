@@ -32069,13 +32069,8 @@
 	                this.props.edible.name
 	              ),
 	              React.createElement(
-	                'mark',
-	                { onClick: this.props.closeForm },
-	                '✕'
-	              ),
-	              React.createElement(
 	                'p',
-	                null,
+	                { className: 'review-form-edible-category' },
 	                this.props.edible.category
 	              ),
 	              React.createElement(
@@ -32091,6 +32086,11 @@
 	                'Submit'
 	              )
 	            )
+	          ),
+	          React.createElement(
+	            'mark',
+	            { onClick: this.props.closeForm },
+	            '☓'
 	          )
 	        )
 	      );
@@ -32135,7 +32135,7 @@
 	      React.createElement('input', { type: 'text', name: 'title', onChange: this.handleTitleChange, maxLength: '20', value: this.state.title, className: 'add-list-input-text' }),
 	      React.createElement(
 	        'button',
-	        null,
+	        { className: 'add-list-button' },
 	        'Add List'
 	      )
 	    );
