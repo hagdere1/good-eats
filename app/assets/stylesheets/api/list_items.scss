@@ -66,8 +66,26 @@ td.list-index-item-title:hover {
   background-color: #EBE8D5;
 }
 
+.add-list-button {
+  border-top: 1px solid #aaa;
+  border-left: 1px solid #aaa;
+  border-right: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+  background-color: #F4F1EA;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.add-list-button:hover {
+  cursor: pointer;
+}
+
 .delete-list-button {
   height: auto;
+}
+
+.delete-list-button:hover {
+  cursor: pointer;
 }
 
 .list-items-table {

@@ -23,7 +23,7 @@ var ListForm = React.createClass({
     return (
       <form onSubmit={ this.submit } className="form-add-list">
         <input type="text" name="title" onChange={this.handleTitleChange} maxLength="20" value={this.state.title} className="add-list-input-text"/>
-        <button>Add List</button>
+        <button className="add-list-button">Add List</button>
       </form>
     );
   }
