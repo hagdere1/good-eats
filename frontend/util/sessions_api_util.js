@@ -20,8 +20,8 @@ var SessionsApiUtil = {
       dataType: 'json',
       success: function () {
         console.log("logged out!");
-        CurrentUserActions.receiveCurrentUser({});
         cb && cb()
+        CurrentUserActions.receiveCurrentUser({});
       }
     });
   },

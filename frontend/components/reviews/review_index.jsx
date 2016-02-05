@@ -39,21 +39,26 @@ var ReviewIndex = React.createClass({
       reviews = (
         this.state.reviews.map(function (review) {
           return (
-            <article key={review.id} className="review">
-
-              <div className="review-name-date group">
-                <p className="review-name">{review.user}:</p>
-                <p className="review-date">{review.created_at}</p>
-              </div>
+            <article key={review.id} className="review group">
 
               <div>
-                <p className="review-title">{review.title}</p>
+                <img className="review-image" src={review.user_image_url} />
               </div>
 
-              <div>
-                <p className="review-body">{review.body}</p>
-              </div>
+              <div className="review-content">
+                <div className="review-name-date group">
+                  <p className="review-name">{review.user}:</p>
+                  <p className="review-date">{review.created_at}</p>
+                </div>
 
+                <div>
+                  <p className="review-title">{review.title}</p>
+                </div>
+
+                <div>
+                  <p className="review-body">{review.body}</p>
+                </div>
+              </div>
             </article>
           );
         })

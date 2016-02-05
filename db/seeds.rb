@@ -162,7 +162,7 @@ harry_bagel = Review.create!(user_id: harry.id, edible_id: bagel_with_lox.id, ti
 
 # Jonathan's reviews
 pizza_review_3 = Review.create!(user_id: jonathan.id, edible_id: pizza.id, title: "Dangerously cheesey", body: "There was so much cheese on this one slice of pizza I thought myself if serious trouble. But then I took a bite and all my fears were assuaged. Happy to report that pizza is a safe item for consumption.")
-mixed_nuts_review2 = Review.create!(user_id: jonathan.id, edible_id: mixed_nuts.id, title: "Crunchy", body: "Mixed nuts are quite crunchy.")
+mixed_nuts_review2 = Review.create!(user_id: jonathan.id, edible_id: mixed_nuts.id, title: "Crunchy", body: "Mixed nuts are quite crunchy. I enjoy them in my salad, where they add a pleasant texture and counterbalance to the tender spinach leaves. Often, I will dump an entire bucket of mixed nuts onto my salad until not one spinach leaf can be spotted. This adds a remarkable quality to the salad.")
 bagel_with_lox_review = Review.create!(user_id: jonathan.id, edible_id: bagel_with_lox.id, title: "Nothing like a NYC bagel with lox", body: "I eat bagel with loxes whenever I get the opportunity and what better place in the world than NYC! Bagel with lox is my favorite bagel with a fish.")
 turtle_soup_review = Review.create!(user_id: jonathan.id, edible_id: turtle_soup.id, title: "A long forgotten delicacy", body: "Not sure what's going on lately with people not eating turtle soup that much. It's a great way to keep warm in the cold NY winter.")
 fois_gras_review = Review.create!(user_id: jonathan.id, edible_id: fois_gras.id, title: "No", body: "I will never eat this ever again. It was not only too soft, but smelled funky and tasted like dog food. Consider this a one word review: DISGUSTING.")
