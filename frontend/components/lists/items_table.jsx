@@ -86,13 +86,13 @@ var ItemsTable = React.createClass({
         return (
           <tr className="item-detail-table-row" key={edible.id}>
             <td><img src={edible.image_url} className="item-detail-image"/></td>
-            <td><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
+            <td className="list-table-name"><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
             <td>{edible.category}</td>
             <td>{edible.date_eaten}</td>
             <td>{edible.created_at}</td>
-            <td>
-              <button onClick={this.handleReviewClick.bind(this, edible)} edible={edible}>Review</button><br/>
-              <button id={edible.id} onClick={this.destroyListItem}>Delete</button>
+            <td className="list-table-buttons">
+              <button onClick={this.handleReviewClick.bind(this, edible)} edible={edible} className="list-table-button-review">Review</button><br/>
+              <button id={edible.id} onClick={this.destroyListItem} className="list-table-button-delete">Delete</button>
             </td>
           </tr>
         );
