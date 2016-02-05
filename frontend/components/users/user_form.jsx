@@ -1,82 +1,67 @@
 var React = require('react');
+var UsersApiUtil = require('./../../util/users_api_util');
 var History = require('react-router').History;
-var UsersStore = require('../../stores/users_store');
-var UsersApiUtil = require('../../util/users_api_util');
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var UserForm = React.createClass({
-  mixins: [History],
+  mixins: [History, LinkedStateMixin],
 
-  submit: function (e) {
+  getInitialState: function () {
+    return ({
+      username: "",
+      email: "",
+      password: "",
+    });
+  },
+
+  onSubmit: function (e) {
     e.preventDefault();
+    var params = { user: this.state };
+
+    UsersApiUtil.createUser(params, function () {
+      this.history.pushState({}, "/");
+    }.bind(this));
   },
 
   render: function() {
-
     return (
-      <form onSubmit={ this.submit }>
+      <div className="auth-body">
 
-        <h1>Sign Up!</h1>
+        <section className="auth-form">
+          <form onSubmit={ this.onSubmit }>
 
-        <label>
-          Name
-          <input type="text" name="name" />
-        </label>
+            <fieldset className="auth-form-fieldset group">
+              <label>
+                Name
+                <input type="text" placeholder="Name" valueLink={this.linkState("name")}/>
+              </label>
 
-        <label>
-          Email
-          <input type="text" name="email" />
-        </label>
+              <label>
+                Email Address
+                <input type="text" placeholder="you@yours.com" valueLink={this.linkState("email")}/>
+              </label>
 
-        <label>
-          Password
-          <input type="password" name="password" />
-        </label>
+              <label>
+                Password
+                <input type="password" valueLink={this.linkState("password")} />
+              </label>
 
-        <button>Join!</button>
-      </form>
+              <button className="auth-form-button">Sign up</button>
+            </fieldset>
+
+            <img className="auth-image" src="/assets/banner/lobster.jpg"/>
+          </form>
+
+
+          <form onSubmit={ this.submit }>
+            <input type="hidden" name="email" value="harry@aol.com" />
+            <input type="hidden" name="password" value="123456" />
+            <button className="auth-form-button">Sign in as Guest</button>
+          </form>
+        </section>
+      </div>
     );
-
-
-    <div className="auth-body">
-
-      <section className="auth-form">
-        <form onSubmit={ this.submit }>
-          <fieldset className="auth-form-fieldset group">
-            <label>
-              Name
-              <input type="text" name="name" placeholder="Name"/>
-            </label>
-
-            <label>
-              Email Address
-              <input type="text" name="email" placeholder="you@yours.com"/>
-            </label>
-
-            <label>
-              Password
-              <input type="password" name="password" />
-            </label>
-
-            <button className="auth-form-button">Sign in</button>
-          </fieldset>
-
-          <img className="sign-up-image" src="/assets/banner/lobster.jpg"/>
-        </form>
-
-        <form onSubmit={ this.submit }>
-          <input type="hidden" name="email" value="harry@aol.com" />
-          <input type="hidden" name="password" value="123456" />
-          <button className="auth-form-button">Sign in as Guest</button>
-        </form>
-      </section>
-    </div>
-
-
-
-
-
   },
-
 });
 
 module.exports = UserForm;
