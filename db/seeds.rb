@@ -76,8 +76,8 @@ ceviche = Edible.create!({name: "Ceviche",
                           category: "Latin American",
                           image_url: "/assets/edible_thumbs/ceviche.jpg"})
 
-bagel_with_lox = Edible.create!({name: "Bagel with Cream Cheese and Lox",
-                                description: "Bagel with Cream Cheese and Lox is the combination of a bagel, cream cheese, and lox. Lox is a fillet of brined salmon. Traditionally, lox is served on a bagel with cream cheese, and is usually garnished with tomato, sliced red onion, and sometimes capers. The American English word lox is derived from the Yiddish word for salmon, laks (cf. German Lachs), which ultimately derives from the Indo-European word for salmon, *laks-. The word lox has cognates in numerous Indo-European languages. For example, cured salmon in Scotland and Scandinavian countries is known by different versions of the name Gravlax or gravad laks.",
+bagel_with_lox = Edible.create!({name: "Bagel with Lox",
+                                description: "Bagel with Lox is the combination of a bagel and lox, often with cream cheese. Lox is a fillet of brined salmon. Traditionally, lox is served on a bagel with cream cheese, and is usually garnished with tomato, sliced red onion, and sometimes capers. The American English word lox is derived from the Yiddish word for salmon, laks (cf. German Lachs), which ultimately derives from the Indo-European word for salmon, *laks-. The word lox has cognates in numerous Indo-European languages. For example, cured salmon in Scotland and Scandinavian countries is known by different versions of the name Gravlax or gravad laks.",
                                 category: "Breakfast",
                                 image_url: "/assets/edible_thumbs/bagel-with-cream-cheese-and-lox.jpg"})
 
@@ -86,7 +86,7 @@ gummy_bears = Edible.create!({name: "Gummy Bears",
                               category: "Candy",
                               image_url: "/assets/edible_thumbs/gummy_bears.png"})
 
-shrimp_scampi = Edible.create!({name: "Scampi (assorted preparations)",
+shrimp_scampi = Edible.create!({name: "Scampi",
                                 description: "Scampi includes various culinary preparations of certain crustaceans, commonly Nephrops norvegicus (the Norway lobster, also known as ‘Langoustine’ or ‘Dublin Bay Prawns’ and sometimes itself called ‘scampi’), or a similar lobster such as Metanephrops, as well as shrimp or prawns. Scampi preparation styles vary regionally. While the United Kingdom legally defines scampi specifically as Nephrops norvegicus, other similar lobsters are considered scampi worldwide. Monkfish tail was sometimes illegally used and sold as scampi in the United Kingdom in the past contravening the Fish Labelling (Amendment) England Regulation 2005 and Schedule 1 of the Food Labelling Regulations 1996.",
                                 category: "Dinner",
                                 image_url: "/assets/edible_thumbs/shrimp_scampi.jpg"})

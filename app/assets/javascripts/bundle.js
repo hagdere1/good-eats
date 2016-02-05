@@ -32017,9 +32017,17 @@
 	        'Explore Edibles'
 	      ),
 	      React.createElement(
-	        'ul',
-	        { className: 'edibles-index-items group' },
-	        indexItems
+	        'table',
+	        { className: 'edibles-table' },
+	        React.createElement(
+	          'tbody',
+	          null,
+	          React.createElement(
+	            'tr',
+	            null,
+	            indexItems
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -32167,8 +32175,8 @@
 
 	    var url = "#/edibles/" + this.props.edible.id;
 	    return React.createElement(
-	      'li',
-	      { className: 'edible-list-item' },
+	      'td',
+	      { className: 'edibles-table-item' },
 	      React.createElement(
 	        'a',
 	        { href: url },
@@ -32268,6 +32276,7 @@
 	      dataType: 'json',
 	      success: function () {
 	        console.log("logged out!");
+	        CurrentUserActions.receiveCurrentUser({});
 	        cb && cb();
 	      }
 	    });
@@ -32324,27 +32333,78 @@
 	var EdibleStore = __webpack_require__(243);
 	var ApiUtil = __webpack_require__(233);
 	var CurrentUserStore = __webpack_require__(245);
-	var ListItemStore = __webpack_require__(231);
+	var ListStore = __webpack_require__(208);
 	var SessionsApiUtil = __webpack_require__(247);
+	var EdibleButton = __webpack_require__(265);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
 
 	  getInitialState: function () {
-	    return { edible: EdibleStore.find(parseInt(this.props.params.id)) };
+	    // Check if user has the edible
+	    var selectedListIds = [];
+	    var currentUser = CurrentUserStore.currentUser();
+
+	    for (i = 0; i < currentUser.list_items; i++) {
+	      if (currentUser.list_items[i].edible_id == this.props.params.id) {
+	        selectedListIds.push(currentUser.list_items[i].list_id);
+	      }
+	    }
+
+	    return { edible: EdibleStore.find(parseInt(this.props.params.id)),
+	      lists: ListStore.all(),
+	      selectedListIds: selectedListIds };
 	  },
 
 	  _onChange: function () {
 	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
 	  },
 
+	  _onCurrentUserChange: function () {
+	    var selectedListIds = [];
+	    var currentUser = CurrentUserStore.currentUser();
+
+	    for (i = 0; i < currentUser.list_items; i++) {
+	      if (currentUser.list_items[i].edible_id == this.props.params.id) {
+	        selectedListIds.push(currentUser.list_items[i].list_id);
+	      }
+	    }
+
+	    this.setState({ selectedListIds: selectedListIds });
+	  },
+
+	  _onListChange: function () {
+	    this.setState({ lists: ListStore.all() });
+	  },
+
 	  componentDidMount: function () {
-	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    this.edibleListener = EdibleStore.addListener(this._onChange); // Add current user listener?
+	    this.currentUserListener = CurrentUserStore.addListener(this._onListenerChange);
+	    this.listListener = ListStore.addListener(this._onListChange);
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
+	    SessionsApiUtil.fetchCurrentUser();
+	    ApiUtil.fetchAllLists();
+	  },
+
+	  onListClick: function (id) {
+	    var selectedListIds = this.state.selectedListIds;
+	    selectedListIds.push(id);
+	    this.setState({ selectedListIds: selectedListIds }); // selectedListIds = [1, 2]
+	    var data = this.state.selectedListIds;
+	    $.ajax({
+	      type: "PATCH",
+	      url: "api/edibles/" + edible.id,
+	      data: { edible: data },
+	      sucess: function () {
+	        // do stuff
+	      }
+	    });
 	  },
 
 	  componentWillUnmount: function () {
 	    this.edibleListener.remove();
+	    this.currentUserListener.remove();
+	    this.listListener.remove();
 	  },
 
 	  render: function () {
@@ -32370,6 +32430,18 @@
 	      );
 	    }
 
+	    var lists;
+
+	    if (this.state.lists) {
+	      lists = this.state.lists.map(function (list) {
+	        return React.createElement(
+	          'li',
+	          { key: list.id },
+	          list.title
+	        );
+	      });
+	    }
+
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-show' },
@@ -32379,7 +32451,12 @@
 	        React.createElement(
 	          'div',
 	          { className: 'edible-image' },
-	          edibleImage
+	          edibleImage,
+	          React.createElement(
+	            'ul',
+	            null,
+	            lists
+	          )
 	        ),
 	        React.createElement(
 	          'div',
@@ -33528,6 +33605,90 @@
 	});
 
 	module.exports = ListForm;
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var EdibleButton = React.createClass({
+	    displayName: "EdibleButton",
+
+	    getInitialState: function () {
+	        return {
+	            listVisible: false
+	        };
+	    },
+
+	    select: function (item) {
+	        this.props.selected = item;
+	    },
+
+	    show: function () {
+	        this.setState({ listVisible: true });
+	        document.addEventListener("click", this.hide);
+	    },
+
+	    hide: function () {
+	        this.setState({ listVisible: false });
+	        document.removeEventListener("click", this.hide);
+	    },
+
+	    render: function () {
+	        return React.createElement(
+	            "div",
+	            { className: "dropdown-container" + (this.state.listVisible ? " show" : "") },
+	            React.createElement(
+	                "div",
+	                { className: "dropdown-display" + (this.state.listVisible ? " clicked" : ""), onClick: this.show },
+	                React.createElement(
+	                    "span",
+	                    { style: { color: this.props.selected.hex } },
+	                    this.props.selected.name
+	                ),
+	                React.createElement("i", { className: "fa fa-angle-down" })
+	            ),
+	            React.createElement(
+	                "div",
+	                { className: "dropdown-list" },
+	                React.createElement(
+	                    "div",
+	                    null,
+	                    this.renderListItems()
+	                )
+	            )
+	        );
+	    },
+
+	    renderListItems: function () {
+	        var items = [];
+	        for (var i = 0; i < this.props.list.length; i++) {
+	            var item = this.props.list[i];
+	            items.push(React.createElement(
+	                "div",
+	                { onClick: this.select.bind(null, item) },
+	                React.createElement(
+	                    "span",
+	                    { style: { color: item.hex } },
+	                    item.name
+	                )
+	            ));
+	        }
+	        return items;
+	    }
+	});
+
+	var colours = [{
+	    name: "Red",
+	    hex: "#F21B1B"
+	}, {
+	    name: "Blue",
+	    hex: "#1B66F2"
+	}, {
+	    name: "Green",
+	    hex: "#07BA16"
+	}];
 
 /***/ }
 /******/ ]);

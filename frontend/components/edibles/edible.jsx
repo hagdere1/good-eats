@@ -86,13 +86,13 @@ var Edible = React.createClass({
 
     var url = "#/edibles/" + this.props.edible.id;
     return (
-      <li className="edible-list-item">
+      <td className="edibles-table-item">
         <a href={url}>
           <p>{this.props.edible.name}</p>
           <img className="edible-list-item-image" src={this.props.edible.image_url} />
         </a>
         <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Add"}</button>
-      </li>
+      </td>
     );
   }
 });

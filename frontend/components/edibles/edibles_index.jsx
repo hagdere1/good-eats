@@ -31,9 +31,13 @@ var EdiblesIndex = React.createClass({
     return (
       <div className="edibles-index">
         <h1 className="heading-main">Explore Edibles</h1>
-        <ul className="edibles-index-items group">
-          {indexItems}
-        </ul>
+        <table className="edibles-table">
+          <tbody>
+            <tr>
+              {indexItems}
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }

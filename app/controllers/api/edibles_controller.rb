@@ -9,7 +9,13 @@ class Api::EdiblesController < ApplicationController
     render :show
   end
 
+  def update
+    @edible = Edible.find(params[:id])
+    @edible.update(edible_params)
+    render :show
+  end
+
   def edible_params
-    params.require(:edible).permit(:name, :description, :category, :image_url)
+    params.require(:edible).permit(:name, :description, :category, :image_url, list_ids: [])
   end
 end
