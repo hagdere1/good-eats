@@ -32,8 +32,13 @@
 }
 
 .auth-header-list li {
-  float: left;
   font-family: "Lato", Helvetica, Arial, sans-serif;
+}
+
+.auth-header-list a {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .auth-header-list h5 {

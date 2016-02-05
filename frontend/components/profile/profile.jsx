@@ -28,7 +28,7 @@ var Profile = React.createClass({
   },
 
   render: function () {
-
+    debugger
     if (this.state.currentUser === "undefined") {
       return <div></div>;
     }
@@ -75,13 +75,17 @@ var Profile = React.createClass({
       })
     );
 
+    var profilePicture = <img className="profile-picture" src={this.state.currentUser.image_url}/>;
+
     var currentDate = new Date();
 
     return (
       <div className="profile-container">
         <div className="profile-header group">
 
-          <img className="profile-picture" src={this.state.currentUser.image_url}/>
+          <div className="profile-picture-container">
+            {profilePicture}
+          </div>
 
           <div className="profile-details">
             <h1 className="heading-main">{this.state.currentUser.name}</h1>
