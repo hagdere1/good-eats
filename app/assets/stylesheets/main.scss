@@ -72,11 +72,11 @@ ul {
 .root-header {
   background-color: #F4F1EA;
   border-bottom: 1px solid #ccc;
+  color: #463020;
 }
 
 .root-header-banner {
   width: 100%;
-  border-bottom: 1px solid black;
 }
 
 .root-header-nav {
@@ -104,18 +104,26 @@ ul {
   padding-right: 10px;
   padding-bottom: 10px;
   font-family: 'Roboto', sans-serif;
-  font-weight: 100px;
+
   letter-spacing: -1.75px;
   margin-right: 10px;
-  color: #463020;
-}
-
-.root-header-logo div {
-  font-weight: 200;
 }
 
 .root-header-logo a {
   text-decoration: none;
+}
+
+.root-header-logo div {
+  display: block;
+  float: left;
+}
+
+.root-header-logo-good {
+  font-weight: 100;
+}
+
+.root-header-logo-eats {
+  font-weight: 300;
 }
 
 .root-header-cookie {

@@ -35,11 +35,14 @@ var Header = React.createClass({
     if (CurrentUserStore.isLoggedIn()) {
       return (
         <header className="root-header">
-          <img className="root-header-banner" src="/assets/banner/banner.jpg" />
+          <img className="root-header-banner" src="/assets/banner/Dollarphotoclub_72620313.jpg" />
           <nav className="root-header-nav group">
 
-            <h1 className="root-header-logo">
-              <a href="/"><div>good</div>eats</a>
+            <h1 className="root-header-logo group">
+              <a href="/">
+                <div className="root-header-logo-good">good</div>
+                <div className="root-header-logo-eats">eats</div>
+              </a>
             </h1>
 
             <input type="text" name="name" placeholder="Edible / Group / Tag / Person" value="" />
