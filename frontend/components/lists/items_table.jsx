@@ -1,6 +1,7 @@
 var React = require('react');
+var SessionsApiUtil = require('../../util/sessions_api_util');
 var ApiUtil = require('../../util/api_util');
-var ListItemStore = require('../../stores/list_item');
+var CurrentUserStore = require('../../stores/current_user_store');
 var ReviewForm = require('./review_form');
 
 var ItemsTable = React.createClass({
@@ -9,7 +10,8 @@ var ItemsTable = React.createClass({
   },
 
   getListItems: function () {
-    var allItems = ListItemStore.all();
+    var currentUser = CurrentUserStore.currentUser();
+    var allItems = currentUser.list_items;
     var listItems = [];
     allItems.forEach(function (listItem) {
       if (listItem.list_id === parseInt(this.props.listId)) {
@@ -25,17 +27,13 @@ var ItemsTable = React.createClass({
     this.setState(this.getListItems());
   },
 
-  componentWillReceiveProps: function (newProps) {
-    ApiUtil.fetchAllListItems();
-  },
-
   componentDidMount: function () {
-    this.listItemListener = ListItemStore.addListener(this._onChange);
-    ApiUtil.fetchAllListItems();
+    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+    SessionsApiUtil.fetchCurrentUser();
   },
 
   componentWillUnmount: function () {
-    this.listItemListener.remove();
+    this.currentUserListener.remove();
   },
 
   destroyListItem: function (event) {

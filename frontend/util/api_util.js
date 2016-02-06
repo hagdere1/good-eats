@@ -1,6 +1,8 @@
 var ApiActions = require('../actions/api_actions');
+var SessionsApiUtil = require('./sessions_api_util');
 
 ApiUtil = {
+
   fetchAllEdibles: function () {
     $.ajax({
       url: "api/edibles",
@@ -9,6 +11,7 @@ ApiUtil = {
       }
     });
   },
+
   fetchSingleEdible: function (id) {
     $.ajax({
       url: "api/edibles/" + id,
@@ -17,6 +20,7 @@ ApiUtil = {
       }
     });
   },
+
   fetchAllLists: function () {
     $.ajax({
       url: "api/lists",
@@ -25,6 +29,7 @@ ApiUtil = {
       }
     });
   },
+
   fetchSingleList: function (id) {
     $.ajax({
       url: "api/lists/" + id,
@@ -34,33 +39,14 @@ ApiUtil = {
       }
     });
   },
-  fetchAllListItems: function () {
-    $.ajax({
-      url: "api/list_items/",
-      success: function (listItems) {
-        ApiActions.receiveAllListItems(listItems);
-        console.log("Successfully fetched all lists!");
-      },
-      error: function () {
-        console.log("Failed to fetch list items.");
-      }
-    });
-  },
-  fetchSingleListItem: function (id) {
-    $.ajax({
-      url: "api/list_item/" + id,
-      success: function (listItem) {
-        ApiActions.receiveSingleListItem(listItem);
-      }
-    });
-  },
+
   createListItem: function (listItem, cb) {
     $.ajax({
       url: "api/list_items/",
       method: "POST",
       data: {list_item: listItem},
-      success: function (listItemData) {
-        ApiActions.receiveSingleListItem(listItemData);
+      success: function () {
+        SessionsApiUtil.fetchCurrentUser();
         cb && cb();
       },
       error: function () {
@@ -68,12 +54,13 @@ ApiUtil = {
       }
     });
   },
+
   destroyListItem: function (id, cb) {
     $.ajax({
       url: "api/list_items/" + id,
       method: "DELETE",
       success: function () {
-        ApiActions.destroyListItem(id);
+        SessionsApiUtil.fetchCurrentUser();
         console.log("Deleted list item!");
         cb && cb();
       },
@@ -82,13 +69,14 @@ ApiUtil = {
       }
     });
   },
+
   updateListItem: function (listItem, cb) {
     $.ajax({
       url: "api/list_items/" + listItem.id,
       method: "PATCH",
       data: {list_item: listItem},
       success: function (listItem) {
-        ApiActions.receiveSingleListItem(listItem);
+        SessionsApiUtil.fetchCurrentUser();
         console.log("Successfully updated list item!");
         cb && cb();
       },
@@ -97,6 +85,7 @@ ApiUtil = {
       }
     });
   },
+
   fetchAllReviews: function () {
     $.ajax({
       url: "/api/reviews/",
@@ -109,6 +98,7 @@ ApiUtil = {
       }
     });
   },
+
   createReview: function (review, cb) {
     $.ajax({
       url: "api/reviews",
@@ -124,6 +114,7 @@ ApiUtil = {
       }
     });
   },
+
   createList: function (list, cb) {
     $.ajax({
       url: "api/lists",
@@ -139,6 +130,7 @@ ApiUtil = {
       }
     });
   },
+
   destroyList: function (id, cb) {
     $.ajax({
       url: "api/lists/" + id,
