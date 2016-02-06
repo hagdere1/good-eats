@@ -31741,9 +31741,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SessionsApiUtil = __webpack_require__(234);
 	var ApiUtil = __webpack_require__(236);
-	var CurrentUserStore = __webpack_require__(232);
+	var ListStore = __webpack_require__(209);
 	var ReviewForm = __webpack_require__(244);
 
 	var ItemsTable = React.createClass({
@@ -31754,15 +31753,8 @@
 	  },
 
 	  getListItems: function () {
-	    var currentUser = CurrentUserStore.currentUser();
-	    var allItems = currentUser.list_items;
-	    var listItems = [];
-	    allItems.forEach(function (listItem) {
-	      if (listItem.list_id === parseInt(this.props.listId)) {
-	        listItems.push(listItem);
-	      }
-	    }.bind(this));
-	    return { edibles: listItems,
+	    var list = ListStore.find(parseInt(this.props.listId));
+	    return { edibles: list.list_items,
 	      reviewFormShowing: false,
 	      reviewEdible: null };
 	  },
@@ -31772,12 +31764,12 @@
 	  },
 
 	  componentDidMount: function () {
-	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
-	    SessionsApiUtil.fetchCurrentUser();
+	    this.listListener = ListStore.addListener(this._onChange);
+	    ApiUtil.fetchSingleList(parseInt(this.props.listId));
 	  },
 
 	  componentWillUnmount: function () {
-	    this.currentUserListener.remove();
+	    this.listListener.remove();
 	  },
 
 	  destroyListItem: function (event) {

@@ -1,7 +1,6 @@
 var React = require('react');
-var SessionsApiUtil = require('../../util/sessions_api_util');
 var ApiUtil = require('../../util/api_util');
-var CurrentUserStore = require('../../stores/current_user_store');
+var ListStore = require('../../stores/list');
 var ReviewForm = require('./review_form');
 
 var ItemsTable = React.createClass({
@@ -10,15 +9,8 @@ var ItemsTable = React.createClass({
   },
 
   getListItems: function () {
-    var currentUser = CurrentUserStore.currentUser();
-    var allItems = currentUser.list_items;
-    var listItems = [];
-    allItems.forEach(function (listItem) {
-      if (listItem.list_id === parseInt(this.props.listId)) {
-        listItems.push(listItem);
-      }
-    }.bind(this));
-    return { edibles: listItems,
+    var list = ListStore.find(parseInt(this.props.listId));
+    return { edibles: list.list_items,
              reviewFormShowing: false,
              reviewEdible: null};
   },
@@ -27,13 +19,14 @@ var ItemsTable = React.createClass({
     this.setState(this.getListItems());
   },
 
+
   componentDidMount: function () {
-    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
-    SessionsApiUtil.fetchCurrentUser();
+    this.listListener = ListStore.addListener(this._onChange);
+    ApiUtil.fetchSingleList(parseInt(this.props.listId));
   },
 
   componentWillUnmount: function () {
-    this.currentUserListener.remove();
+    this.listListener.remove();
   },
 
   destroyListItem: function (event) {
