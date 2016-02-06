@@ -46,34 +46,27 @@
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 
-	var ListStore = __webpack_require__(208);
-	var ListItemStore = __webpack_require__(231);
-	var ApiUtil = __webpack_require__(233);
-	// Delete testing vars
-
-	var ListsIndex = __webpack_require__(237);
-	var ListsIndexItem = __webpack_require__(242);
-	var EdiblesIndex = __webpack_require__(247);
-	var Edible = __webpack_require__(249);
-	var EdibleShow = __webpack_require__(250);
-	var ListShow = __webpack_require__(243);
-	var ReviewIndex = __webpack_require__(251);
-	var Profile = __webpack_require__(253);
+	var ListsIndex = __webpack_require__(208);
+	var EdiblesIndex = __webpack_require__(246);
+	var Edible = __webpack_require__(248);
+	var EdibleShow = __webpack_require__(249);
+	var ListShow = __webpack_require__(242);
+	var ReviewIndex = __webpack_require__(250);
+	var Profile = __webpack_require__(252);
 
 	// React auth
-	var UsersIndex = __webpack_require__(254);
-	var UserShow = __webpack_require__(259);
-	var SessionForm = __webpack_require__(260);
-	var UserForm = __webpack_require__(261);
-	var CurrentUserStore = __webpack_require__(238);
-	var SessionsApiUtil = __webpack_require__(240);
+	var UsersIndex = __webpack_require__(253);
+	var UserShow = __webpack_require__(258);
+	var SessionForm = __webpack_require__(259);
+	var UserForm = __webpack_require__(260);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
 
-	var App = __webpack_require__(266);
+	var App = __webpack_require__(265);
 
 	var routes = React.createElement(
 	  Route,
@@ -24366,10 +24359,81 @@
 /* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(209).Store;
-	var AppDispatcher = __webpack_require__(227);
+	var React = __webpack_require__(1);
+	var ListStore = __webpack_require__(209);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
+	var ApiUtil = __webpack_require__(236);
+	var ListsIndexItem = __webpack_require__(241);
+	var ListShow = __webpack_require__(242);
+	var ListForm = __webpack_require__(245);
+
+	var ListsIndex = React.createClass({
+	  displayName: 'ListsIndex',
+
+	  getInitialState: function () {
+	    return { lists: ListStore.all() };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ lists: ListStore.all() });
+	  },
+
+	  componentDidMount: function () {
+	    this.listListener = ListStore.addListener(this._onChange);
+	    ApiUtil.fetchAllLists();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.listListener.remove();
+	  },
+
+	  render: function () {
+
+	    return React.createElement(
+	      'div',
+	      { className: 'lists-index group' },
+	      React.createElement(
+	        'h1',
+	        { className: 'heading-main' },
+	        'My Edibles'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'lists-index-nav' },
+	        React.createElement(
+	          'h3',
+	          { className: 'heading-sub-main' },
+	          'Lists'
+	        ),
+	        React.createElement(
+	          'table',
+	          { className: 'lists-index' },
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.state.lists.map(function (list) {
+	              return React.createElement(ListsIndexItem, { key: list.id, list: list });
+	            })
+	          )
+	        ),
+	        React.createElement(ListForm, null)
+	      ),
+	      this.props.children
+	    );
+	  }
+	});
+
+	module.exports = ListsIndex;
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(210).Store;
+	var AppDispatcher = __webpack_require__(228);
 	var ListStore = new Store(AppDispatcher);
-	var ListConstants = __webpack_require__(230);
+	var ListConstants = __webpack_require__(231);
 
 	var _lists = {};
 
@@ -24421,7 +24485,7 @@
 	module.exports = ListStore;
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24433,15 +24497,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Container = __webpack_require__(210);
-	module.exports.MapStore = __webpack_require__(214);
-	module.exports.Mixin = __webpack_require__(226);
-	module.exports.ReduceStore = __webpack_require__(215);
-	module.exports.Store = __webpack_require__(216);
+	module.exports.Container = __webpack_require__(211);
+	module.exports.MapStore = __webpack_require__(215);
+	module.exports.Mixin = __webpack_require__(227);
+	module.exports.ReduceStore = __webpack_require__(216);
+	module.exports.Store = __webpack_require__(217);
 
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24463,10 +24527,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStoreGroup = __webpack_require__(211);
+	var FluxStoreGroup = __webpack_require__(212);
 
-	var invariant = __webpack_require__(212);
-	var shallowEqual = __webpack_require__(213);
+	var invariant = __webpack_require__(213);
+	var shallowEqual = __webpack_require__(214);
 
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -24624,7 +24688,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24643,7 +24707,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(212);
+	var invariant = __webpack_require__(213);
 
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -24705,7 +24769,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24760,7 +24824,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports) {
 
 	/**
@@ -24815,7 +24879,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24836,10 +24900,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxReduceStore = __webpack_require__(215);
-	var Immutable = __webpack_require__(225);
+	var FluxReduceStore = __webpack_require__(216);
+	var Immutable = __webpack_require__(226);
 
-	var invariant = __webpack_require__(212);
+	var invariant = __webpack_require__(213);
 
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -24965,7 +25029,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24986,10 +25050,10 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var FluxStore = __webpack_require__(216);
+	var FluxStore = __webpack_require__(217);
 
-	var abstractMethod = __webpack_require__(224);
-	var invariant = __webpack_require__(212);
+	var abstractMethod = __webpack_require__(225);
+	var invariant = __webpack_require__(213);
 
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25072,7 +25136,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25091,11 +25155,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var _require = __webpack_require__(217);
+	var _require = __webpack_require__(218);
 
 	var EventEmitter = _require.EventEmitter;
 
-	var invariant = __webpack_require__(212);
+	var invariant = __webpack_require__(213);
 
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -25255,7 +25319,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25268,14 +25332,14 @@
 	 */
 
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(218)
+	  EventEmitter: __webpack_require__(219)
 	};
 
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25294,11 +25358,11 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var EmitterSubscription = __webpack_require__(219);
-	var EventSubscriptionVendor = __webpack_require__(221);
+	var EmitterSubscription = __webpack_require__(220);
+	var EventSubscriptionVendor = __webpack_require__(222);
 
-	var emptyFunction = __webpack_require__(223);
-	var invariant = __webpack_require__(222);
+	var emptyFunction = __webpack_require__(224);
+	var invariant = __webpack_require__(223);
 
 	/**
 	 * @class BaseEventEmitter
@@ -25472,7 +25536,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25493,7 +25557,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var EventSubscription = __webpack_require__(220);
+	var EventSubscription = __webpack_require__(221);
 
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -25525,7 +25589,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports) {
 
 	/**
@@ -25579,7 +25643,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25598,7 +25662,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(222);
+	var invariant = __webpack_require__(223);
 
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -25688,7 +25752,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25743,7 +25807,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 223 */
+/* 224 */
 /***/ function(module, exports) {
 
 	/**
@@ -25785,7 +25849,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 224 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25802,7 +25866,7 @@
 
 	'use strict';
 
-	var invariant = __webpack_require__(212);
+	var invariant = __webpack_require__(213);
 
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -25812,7 +25876,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 225 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30799,7 +30863,7 @@
 	}));
 
 /***/ },
-/* 226 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30816,9 +30880,9 @@
 
 	'use strict';
 
-	var FluxStoreGroup = __webpack_require__(211);
+	var FluxStoreGroup = __webpack_require__(212);
 
-	var invariant = __webpack_require__(212);
+	var invariant = __webpack_require__(213);
 
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -30922,14 +30986,14 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(228).Dispatcher;
+	var Dispatcher = __webpack_require__(229).Dispatcher;
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30941,11 +31005,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 
-	module.exports.Dispatcher = __webpack_require__(229);
+	module.exports.Dispatcher = __webpack_require__(230);
 
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30967,7 +31031,7 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var invariant = __webpack_require__(212);
+	var invariant = __webpack_require__(213);
 
 	var _prefix = 'ID_';
 
@@ -31182,7 +31246,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports) {
 
 	ListConstants = {
@@ -31194,414 +31258,12 @@
 	module.exports = ListConstants;
 
 /***/ },
-/* 231 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var AppDispatcher = __webpack_require__(227);
-	var ListItemStore = new Store(AppDispatcher);
-	var ListItemConstants = __webpack_require__(232);
-
-	var _listItems = {};
-
-	ListItemStore.all = function () {
-	  var listItems = [];
-	  for (var id in _listItems) {
-	    listItems.push(_listItems[id]);
-	  }
-	  return listItems;
-	};
-
-	ListItemStore.resetListItems = function (listItems) {
-	  _listItems = {};
-	  listItems.forEach(function (listItem) {
-	    _listItems[listItem.id] = listItem;
-	  });
-	};
-
-	ListItemStore.resetListItem = function (listItem) {
-	  _listItems[listItem.id] = listItem;
-	};
-
-	ListItemStore.find = function (id) {
-	  return _listItems[id];
-	};
-
-	ListItemStore.destroyListItem = function (id) {
-	  delete _listItems[id];
-	};
-
-	ListItemStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ListItemConstants.LIST_ITEMS_RECEIVED:
-	      this.resetListItems(payload.listItems);
-	      ListItemStore.__emitChange();
-	      break;
-	    case ListItemConstants.LIST_ITEM_RECEIVED:
-	      this.resetListItem(payload.listItem);
-	      ListItemStore.__emitChange();
-	      break;
-	    case ListItemConstants.LIST_ITEM_DESTROYED:
-	      this.destroyListItem(payload.listItemId);
-	      ListItemStore.__emitChange();
-	      break;
-	  }
-	};
-
-	window.ListItemStore = ListItemStore;
-	module.exports = ListItemStore;
-
-/***/ },
 /* 232 */
-/***/ function(module, exports) {
-
-	ListItemConstants = {
-	  LIST_ITEMS_RECEIVED: "LIST_ITEMS_RECEIVED",
-	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED",
-	  LIST_ITEM_DESTROYED: "LIST_ITEM_DESTROYED"
-	};
-
-	module.exports = ListItemConstants;
-
-/***/ },
-/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(234);
-
-	ApiUtil = {
-	  fetchAllEdibles: function () {
-	    $.ajax({
-	      url: "api/edibles",
-	      success: function (edibles) {
-	        ApiActions.receiveAllEdibles(edibles);
-	      }
-	    });
-	  },
-	  fetchSingleEdible: function (id) {
-	    $.ajax({
-	      url: "api/edibles/" + id,
-	      success: function (edible) {
-	        ApiActions.receiveSingleEdible(edible);
-	      }
-	    });
-	  },
-	  fetchAllLists: function () {
-	    $.ajax({
-	      url: "api/lists",
-	      success: function (lists) {
-	        ApiActions.receiveAllLists(lists);
-	      }
-	    });
-	  },
-	  fetchSingleList: function (id) {
-	    $.ajax({
-	      url: "api/lists/" + id,
-	      success: function (list) {
-	        console.log("Successfully fetched your list!");
-	        ApiActions.receiveSingleList(list);
-	      }
-	    });
-	  },
-	  fetchAllListItems: function () {
-	    $.ajax({
-	      url: "api/list_items/",
-	      success: function (listItems) {
-	        ApiActions.receiveAllListItems(listItems);
-	        console.log("Successfully fetched all lists!");
-	      },
-	      error: function () {
-	        console.log("Failed to fetch list items.");
-	      }
-	    });
-	  },
-	  fetchSingleListItem: function (id) {
-	    $.ajax({
-	      url: "api/list_item/" + id,
-	      success: function (listItem) {
-	        ApiActions.receiveSingleListItem(listItem);
-	      }
-	    });
-	  },
-	  createListItem: function (listItem, cb) {
-	    $.ajax({
-	      url: "api/list_items/",
-	      method: "POST",
-	      data: { list_item: listItem },
-	      success: function (listItemData) {
-	        ApiActions.receiveSingleListItem(listItemData);
-	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to create list item");
-	      }
-	    });
-	  },
-	  destroyListItem: function (id, cb) {
-	    $.ajax({
-	      url: "api/list_items/" + id,
-	      method: "DELETE",
-	      success: function () {
-	        ApiActions.destroyListItem(id);
-	        console.log("Deleted list item!");
-	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to delete list item");
-	      }
-	    });
-	  },
-	  updateListItem: function (listItem, cb) {
-	    $.ajax({
-	      url: "api/list_items/" + listItem.id,
-	      method: "PATCH",
-	      data: { list_item: listItem },
-	      success: function (listItem) {
-	        ApiActions.receiveSingleListItem(listItem);
-	        console.log("Successfully updated list item!");
-	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to create list item.");
-	      }
-	    });
-	  },
-	  fetchAllReviews: function () {
-	    $.ajax({
-	      url: "/api/reviews/",
-	      success: function (reviews) {
-	        ApiActions.receiveAllReviews(reviews);
-	        console.log("Successfully retrieved reviews");
-	      },
-	      error: function () {
-	        console.log("Failed to retrieve reviews");
-	      }
-	    });
-	  },
-	  createReview: function (review, cb) {
-	    $.ajax({
-	      url: "api/reviews",
-	      method: "POST",
-	      data: { review: review },
-	      success: function (reviewData) {
-	        console.log("You wrote a review!");
-	        ApiActions.receiveSingleReview(reviewData);
-	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("We regret to inform you that your review submission has been denied.");
-	      }
-	    });
-	  },
-	  createList: function (list, cb) {
-	    $.ajax({
-	      url: "api/lists",
-	      method: "POST",
-	      data: { list: list },
-	      success: function (listData) {
-	        console.log("You created a list!");
-	        ApiActions.receiveSingleList(listData);
-	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to create list");
-	      }
-	    });
-	  },
-	  destroyList: function (id, cb) {
-	    $.ajax({
-	      url: "api/lists/" + id,
-	      method: "DELETE",
-	      success: function () {
-	        ApiActions.destroyList(id);
-	        console.log("Deleted list!");
-	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to delete list.");
-	      }
-	    });
-	  }
-	};
-
-	window.ApiUtil = ApiUtil;
-	module.exports = ApiUtil;
-
-/***/ },
-/* 234 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(227);
-	var EdibleConstants = __webpack_require__(235);
-	var ListConstants = __webpack_require__(230);
-	var ListItemConstants = __webpack_require__(232);
-	var ReviewConstants = __webpack_require__(236);
-
-	var ApiActions = {
-	  receiveAllEdibles: function (edibles) {
-	    AppDispatcher.dispatch({
-	      actionType: EdibleConstants.EDIBLES_RECEIVED,
-	      edibles: edibles
-	    });
-	  },
-	  receiveSingleEdible: function (edible) {
-	    AppDispatcher.dispatch({
-	      actionType: EdibleConstants.EDIBLE_RECEIVED,
-	      edible: edible
-	    });
-	  },
-	  receiveAllLists: function (lists) {
-	    AppDispatcher.dispatch({
-	      actionType: ListConstants.LISTS_RECEIVED,
-	      lists: lists
-	    });
-	  },
-	  receiveSingleList: function (list) {
-	    AppDispatcher.dispatch({
-	      actionType: ListConstants.LIST_RECEIVED,
-	      list: list
-	    });
-	  },
-	  destroyList: function (id) {
-	    AppDispatcher.dispatch({
-	      actionType: ListConstants.LIST_DESTROYED,
-	      id: id
-	    });
-	  },
-	  receiveAllListItems: function (listItems) {
-	    AppDispatcher.dispatch({
-	      actionType: ListItemConstants.LIST_ITEMS_RECEIVED,
-	      listItems: listItems
-	    });
-	  },
-	  receiveSingleListItem: function (listItem) {
-	    AppDispatcher.dispatch({
-	      actionType: ListItemConstants.LIST_ITEM_RECEIVED,
-	      listItem: listItem
-	    });
-	  },
-	  destroyListItem: function (id) {
-	    AppDispatcher.dispatch({
-	      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
-	      listItemId: id
-	    });
-	  },
-	  receiveAllReviews: function (reviews) {
-	    AppDispatcher.dispatch({
-	      actionType: ReviewConstants.REVIEWS_RECEIVED,
-	      reviews: reviews
-	    });
-	  },
-	  receiveSingleReview: function (review) {
-	    AppDispatcher.dispatch({
-	      actionType: ReviewConstants.REVIEW_RECEIVED,
-	      review: review
-	    });
-	  }
-	};
-
-	module.exports = ApiActions;
-
-/***/ },
-/* 235 */
-/***/ function(module, exports) {
-
-	EdibleConstants = {
-	  EDIBLES_RECEIVED: "EDIBLES_RECEIVED",
-	  EDIBLE_RECEIVED: "EDIBLE_RECEIVED"
-	};
-
-	module.exports = EdibleConstants;
-
-/***/ },
-/* 236 */
-/***/ function(module, exports) {
-
-	ReviewConstants = {
-	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED",
-	  REVIEW_RECEIVED: "REVIEW_RECEIVED"
-	};
-
-	module.exports = ReviewConstants;
-
-/***/ },
-/* 237 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ListStore = __webpack_require__(208);
-	var CurrentUserStore = __webpack_require__(238);
-	var SessionsApiUtil = __webpack_require__(240);
-	var ApiUtil = __webpack_require__(233);
-	var ListsIndexItem = __webpack_require__(242);
-	var ListShow = __webpack_require__(243);
-	var ListForm = __webpack_require__(246);
-
-	var ListsIndex = React.createClass({
-	  displayName: 'ListsIndex',
-
-	  getInitialState: function () {
-	    return { lists: ListStore.all() };
-	  },
-
-	  _onChange: function () {
-	    this.setState({ lists: ListStore.all() });
-	  },
-
-	  componentDidMount: function () {
-	    this.listListener = ListStore.addListener(this._onChange);
-	    ApiUtil.fetchAllLists();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.listListener.remove();
-	  },
-
-	  render: function () {
-
-	    return React.createElement(
-	      'div',
-	      { className: 'lists-index group' },
-	      React.createElement(
-	        'h1',
-	        { className: 'heading-main' },
-	        'My Edibles'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'lists-index-nav' },
-	        React.createElement(
-	          'h3',
-	          { className: 'heading-sub-main' },
-	          'Lists'
-	        ),
-	        React.createElement(
-	          'table',
-	          { className: 'lists-index' },
-	          React.createElement(
-	            'tbody',
-	            null,
-	            this.state.lists.map(function (list) {
-	              return React.createElement(ListsIndexItem, { key: list.id, list: list });
-	            })
-	          )
-	        ),
-	        React.createElement(ListForm, null)
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-
-	module.exports = ListsIndex;
-
-/***/ },
-/* 238 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(209).Store;
-	var AppDispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(239);
+	var Store = __webpack_require__(210).Store;
+	var AppDispatcher = __webpack_require__(228);
+	var CurrentUserConstants = __webpack_require__(233);
 
 	var _currentUser = {};
 	var _currentUserHasBeenFetched = false;
@@ -31637,7 +31299,7 @@
 	module.exports = CurrentUserStore;
 
 /***/ },
-/* 239 */
+/* 233 */
 /***/ function(module, exports) {
 
 	var CurrentUserConstants = {
@@ -31648,10 +31310,10 @@
 	module.exports = CurrentUserConstants;
 
 /***/ },
-/* 240 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var CurrentUserActions = __webpack_require__(241);
+	var CurrentUserActions = __webpack_require__(235);
 	var SessionsApiUtil = {
 	  login: function (credentials, success) {
 	    $.ajax({
@@ -31700,19 +31362,21 @@
 	module.exports = SessionsApiUtil;
 
 /***/ },
-/* 241 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(227);
-	var CurrentUserConstants = __webpack_require__(239);
+	var AppDispatcher = __webpack_require__(228);
+	var CurrentUserConstants = __webpack_require__(233);
 
 	var CurrentUserActions = {
+
 	  receiveCurrentUser: function (currentUser) {
 	    AppDispatcher.dispatch({
 	      actionType: CurrentUserConstants.RECEIVE_CURRENT_USER,
 	      currentUser: currentUser
 	    });
 	  },
+
 	  logOut: function () {
 	    AppDispatcher.dispatch({
 	      actionType: CurrentUserConstants.LOG_OUT
@@ -31723,7 +31387,261 @@
 	module.exports = CurrentUserActions;
 
 /***/ },
-/* 242 */
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiActions = __webpack_require__(237);
+	var SessionsApiUtil = __webpack_require__(234);
+
+	ApiUtil = {
+
+	  fetchAllEdibles: function () {
+	    $.ajax({
+	      url: "api/edibles",
+	      success: function (edibles) {
+	        ApiActions.receiveAllEdibles(edibles);
+	      }
+	    });
+	  },
+
+	  fetchSingleEdible: function (id) {
+	    $.ajax({
+	      url: "api/edibles/" + id,
+	      success: function (edible) {
+	        ApiActions.receiveSingleEdible(edible);
+	      }
+	    });
+	  },
+
+	  fetchAllLists: function () {
+	    $.ajax({
+	      url: "api/lists",
+	      success: function (lists) {
+	        ApiActions.receiveAllLists(lists);
+	      }
+	    });
+	  },
+
+	  fetchSingleList: function (id) {
+	    $.ajax({
+	      url: "api/lists/" + id,
+	      success: function (list) {
+	        console.log("Successfully fetched your list!");
+	        ApiActions.receiveSingleList(list);
+	      }
+	    });
+	  },
+
+	  createListItem: function (listItem, cb) {
+	    $.ajax({
+	      url: "api/list_items/",
+	      method: "POST",
+	      data: { list_item: listItem },
+	      success: function () {
+	        SessionsApiUtil.fetchCurrentUser();
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to create list item");
+	      }
+	    });
+	  },
+
+	  destroyListItem: function (id, cb) {
+	    $.ajax({
+	      url: "api/list_items/" + id,
+	      method: "DELETE",
+	      success: function () {
+	        SessionsApiUtil.fetchCurrentUser();
+	        console.log("Deleted list item!");
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to delete list item");
+	      }
+	    });
+	  },
+
+	  updateListItem: function (listItem, cb) {
+	    $.ajax({
+	      url: "api/list_items/" + listItem.id,
+	      method: "PATCH",
+	      data: { list_item: listItem },
+	      success: function (listItem) {
+	        SessionsApiUtil.fetchCurrentUser();
+	        console.log("Successfully updated list item!");
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to create list item.");
+	      }
+	    });
+	  },
+
+	  fetchAllReviews: function () {
+	    $.ajax({
+	      url: "/api/reviews/",
+	      success: function (reviews) {
+	        ApiActions.receiveAllReviews(reviews);
+	        console.log("Successfully retrieved reviews");
+	      },
+	      error: function () {
+	        console.log("Failed to retrieve reviews");
+	      }
+	    });
+	  },
+
+	  createReview: function (review, cb) {
+	    $.ajax({
+	      url: "api/reviews",
+	      method: "POST",
+	      data: { review: review },
+	      success: function (reviewData) {
+	        console.log("You wrote a review!");
+	        ApiActions.receiveSingleReview(reviewData);
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("We regret to inform you that your review submission has been denied.");
+	      }
+	    });
+	  },
+
+	  createList: function (list, cb) {
+	    $.ajax({
+	      url: "api/lists",
+	      method: "POST",
+	      data: { list: list },
+	      success: function (listData) {
+	        console.log("You created a list!");
+	        ApiActions.receiveSingleList(listData);
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to create list");
+	      }
+	    });
+	  },
+
+	  destroyList: function (id, cb) {
+	    $.ajax({
+	      url: "api/lists/" + id,
+	      method: "DELETE",
+	      success: function () {
+	        ApiActions.destroyList(id);
+	        console.log("Deleted list!");
+	        cb && cb();
+	      },
+	      error: function () {
+	        console.log("Failed to delete list.");
+	      }
+	    });
+	  }
+	};
+
+	window.ApiUtil = ApiUtil;
+	module.exports = ApiUtil;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(228);
+	var EdibleConstants = __webpack_require__(238);
+	var ListConstants = __webpack_require__(231);
+	var ListItemConstants = __webpack_require__(239);
+	var ReviewConstants = __webpack_require__(240);
+
+	var ApiActions = {
+
+	  receiveAllEdibles: function (edibles) {
+	    AppDispatcher.dispatch({
+	      actionType: EdibleConstants.EDIBLES_RECEIVED,
+	      edibles: edibles
+	    });
+	  },
+
+	  receiveSingleEdible: function (edible) {
+	    AppDispatcher.dispatch({
+	      actionType: EdibleConstants.EDIBLE_RECEIVED,
+	      edible: edible
+	    });
+	  },
+
+	  receiveAllLists: function (lists) {
+	    AppDispatcher.dispatch({
+	      actionType: ListConstants.LISTS_RECEIVED,
+	      lists: lists
+	    });
+	  },
+
+	  receiveSingleList: function (list) {
+	    AppDispatcher.dispatch({
+	      actionType: ListConstants.LIST_RECEIVED,
+	      list: list
+	    });
+	  },
+
+	  destroyList: function (id) {
+	    AppDispatcher.dispatch({
+	      actionType: ListConstants.LIST_DESTROYED,
+	      id: id
+	    });
+	  },
+
+	  receiveAllReviews: function (reviews) {
+	    AppDispatcher.dispatch({
+	      actionType: ReviewConstants.REVIEWS_RECEIVED,
+	      reviews: reviews
+	    });
+	  },
+
+	  receiveSingleReview: function (review) {
+	    AppDispatcher.dispatch({
+	      actionType: ReviewConstants.REVIEW_RECEIVED,
+	      review: review
+	    });
+	  }
+	};
+
+	module.exports = ApiActions;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports) {
+
+	EdibleConstants = {
+	  EDIBLES_RECEIVED: "EDIBLES_RECEIVED",
+	  EDIBLE_RECEIVED: "EDIBLE_RECEIVED"
+	};
+
+	module.exports = EdibleConstants;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports) {
+
+	ListItemConstants = {
+	  LIST_ITEMS_RECEIVED: "LIST_ITEMS_RECEIVED",
+	  LIST_ITEM_RECEIVED: "LIST_ITEM_RECEIVED",
+	  LIST_ITEM_DESTROYED: "LIST_ITEM_DESTROYED"
+	};
+
+	module.exports = ListItemConstants;
+
+/***/ },
+/* 240 */
+/***/ function(module, exports) {
+
+	ReviewConstants = {
+	  REVIEWS_RECEIVED: "REVIEWS_RECEIVED",
+	  REVIEW_RECEIVED: "REVIEW_RECEIVED"
+	};
+
+	module.exports = ReviewConstants;
+
+/***/ },
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -31771,13 +31689,13 @@
 	module.exports = ListsIndexItem;
 
 /***/ },
-/* 243 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ListStore = __webpack_require__(208);
-	var ApiUtil = __webpack_require__(233);
-	var ItemsTable = __webpack_require__(244);
+	var ListStore = __webpack_require__(209);
+	var ApiUtil = __webpack_require__(236);
+	var ItemsTable = __webpack_require__(243);
 
 	var ListShow = React.createClass({
 	  displayName: 'ListShow',
@@ -31819,13 +31737,14 @@
 	module.exports = ListShow;
 
 /***/ },
-/* 244 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
-	var ListItemStore = __webpack_require__(231);
-	var ReviewForm = __webpack_require__(245);
+	var SessionsApiUtil = __webpack_require__(234);
+	var ApiUtil = __webpack_require__(236);
+	var CurrentUserStore = __webpack_require__(232);
+	var ReviewForm = __webpack_require__(244);
 
 	var ItemsTable = React.createClass({
 	  displayName: 'ItemsTable',
@@ -31835,7 +31754,8 @@
 	  },
 
 	  getListItems: function () {
-	    var allItems = ListItemStore.all();
+	    var currentUser = CurrentUserStore.currentUser();
+	    var allItems = currentUser.list_items;
 	    var listItems = [];
 	    allItems.forEach(function (listItem) {
 	      if (listItem.list_id === parseInt(this.props.listId)) {
@@ -31851,17 +31771,13 @@
 	    this.setState(this.getListItems());
 	  },
 
-	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.fetchAllListItems();
-	  },
-
 	  componentDidMount: function () {
-	    this.listItemListener = ListItemStore.addListener(this._onChange);
-	    ApiUtil.fetchAllListItems();
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	    SessionsApiUtil.fetchCurrentUser();
 	  },
 
 	  componentWillUnmount: function () {
-	    this.listItemListener.remove();
+	    this.currentUserListener.remove();
 	  },
 
 	  destroyListItem: function (event) {
@@ -32001,12 +31917,12 @@
 	module.exports = ItemsTable;
 
 /***/ },
-/* 245 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
-	var ApiUtil = __webpack_require__(233);
+	var ApiUtil = __webpack_require__(236);
 
 	var ReviewForm = React.createClass({
 	  displayName: 'ReviewForm',
@@ -32103,11 +32019,11 @@
 	module.exports = ReviewForm;
 
 /***/ },
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
+	var ApiUtil = __webpack_require__(236);
 
 	var ListForm = React.createClass({
 	  displayName: 'ListForm',
@@ -32146,13 +32062,13 @@
 	module.exports = ListForm;
 
 /***/ },
-/* 247 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(248);
-	var ApiUtil = __webpack_require__(233);
-	var Edible = __webpack_require__(249);
+	var EdibleStore = __webpack_require__(247);
+	var ApiUtil = __webpack_require__(236);
+	var Edible = __webpack_require__(248);
 
 	var EdiblesIndex = React.createClass({
 	  displayName: 'EdiblesIndex',
@@ -32199,13 +32115,13 @@
 	module.exports = EdiblesIndex;
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(209).Store;
-	var AppDispatcher = __webpack_require__(227);
+	var Store = __webpack_require__(210).Store;
+	var AppDispatcher = __webpack_require__(228);
 	var EdibleStore = new Store(AppDispatcher);
-	var EdibleConstants = __webpack_require__(235);
+	var EdibleConstants = __webpack_require__(238);
 
 	var _edibles = {};
 
@@ -32249,14 +32165,14 @@
 	module.exports = EdibleStore;
 
 /***/ },
-/* 249 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var ApiUtil = __webpack_require__(233);
-	var CurrentUserStore = __webpack_require__(238);
-	var SessionsApiUtil = __webpack_require__(240);
+	var ApiUtil = __webpack_require__(236);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
 
 	var Edible = React.createClass({
 	  displayName: 'Edible',
@@ -32362,15 +32278,14 @@
 	module.exports = Edible;
 
 /***/ },
-/* 250 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(248);
-	var ApiUtil = __webpack_require__(233);
-	var CurrentUserStore = __webpack_require__(238);
-	var ListItemStore = __webpack_require__(231);
-	var SessionsApiUtil = __webpack_require__(240);
+	var EdibleStore = __webpack_require__(247);
+	var ApiUtil = __webpack_require__(236);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
@@ -32506,12 +32421,12 @@
 	module.exports = EdibleShow;
 
 /***/ },
-/* 251 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(233);
-	var ReviewStore = __webpack_require__(252);
+	var ApiUtil = __webpack_require__(236);
+	var ReviewStore = __webpack_require__(251);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32610,13 +32525,13 @@
 	module.exports = ReviewIndex;
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(209).Store;
-	var AppDispatcher = __webpack_require__(227);
+	var Store = __webpack_require__(210).Store;
+	var AppDispatcher = __webpack_require__(228);
 	var ReviewStore = new Store(AppDispatcher);
-	var ReviewConstants = __webpack_require__(236);
+	var ReviewConstants = __webpack_require__(240);
 
 	var _reviews = {};
 
@@ -32661,12 +32576,12 @@
 	module.exports = ReviewStore;
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(238);
-	var SessionsApiUtil = __webpack_require__(240);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -32904,12 +32819,12 @@
 	module.exports = Profile;
 
 /***/ },
-/* 254 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(255);
-	var UsersApiUtil = __webpack_require__(257);
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
 
 	var UsersIndex = React.createClass({
 	  displayName: 'UsersIndex',
@@ -32964,12 +32879,12 @@
 	module.exports = UsersIndex;
 
 /***/ },
-/* 255 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(209).Store;
-	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(256);
+	var Store = __webpack_require__(210).Store;
+	var Dispatcher = __webpack_require__(228);
+	var UserConstants = __webpack_require__(255);
 
 	var _users = [];
 	var CHANGE_EVENT = "change";
@@ -33012,7 +32927,7 @@
 	module.exports = UsersStore;
 
 /***/ },
-/* 256 */
+/* 255 */
 /***/ function(module, exports) {
 
 	var UserConstants = {
@@ -33023,11 +32938,11 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 257 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var UserActions = __webpack_require__(258);
-	var CurrentUserActions = __webpack_require__(241);
+	var UserActions = __webpack_require__(257);
+	var CurrentUserActions = __webpack_require__(235);
 
 	var UsersApiUtil = {
 	  fetchUsers: function () {
@@ -33070,11 +32985,11 @@
 	module.exports = UsersApiUtil;
 
 /***/ },
-/* 258 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(227);
-	var UserConstants = __webpack_require__(256);
+	var Dispatcher = __webpack_require__(228);
+	var UserConstants = __webpack_require__(255);
 
 	var UserActions = {
 	  receiveUsers: function (users) {
@@ -33095,12 +33010,12 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 259 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(255);
-	var UsersApiUtil = __webpack_require__(257);
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
 
 	var UserShow = React.createClass({
 	  displayName: 'UserShow',
@@ -33180,12 +33095,12 @@
 	module.exports = UserShow;
 
 /***/ },
-/* 260 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var History = __webpack_require__(159).History;
-	var SessionsApiUtil = __webpack_require__(240);
+	var SessionsApiUtil = __webpack_require__(234);
 
 	var SessionForm = React.createClass({
 	  displayName: 'SessionForm',
@@ -33255,13 +33170,13 @@
 	module.exports = SessionForm;
 
 /***/ },
-/* 261 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersApiUtil = __webpack_require__(257);
+	var UsersApiUtil = __webpack_require__(256);
 	var History = __webpack_require__(159).History;
-	var LinkedStateMixin = __webpack_require__(262);
+	var LinkedStateMixin = __webpack_require__(261);
 
 	var UserForm = React.createClass({
 	  displayName: 'UserForm',
@@ -33343,13 +33258,13 @@
 	module.exports = UserForm;
 
 /***/ },
-/* 262 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(263);
+	module.exports = __webpack_require__(262);
 
 /***/ },
-/* 263 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33366,8 +33281,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(264);
-	var ReactStateSetters = __webpack_require__(265);
+	var ReactLink = __webpack_require__(263);
+	var ReactStateSetters = __webpack_require__(264);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -33390,7 +33305,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 264 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33464,7 +33379,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 265 */
+/* 264 */
 /***/ function(module, exports) {
 
 	/**
@@ -33573,14 +33488,14 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 266 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Header = __webpack_require__(267);
-	var Footer = __webpack_require__(268);
-	var SessionsApiUtil = __webpack_require__(240);
-	var CurrentUserStore = __webpack_require__(238);
+	var Header = __webpack_require__(266);
+	var Footer = __webpack_require__(267);
+	var SessionsApiUtil = __webpack_require__(234);
+	var CurrentUserStore = __webpack_require__(232);
 
 	var App = React.createClass({
 	  displayName: 'App',
@@ -33615,12 +33530,12 @@
 	module.exports = App;
 
 /***/ },
-/* 267 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(238);
-	var SessionsApiUtil = __webpack_require__(240);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
 	var History = __webpack_require__(159).History;
 
 	var Header = React.createClass({
@@ -33828,7 +33743,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 268 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

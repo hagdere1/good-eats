@@ -2,7 +2,6 @@ var React = require('react');
 var EdibleStore = require('./../../stores/edible');
 var ApiUtil = require('./../../util/api_util');
 var CurrentUserStore = require('./../../stores/current_user_store');
-var ListItemStore = require('./../../stores/list_item');
 var SessionsApiUtil = require('./../../util/sessions_api_util');
 
 
@@ -40,10 +39,6 @@ var EdibleShow = React.createClass({
             userHasListItem: userHasListItem};
   },
 
-
-
-
-
   addToListOrDestroy: function (event) {
     event.preventDefault();
     var listItem = {};
@@ -58,14 +53,6 @@ var EdibleShow = React.createClass({
     }
   },
 
-
-
-
-
-
-
-
-
   _onChange: function () {
     var state = this.getInitialValues();
     this.setState(state);
@@ -75,9 +62,6 @@ var EdibleShow = React.createClass({
     var state = this.getInitialValues();
     this.setState(state);
   },
-
-
-
 
   componentDidMount: function () {
     this.edibleListener = EdibleStore.addListener(this._onChange);
@@ -93,7 +77,6 @@ var EdibleShow = React.createClass({
 
   render: function () {
 
-
     var edibleImage,
         edibleName,
         edibleCategory,
@@ -105,8 +88,6 @@ var EdibleShow = React.createClass({
       edibleCategory = <h2 className="edible-show-category">{this.state.edible.category}</h2>;
       edibleDescription = <p className="edible-show-description">{this.state.edible.description}</p>;
     }
-
-
 
     return (
       <div className="edible-show">
