@@ -89,13 +89,36 @@ var EdibleShow = React.createClass({
       edibleDescription = <p className="edible-show-description">{this.state.edible.description}</p>;
     }
 
+    var lists = [];
+
+    if (this.currentUser) {
+
+      if (this.state.userHasListItem) {
+        for (i = 0; i < this.currentUser.lists.length; i++) {
+          if (this.currentUser.lists[i].id != this.state.currentList.id) {
+            lists.push(<li key={this.currentUser.lists[i].id}>{this.currentUser.lists[i].title}</li>);
+          }
+        }
+      }
+
+      else {
+        lists = this.currentUser.lists.map(function (list) {
+          return <li key={list.id}>{list.title}</li>
+        });
+      }
+
+    }
+
     return (
       <div className="edible-show">
         <div className="edible-details group">
 
           <div className="edible-image">
             {edibleImage}
-            <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Want To Try"}</button>
+            <div className="edible-show-buttons group">
+              <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"}</button>
+              <div className="edible-list-item-dropdown"><ul className="edible-dropdown-lists">{lists}</ul></div>
+            </div>
           </div>
 
           <div className="edible-show-info">

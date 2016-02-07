@@ -32372,6 +32372,31 @@
 	      );
 	    }
 
+	    var lists = [];
+
+	    if (this.currentUser) {
+
+	      if (this.state.userHasListItem) {
+	        for (i = 0; i < this.currentUser.lists.length; i++) {
+	          if (this.currentUser.lists[i].id != this.state.currentList.id) {
+	            lists.push(React.createElement(
+	              'li',
+	              { key: this.currentUser.lists[i].id },
+	              this.currentUser.lists[i].title
+	            ));
+	          }
+	        }
+	      } else {
+	        lists = this.currentUser.lists.map(function (list) {
+	          return React.createElement(
+	            'li',
+	            { key: list.id },
+	            list.title
+	          );
+	        });
+	      }
+	    }
+
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-show' },
@@ -32383,9 +32408,22 @@
 	          { className: 'edible-image' },
 	          edibleImage,
 	          React.createElement(
-	            'button',
-	            { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
-	            this.state.userHasListItem ? "Remove" : "Want To Try"
+	            'div',
+	            { className: 'edible-show-buttons group' },
+	            React.createElement(
+	              'button',
+	              { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
+	              this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'edible-list-item-dropdown' },
+	              React.createElement(
+	                'ul',
+	                { className: 'edible-dropdown-lists' },
+	                lists
+	              )
+	            )
 	          )
 	        ),
 	        React.createElement(
