@@ -32271,6 +32271,26 @@
 	      }.bind(this));
 	    }
 
+	    var buttonContent;
+	    if (this.state.userHasListItem) {
+	      buttonContent = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'span',
+	          { className: 'button-checkmark' },
+	          '✓'
+	        ),
+	        React.createElement(
+	          'span',
+	          null,
+	          this.state.currentList.title
+	        )
+	      );
+	    } else {
+	      buttonContent = "Want To Try";
+	    }
+
 	    var url = "#/edibles/" + this.props.edible.id;
 	    return React.createElement(
 	      'li',
@@ -32289,13 +32309,14 @@
 	        'div',
 	        { className: 'edible-show-buttons group' },
 	        React.createElement(
-	          'button',
-	          { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
-	          this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"
+	          'div',
+	          { className: this.state.userHasListItem ? "edible-list-item-button-selected" : "edible-list-item-button", onClick: this.addToListOrDestroy },
+	          buttonContent
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'edible-list-item-dropdown' },
+	          '▼',
 	          React.createElement(
 	            'ul',
 	            { className: 'edible-dropdown-lists' },
@@ -32447,6 +32468,26 @@
 	      }.bind(this));
 	    }
 
+	    var buttonContent;
+	    if (this.state.userHasListItem) {
+	      buttonContent = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'span',
+	          { className: 'button-checkmark' },
+	          '✓'
+	        ),
+	        React.createElement(
+	          'span',
+	          null,
+	          this.state.currentList.title
+	        )
+	      );
+	    } else {
+	      buttonContent = "Want To Try";
+	    }
+
 	    return React.createElement(
 	      'div',
 	      { className: 'edible-show' },
@@ -32461,13 +32502,14 @@
 	            'div',
 	            { className: 'edible-show-buttons group' },
 	            React.createElement(
-	              'button',
-	              { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
-	              this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"
+	              'div',
+	              { className: this.state.userHasListItem ? "edible-list-item-button-selected" : "edible-list-item-button", onClick: this.addToListOrDestroy },
+	              buttonContent
 	            ),
 	            React.createElement(
 	              'div',
 	              { className: 'edible-list-item-dropdown' },
+	              '▼',
 	              React.createElement(
 	                'ul',
 	                { className: 'edible-dropdown-lists' },

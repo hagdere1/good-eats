@@ -14,11 +14,10 @@
 
 .edible-list-item {
   float: left;
-  width: 160px;
+  width: 178px;
   padding-right: 15px;
   margin-top: 30px;
   font-size: 15px;
-  text-shadow: 1px 1px #ccc;
 }
 
 .edible-list-item a {
@@ -32,30 +31,32 @@
 }
 
 .edible-list-item-image {
-  width: 160px;
-  height: 160px;
+  width: 185px;
+  height: 185px;
 }
 
 .edible-list-item-image:hover {
-  width: 160px;
-  height: 160px;
   background-color: white;
   opacity: 0.5;
 }
 
-
-
-
-
-
-
+.edible-show-buttons {
+  color: white;
+  font-family: helvetica;
+  line-height: 18px;
+  font-size: 13px;
+  width: 190px;
+  margin: auto;
+  float: left;
+}
 
 .edible-list-item-button {
   display: block;
   color: white;
   background-color: #409D69;
-  border-radius: 3px;
-  border-style: solid;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border: 1px solid #aaa;
   font-family: helvetica;
   line-height: 18px;
   font-size: 13px;
@@ -63,9 +64,34 @@
   padding-top: 5px;
   padding-left: 5px;
   padding-bottom: 5px;
-  margin: auto;
   margin-top: 5px;
   text-align: center;
+  float: left;
+}
+
+.edible-list-item-button-selected {
+  display: block;
+  font-weight: bold;
+  color: black;
+  background-color: rgb(242, 242, 242);
+  border: 1px solid #ccc;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  font-family: helvetica;
+  line-height: 18px;
+  font-size: 13px;
+  width: 150px;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  margin-top: 5px;
+  text-align: center;
+  float: left;
+}
+
+.button-checkmark {
+  margin-right: 5px;
+  color: #409D69;
 }
 
 .edible-list-item-button:hover {
@@ -74,18 +100,23 @@
 }
 
 .edible-list-item-dropdown {
+  display: block;
   background-color: #409D69;
-  font-size: 8px;
+  line-height: 18px;
+  font-size: 13px;
   width: 25px;
   padding-top: 5px;
   padding-left: 5px;
   padding-bottom: 5px;
-  margin: auto;
   margin-top: 5px;
-  border-radius-top-right: 3px;
-  border-radius-bottom-right: 3px;
-  float: left;
+  border-top: 1px solid #aaa;
+  border-right: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
   position: relative;
+  float: left;
+  text-align: center;
 }
 
 .edible-list-item-dropdown:hover {
@@ -97,76 +128,33 @@
   display: none;
   color: black;
   position: absolute;
-  left: -1px;
-  font-size: 14px;
+  right: 0;
+  top: 28px;
+  font-size: 12px;
+  text-align: left;
   white-space: nowrap;
   background: #fff;
-  border-left: 1px solid #ccc;
+  width: 150px;
+  padding-bottom: 10px;
+  padding-top: 5px;
   border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  border-radius: 3px;
   overflow: hidden;
 }
 
+.edible-dropdown-lists li {
+  display: block;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
 .edible-dropdown-lists li:hover {
-  background-color: #ccc;
+  background-color: #eee;
 }
 
 div.edible-list-item-dropdown:hover .edible-dropdown-lists {
   display: block;
-}
-
-
-
-
-
-
-.edible-show-buttons {
-  color: white;
-  font-family: helvetica;
-  line-height: 18px;
-  font-size: 13px;
-  width: 126px;
-  margin: auto;
-  float: left;
-}
-
-.edible-show-button:hover {
-  background-color: #008000;
-  cursor: pointer;
-}
-
-
-.edible-show-button-select-list:hover {
-  background-color: #008000;
-  cursor: pointer;
-}
-
-.edible-select-list {
-  display: none;
-  position: absolute;
-  left: -1px;
-  font-size: 14px;
-  white-space: nowrap;
-  background: #fff;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  overflow: hidden;
-}
-
-.edible-show-button-select-list:hover .edible-select-list {
-  display: block;
-}
-
-.edible-select-list > li {
-  border-top: 1px solid #ccc;
-  color: #000;
-}
-
-.edible-select-list > li:hover {
-  background: #eee;
 }

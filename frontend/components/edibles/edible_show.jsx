@@ -119,6 +119,19 @@ var EdibleShow = React.createClass({
       }.bind(this));
     }
 
+    var buttonContent;
+    if (this.state.userHasListItem) {
+      buttonContent = (
+        <div>
+          <span className="button-checkmark">&#x2713;</span>
+          <span>{this.state.currentList.title}</span>
+        </div>
+      )
+    }
+    else {
+      buttonContent = "Want To Try"
+    }
+
     return (
       <div className="edible-show">
         <div className="edible-details group">
@@ -126,8 +139,11 @@ var EdibleShow = React.createClass({
           <div className="edible-image">
             {edibleImage}
             <div className="edible-show-buttons group">
-              <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"}</button>
-              <div className="edible-list-item-dropdown"><ul className="edible-dropdown-lists">{lists}</ul></div>
+              <div className={this.state.userHasListItem ? "edible-list-item-button-selected" : "edible-list-item-button"} onClick={this.addToListOrDestroy}>{buttonContent}</div>
+              <div className="edible-list-item-dropdown">
+                &#9660;
+                <ul className="edible-dropdown-lists">{lists}</ul>
+              </div>
             </div>
           </div>
 
