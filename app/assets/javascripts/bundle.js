@@ -74,7 +74,7 @@
 	  React.createElement(IndexRoute, { component: EdiblesIndex, onEnter: _ensureLoggedIn }),
 	  React.createElement(Route, { path: 'login', component: SessionForm }),
 	  React.createElement(Route, { path: 'users/new', component: UserForm }),
-	  React.createElement(Route, { path: 'users/:id', componet: UserShow }),
+	  React.createElement(Route, { path: 'users/:id', component: UserShow }),
 	  React.createElement(Route, { path: 'edibles', component: EdiblesIndex }),
 	  React.createElement(
 	    Route,
@@ -32753,7 +32753,10 @@
 	        React.createElement(
 	          'a',
 	          { href: "#/lists/" + list.id },
-	          list.title
+	          list.title,
+	          ' (',
+	          list.list_items.length,
+	          ')'
 	        )
 	      );
 	    });
@@ -33143,7 +33146,11 @@
 	  displayName: 'UserShow',
 
 	  getInitialState: function () {
-	    return this.getStateFromStore();
+	    return {
+	      user: null,
+	      reviews: [],
+	      lists: []
+	    };
 	  },
 
 	  getStateFromStore: function () {
@@ -33169,13 +33176,10 @@
 	  },
 
 	  render: function () {
+
 	    var user = this.state.user;
 	    if (!user) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        'User not found.'
-	      );
+	      return React.createElement('div', null);
 	    }
 
 	    var ediblesEaten;
@@ -33195,7 +33199,10 @@
 	        return React.createElement(
 	          'li',
 	          { key: list.id, className: 'profile-list' },
-	          list.title
+	          list.title,
+	          ' (',
+	          list.list_items.length,
+	          ')'
 	        );
 	      });
 
@@ -33794,6 +33801,7 @@
 	  },
 
 	  render: function () {
+
 	    if (!CurrentUserStore.userHasBeenFetched()) {
 	      return React.createElement(
 	        'p',

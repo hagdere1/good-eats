@@ -27,7 +27,7 @@ var routes = (
     <IndexRoute component={ EdiblesIndex } onEnter={_ensureLoggedIn}/>
     <Route path="login" component={ SessionForm } />
     <Route path="users/new" component={ UserForm } />
-    <Route path="users/:id" componet={ UserShow } />
+    <Route path="users/:id" component={ UserShow } />
     <Route path="edibles" component={ EdiblesIndex } />
     <Route path="edibles/:id" component={ EdibleShow }>
       <IndexRoute component={ ReviewIndex } />

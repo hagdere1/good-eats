@@ -4,7 +4,11 @@ var UsersApiUtil = require('../../util/users_api_util');
 
 var UserShow = React.createClass({
   getInitialState: function() {
-    return this.getStateFromStore();
+    return {
+      user: null,
+      reviews: [],
+      lists: []
+    };
   },
 
   getStateFromStore: function () {
@@ -30,10 +34,11 @@ var UserShow = React.createClass({
   },
 
   render: function() {
+
     var user = this.state.user;
     if (!user) {
       return (
-        <div>User not found.</div>
+        <div></div>
       );
     }
 
@@ -54,7 +59,7 @@ var UserShow = React.createClass({
         this.state.user.lists.map(function (list) {
           return (
             <li key={list.id} className="profile-list">
-              {list.title}
+              {list.title} ({list.list_items.length})
             </li>
           );
         })

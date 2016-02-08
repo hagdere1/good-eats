@@ -46,7 +46,7 @@ var Profile = React.createClass({
         return (
           <li key={list.id} className="profile-list">
             <a href={"#/lists/" + list.id}>
-              {list.title}
+              {list.title} ({list.list_items.length})
             </a>
           </li>
         );
@@ -73,7 +73,7 @@ var Profile = React.createClass({
         );
       })
     );
- 
+
     var profilePicture = <img className="profile-picture" src={this.state.currentUser.image_url}/>;
 
     var currentDate = new Date();

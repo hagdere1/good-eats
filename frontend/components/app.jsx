@@ -11,6 +11,7 @@ var App = React.createClass({
   },
 
   render: function () {
+  
     if (!CurrentUserStore.userHasBeenFetched()) {
       return <p>PLEASE WAIT</p>;
     }
