@@ -73,7 +73,7 @@ var Profile = React.createClass({
         );
       })
     );
-
+ 
     var profilePicture = <img className="profile-picture" src={this.state.currentUser.image_url}/>;
 
     var currentDate = new Date();
