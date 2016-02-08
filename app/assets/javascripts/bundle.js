@@ -33147,9 +33147,16 @@
 	  },
 
 	  getStateFromStore: function () {
+	    var user = UsersStore.findUserById(parseInt(this.props.params.id));
 	    return {
-	      user: UsersStore.findUserById(parseInt(this.props.params.id))
+	      user: user,
+	      reviews: user.reviews,
+	      lists: user.lists
 	    };
+	  },
+
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
 	  },
 
 	  componentDidMount: function () {
@@ -33167,50 +33174,209 @@
 	      return React.createElement(
 	        'div',
 	        null,
-	        'DONT HAVE A USER TO RENDER'
+	        'User not found.'
 	      );
 	    }
 
-	    var reviews = [];
-	    if (user) {
-	      user.reviews && user.reviews.forEach(function (review) {
-	        reviews.push(React.createElement(
+	    var ediblesEaten;
+	    var numReviews;
+	    var ownerName;
+	    var lists;
+	    var reviews;
+	    var profilePicture;
+	    var currentDate;
+
+	    if (this.state.user) {
+	      numEdiblesEaten = this.state.user.lists[1].list_items.length;
+	      numReviews = this.state.user.reviews.length;
+	      ownerName = this.state.user.name + "'s";
+
+	      lists = this.state.user.lists.map(function (list) {
+	        return React.createElement(
 	          'li',
-	          { key: review.id },
-	          review.title
-	        ));
+	          { key: list.id, className: 'profile-list' },
+	          list.title
+	        );
 	      });
+
+	      reviews = this.state.user.reviews.reverse().map(function (review) {
+	        return React.createElement(
+	          'div',
+	          { key: review.id, className: 'review' },
+	          React.createElement(
+	            'div',
+	            { className: 'review-name-date group' },
+	            React.createElement(
+	              'p',
+	              { className: 'review-name' },
+	              React.createElement(
+	                'span',
+	                { className: 'profile-review-name' },
+	                review.user,
+	                ' reviewed'
+	              ),
+	              ' ',
+	              React.createElement(
+	                'a',
+	                { className: 'profile-edible-link', href: "#/edibles/" + review.edible.id },
+	                review.edible.name
+	              ),
+	              ':'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'review-date' },
+	              review.created_at
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'p',
+	              { className: 'review-title' },
+	              review.title
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            React.createElement(
+	              'p',
+	              { className: 'review-body' },
+	              review.body
+	            )
+	          )
+	        );
+	      });
+
+	      profilePicture = React.createElement('img', { className: 'profile-picture', src: this.state.user.image_url });
+
+	      currentDate = new Date();
 	    }
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'profile-container' },
 	      React.createElement(
-	        'h1',
-	        { className: 'title' },
-	        'UserShow: ',
-	        user.email
+	        'div',
+	        { className: 'profile-header group' },
+	        React.createElement(
+	          'div',
+	          { className: 'profile-picture-container' },
+	          profilePicture
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'profile-details' },
+	          React.createElement(
+	            'h1',
+	            { className: 'heading-main' },
+	            this.state.user.name
+	          ),
+	          React.createElement(
+	            'table',
+	            { className: 'profile-details-table' },
+	            React.createElement(
+	              'tbody',
+	              null,
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  { className: 'profile-detail' },
+	                  'Email'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.state.user.email
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  { className: 'profile-detail' },
+	                  'Joined'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.state.user.created_at
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  { className: 'profile-detail' },
+	                  'Last Active'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  currentDate.toString()
+	                )
+	              )
+	            )
+	          )
+	        )
 	      ),
 	      React.createElement(
-	        'h3',
-	        null,
-	        'Users posts:'
+	        'div',
+	        { className: 'profile-stats' },
+	        React.createElement(
+	          'p',
+	          null,
+	          numReviews,
+	          ' reviews'
+	        ),
+	        React.createElement(
+	          'p',
+	          null,
+	          numEdiblesEaten,
+	          ' edibles eaten'
+	        )
 	      ),
 	      React.createElement(
-	        'ul',
-	        { className: 'users-index' },
-	        posts
+	        'div',
+	        { className: 'profile-lists' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          ownerName,
+	          ' Lists'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'profile-list-items' },
+	          React.createElement(
+	            'ul',
+	            null,
+	            lists
+	          )
+	        )
 	      ),
 	      React.createElement(
-	        'a',
-	        { href: "#/" },
-	        'All Users'
+	        'div',
+	        { className: 'profile-reviews' },
+	        React.createElement(
+	          'h2',
+	          null,
+	          ownerName,
+	          ' Recent Reviews'
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          reviews
+	        )
 	      )
 	    );
-	  },
-
-	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
 	  }
 	});
 
