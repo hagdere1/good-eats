@@ -33719,7 +33719,6 @@
 	              )
 	            )
 	          ),
-	          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Edible / Group / Tag / Person', value: '' }),
 	          React.createElement(
 	            'ul',
 	            { className: 'root-header-list group' },
@@ -33740,47 +33739,11 @@
 	                { href: '#/lists/' },
 	                'My Lists'
 	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Groups'
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                'Recommendations'
-	              )
 	            )
 	          ),
 	          React.createElement(
 	            'ul',
 	            { className: 'root-header-icons group' },
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-envelope' })
-	              )
-	            ),
-	            React.createElement(
-	              'li',
-	              null,
-	              React.createElement(
-	                'a',
-	                { href: '#' },
-	                React.createElement('i', { className: 'fa fa-users' })
-	              )
-	            ),
 	            React.createElement(
 	              'li',
 	              null,
