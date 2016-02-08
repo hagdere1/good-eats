@@ -61,9 +61,8 @@ var EdibleShow = React.createClass({
   },
 
   updateListItem: function (list) {
-    var listItem = {};
+    var listItem = this.state.currentListItem;
     listItem.list_id = list.id;
-    listItem.edible_id = parseInt(this.props.params.id);
     ApiUtil.updateListItem(listItem, this.setState({currentList: list.id}));
   },
 
