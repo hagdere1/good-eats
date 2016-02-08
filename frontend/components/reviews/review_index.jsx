@@ -38,6 +38,7 @@ var ReviewIndex = React.createClass({
     if (this.state.reviews) {
       reviews = (
         this.state.reviews.map(function (review) {
+          debugger
           return (
             <article key={review.id} className="review group">
 
@@ -47,7 +48,7 @@ var ReviewIndex = React.createClass({
 
               <div className="review-content">
                 <div className="review-name-date group">
-                  <p className="review-name">{review.user}:</p>
+                  <p className="review-name"><a href={"#/users/" + review.user_id}>{review.user}</a>:</p>
                   <p className="review-date">{review.created_at}</p>
                 </div>
 

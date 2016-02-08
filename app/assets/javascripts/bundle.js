@@ -32587,6 +32587,7 @@
 	    var reviews;
 	    if (this.state.reviews) {
 	      reviews = this.state.reviews.map(function (review) {
+	        debugger;
 	        return React.createElement(
 	          'article',
 	          { key: review.id, className: 'review group' },
@@ -32604,7 +32605,11 @@
 	              React.createElement(
 	                'p',
 	                { className: 'review-name' },
-	                review.user,
+	                React.createElement(
+	                  'a',
+	                  { href: "#/users/" + review.user_id },
+	                  review.user
+	                ),
 	                ':'
 	              ),
 	              React.createElement(
