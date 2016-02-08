@@ -32327,6 +32327,20 @@
 	    }
 	  },
 
+	  addListItem: function (list) {
+	    var listItem = {};
+	    listItem.list_id = list.id;
+	    listItem.edible_id = parseInt(this.props.params.id);
+	    ApiUtil.createListItem(listItem, this.setState({ userHasListItem: true }));
+	  },
+
+	  updateListItem: function (list) {
+	    var listItem = {};
+	    listItem.list_id = list.id;
+	    listItem.edible_id = parseInt(this.props.params.id);
+	    ApiUtil.updateListItem(listItem, this.setState({ currentList: list.id }));
+	  },
+
 	  _onChange: function () {
 	    var state = this.getInitialValues();
 	    this.setState(state);
@@ -32374,27 +32388,25 @@
 
 	    var lists = [];
 
-	    if (this.currentUser) {
-
-	      if (this.state.userHasListItem) {
-	        for (i = 0; i < this.currentUser.lists.length; i++) {
-	          if (this.currentUser.lists[i].id != this.state.currentList.id) {
-	            lists.push(React.createElement(
-	              'li',
-	              { key: this.currentUser.lists[i].id },
-	              this.currentUser.lists[i].title
-	            ));
-	          }
-	        }
-	      } else {
-	        lists = this.currentUser.lists.map(function (list) {
-	          return React.createElement(
+	    if (this.state.userHasListItem) {
+	      for (i = 0; i < this.currentUser.lists.length; i++) {
+	        if (this.currentUser.lists[i].id != this.state.currentList.id) {
+	          var list = this.currentUser.lists[i];
+	          lists.push(React.createElement(
 	            'li',
-	            { key: list.id },
+	            { key: list.id, onClick: this.updateListItem.bind(this, list) },
 	            list.title
-	          );
-	        });
+	          ));
+	        }
 	      }
+	    } else {
+	      lists = this.currentUser.lists.map(function (list) {
+	        return React.createElement(
+	          'li',
+	          { key: list.id, onClick: this.addListItem.bind(this, list) },
+	          list.title
+	        );
+	      }.bind(this));
 	    }
 
 	    return React.createElement(

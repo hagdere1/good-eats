@@ -109,6 +109,10 @@
   overflow: hidden;
 }
 
+.edible-dropdown-lists li:hover {
+  background-color: #ccc;
+}
+
 div.edible-list-item-dropdown:hover .edible-dropdown-lists {
   display: block;
 }

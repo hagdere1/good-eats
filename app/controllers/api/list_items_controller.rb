@@ -22,6 +22,12 @@ class Api::ListItemsController < ApplicationController
   end
 
   def update
+    @list_item = ListItem.find(params[:id])
+    if @list_item.update(list_item_params)
+      render json: @list_item
+    else
+      render json: "Error"
+    end
   end
 
   def destroy
