@@ -5,13 +5,6 @@ var CurrentUserStore = require('./../../stores/current_user_store');
 var SessionsApiUtil = require('./../../util/sessions_api_util');
 
 var Edible = React.createClass({
-  addToList: function (event) {
-    event.preventDefault();
-    var listItem = {};
-    listItem.list_id = this.currentUser.lists[1];
-    listItem.edible_id = parseInt(this.props.edible.id);
-    ApiUtil.createListItem(listItem);
-  },
 
   getInitialState: function () {
     return this.getInitialValues();
@@ -23,7 +16,6 @@ var Edible = React.createClass({
     var currentListItem;
     var userItems = this.currentUser.list_items;
     var userHasListItem = false;
-    var inList = false;
 
     for (i = 0; i < userItems.length; i++) {
       if (userItems[i].edible_id == this.props.edible.id) {
@@ -59,6 +51,19 @@ var Edible = React.createClass({
     }
   },
 
+  addListItem: function (list) {
+    var listItem = {};
+    listItem.list_id = list.id;
+    listItem.edible_id = parseInt(this.props.edible.id);
+    ApiUtil.createListItem(listItem, this.setState({userHasListItem: true}));
+  },
+
+  updateListItem: function (list) {
+    var listItem = this.state.currentListItem;
+    listItem.list_id = list.id;
+    ApiUtil.updateListItem(listItem);
+  },
+
   _onChange: function () {
     var state = this.getInitialValues();
     this.setState(state);
@@ -81,6 +86,24 @@ var Edible = React.createClass({
 
   render: function () {
 
+    var lists = [];
+
+    if (this.state.userHasListItem) {
+      for (i = 0; i < this.currentUser.lists.length; i++) {
+        if (this.currentUser.lists[i].id != this.state.currentList.id) {
+          var list = this.currentUser.lists[i];
+          lists.push(<li key={list.id} onClick={this.updateListItem.bind(this, list)}>{list.title}</li>);
+        }
+      }
+    }
+
+    else {
+      lists = this.currentUser.lists.map(function (list) {
+        return <li key={list.id} onClick={this.addListItem.bind(this, list)}>{list.title}</li>
+      }.bind(this));
+    }
+
+
     var url = "#/edibles/" + this.props.edible.id;
     return (
       <li className="edible-list-item">
@@ -88,7 +111,10 @@ var Edible = React.createClass({
           <p>{this.props.edible.name}</p>
           <img className="edible-list-item-image" src={this.props.edible.image_url} />
         </a>
-        <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "Remove" : "Want To Try"}</button>
+        <div className="edible-show-buttons group">
+          <button className="edible-list-item-button" onClick={this.addToListOrDestroy}>{this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"}</button>
+          <div className="edible-list-item-dropdown"><ul className="edible-dropdown-lists">{lists}</ul></div>
+        </div>
       </li>
     );
   }

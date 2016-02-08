@@ -32169,14 +32169,6 @@
 	var Edible = React.createClass({
 	  displayName: 'Edible',
 
-	  addToList: function (event) {
-	    event.preventDefault();
-	    var listItem = {};
-	    listItem.list_id = this.currentUser.lists[1];
-	    listItem.edible_id = parseInt(this.props.edible.id);
-	    ApiUtil.createListItem(listItem);
-	  },
-
 	  getInitialState: function () {
 	    return this.getInitialValues();
 	  },
@@ -32187,7 +32179,6 @@
 	    var currentListItem;
 	    var userItems = this.currentUser.list_items;
 	    var userHasListItem = false;
-	    var inList = false;
 
 	    for (i = 0; i < userItems.length; i++) {
 	      if (userItems[i].edible_id == this.props.edible.id) {
@@ -32222,6 +32213,19 @@
 	    }
 	  },
 
+	  addListItem: function (list) {
+	    var listItem = {};
+	    listItem.list_id = list.id;
+	    listItem.edible_id = parseInt(this.props.edible.id);
+	    ApiUtil.createListItem(listItem, this.setState({ userHasListItem: true }));
+	  },
+
+	  updateListItem: function (list) {
+	    var listItem = this.state.currentListItem;
+	    listItem.list_id = list.id;
+	    ApiUtil.updateListItem(listItem);
+	  },
+
 	  _onChange: function () {
 	    var state = this.getInitialValues();
 	    this.setState(state);
@@ -32244,6 +32248,29 @@
 
 	  render: function () {
 
+	    var lists = [];
+
+	    if (this.state.userHasListItem) {
+	      for (i = 0; i < this.currentUser.lists.length; i++) {
+	        if (this.currentUser.lists[i].id != this.state.currentList.id) {
+	          var list = this.currentUser.lists[i];
+	          lists.push(React.createElement(
+	            'li',
+	            { key: list.id, onClick: this.updateListItem.bind(this, list) },
+	            list.title
+	          ));
+	        }
+	      }
+	    } else {
+	      lists = this.currentUser.lists.map(function (list) {
+	        return React.createElement(
+	          'li',
+	          { key: list.id, onClick: this.addListItem.bind(this, list) },
+	          list.title
+	        );
+	      }.bind(this));
+	    }
+
 	    var url = "#/edibles/" + this.props.edible.id;
 	    return React.createElement(
 	      'li',
@@ -32259,9 +32286,22 @@
 	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url })
 	      ),
 	      React.createElement(
-	        'button',
-	        { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
-	        this.state.userHasListItem ? "Remove" : "Want To Try"
+	        'div',
+	        { className: 'edible-show-buttons group' },
+	        React.createElement(
+	          'button',
+	          { className: 'edible-list-item-button', onClick: this.addToListOrDestroy },
+	          this.state.userHasListItem ? "In " + this.state.currentList.title : "Want To Try"
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'edible-list-item-dropdown' },
+	          React.createElement(
+	            'ul',
+	            { className: 'edible-dropdown-lists' },
+	            lists
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -32292,7 +32332,6 @@
 	    var currentListItem;
 	    var userItems = this.currentUser.list_items;
 	    var userHasListItem = false;
-	    var inList = false;
 
 	    for (i = 0; i < userItems.length; i++) {
 	      if (userItems[i].edible_id == this.props.params.id) {
@@ -32337,7 +32376,7 @@
 	  updateListItem: function (list) {
 	    var listItem = this.state.currentListItem;
 	    listItem.list_id = list.id;
-	    ApiUtil.updateListItem(listItem, this.setState({ currentList: list.id }));
+	    ApiUtil.updateListItem(listItem);
 	  },
 
 	  _onChange: function () {

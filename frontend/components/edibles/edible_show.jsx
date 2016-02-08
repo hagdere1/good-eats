@@ -17,7 +17,6 @@ var EdibleShow = React.createClass({
     var currentListItem;
     var userItems = this.currentUser.list_items;
     var userHasListItem = false;
-    var inList = false;
 
     for (i = 0; i < userItems.length; i++) {
       if (userItems[i].edible_id == this.props.params.id) {
@@ -63,7 +62,7 @@ var EdibleShow = React.createClass({
   updateListItem: function (list) {
     var listItem = this.state.currentListItem;
     listItem.list_id = list.id;
-    ApiUtil.updateListItem(listItem, this.setState({currentList: list.id}));
+    ApiUtil.updateListItem(listItem);
   },
 
 
