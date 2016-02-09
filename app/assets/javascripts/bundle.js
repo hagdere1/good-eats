@@ -31744,6 +31744,7 @@
 	var ApiUtil = __webpack_require__(236);
 	var ListStore = __webpack_require__(209);
 	var ReviewForm = __webpack_require__(244);
+	var DateEatenInput = __webpack_require__(268);
 
 	var ItemsTable = React.createClass({
 	  displayName: 'ItemsTable',
@@ -31756,7 +31757,9 @@
 	    var list = ListStore.find(parseInt(this.props.listId));
 	    return { edibles: list.list_items,
 	      reviewFormShowing: false,
-	      reviewEdible: null };
+	      reviewEdible: null,
+	      dateEatenInputShowing: false,
+	      list: list };
 	  },
 
 	  _onChange: function () {
@@ -31786,6 +31789,14 @@
 	  closeReviewForm: function () {
 	    this.setState({ reviewFormShowing: false,
 	      reviewEdible: null });
+	  },
+
+	  hideInputForm: function () {
+	    this.setState({ dateEatenInputShowing: false });
+	  },
+
+	  showDateEatenInput: function () {
+	    this.setState({ dateEatenInputShowing: true });
 	  },
 
 	  render: function () {
@@ -31838,6 +31849,21 @@
 	    }
 
 	    var tableBody = this.state.edibles.map(function (edible) {
+	      var dateEaten;
+	      if (this.state.dateEatenInputShowing) {
+	        dateEaten = React.createElement(
+	          'td',
+	          { className: 'list-item-date-eaten-input' },
+	          React.createElement(DateEatenInput, { listId: this.state.list.id, edibleId: edible.edible_id, listItem: edible, hideInputForm: this.hideInputForm })
+	        );
+	      } else {
+	        dateEaten = React.createElement(
+	          'td',
+	          { className: 'list-item-date-eaten', onClick: this.showDateEatenInput },
+	          edible.date_eaten ? edible.date_eaten : "(ADD)"
+	        );
+	      }
+
 	      return React.createElement(
 	        'tr',
 	        { className: 'item-detail-table-row', key: edible.id },
@@ -31860,11 +31886,7 @@
 	          null,
 	          edible.category
 	        ),
-	        React.createElement(
-	          'td',
-	          null,
-	          edible.date_eaten
-	        ),
+	        dateEaten,
 	        React.createElement(
 	          'td',
 	          null,
@@ -34057,6 +34079,65 @@
 	});
 
 	module.exports = Footer;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(236);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
+
+	var DateEatenInput = React.createClass({
+	  displayName: 'DateEatenInput',
+
+	  getInitialState: function () {
+	    return { edibleId: this.props.edibleId,
+	      listId: this.props.listId,
+	      dateEaten: this.props.listItem.date_eaten,
+	      listItem: this.props.listItem };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edibleId: this.props.edibleId,
+	      listId: this.props.listId,
+	      listItem: this.props.listItem,
+	      dateEaten: this.props.listItem.date_eaten });
+	  },
+
+	  handleChange: function (e) {
+	    this.setState({ dateEaten: e.target.value });
+	  },
+
+	  submit: function (e) {
+	    e.preventDefault();
+	    listItem = this.state.listItem;
+	    listItem.date_eaten = this.state.dateEaten;
+	    ApiUtil.updateListItem(listItem);
+	    this.props.hideInputForm();
+	  },
+
+	  componentDidMount: function () {
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	    SessionsApiUtil.fetchCurrentUser();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.currentUserListener.remove();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.submit, className: 'form-date-eaten' },
+	      React.createElement('input', { type: 'text', onChange: this.handleChange, value: this.state.dateEaten, className: 'date-eaten-input' })
+	    );
+	  }
+
+	});
+
+	module.exports = DateEatenInput;
 
 /***/ }
 /******/ ]);

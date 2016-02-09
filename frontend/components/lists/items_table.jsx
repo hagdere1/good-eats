@@ -2,6 +2,7 @@ var React = require('react');
 var ApiUtil = require('../../util/api_util');
 var ListStore = require('../../stores/list');
 var ReviewForm = require('./review_form');
+var DateEatenInput = require('./date_eaten_input');
 
 var ItemsTable = React.createClass({
   getInitialState: function () {
@@ -12,7 +13,9 @@ var ItemsTable = React.createClass({
     var list = ListStore.find(parseInt(this.props.listId));
     return { edibles: list.list_items,
              reviewFormShowing: false,
-             reviewEdible: null};
+             reviewEdible: null,
+             dateEatenInputShowing: false,
+             list: list};
   },
 
   _onChange: function () {
@@ -45,6 +48,14 @@ var ItemsTable = React.createClass({
                    reviewEdible: null});
   },
 
+  hideInputForm: function () {
+    this.setState({dateEatenInputShowing: false});
+  },
+
+  showDateEatenInput: function () {
+    this.setState({dateEatenInputShowing: true})
+  },
+
   render: function () {
     var header = (
       <thead className="item-detail-table-head">
@@ -74,12 +85,20 @@ var ItemsTable = React.createClass({
 
     var tableBody = (
       this.state.edibles.map(function (edible) {
+        var dateEaten;
+        if (this.state.dateEatenInputShowing) {
+          dateEaten = <td className="list-item-date-eaten-input"><DateEatenInput listId={this.state.list.id} edibleId={edible.edible_id} listItem={edible} hideInputForm={this.hideInputForm} /></td>
+        }
+        else {
+          dateEaten = <td className="list-item-date-eaten" onClick={this.showDateEatenInput}>{edible.date_eaten ? edible.date_eaten : "(ADD)"}</td>
+        }
+
         return (
           <tr className="item-detail-table-row" key={edible.id}>
             <td><img src={edible.image_url} className="item-detail-image"/></td>
             <td className="list-table-name"><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
             <td>{edible.category}</td>
-            <td>{edible.date_eaten}</td>
+            {dateEaten}
             <td>{edible.created_at}</td>
             <td className="list-table-buttons">
               <button onClick={this.handleReviewClick.bind(this, edible)} edible={edible} className="list-table-button-review">Review</button><br/>
