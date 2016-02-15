@@ -38,7 +38,6 @@ var ReviewIndex = React.createClass({
     if (this.state.reviews) {
       reviews = (
         this.state.reviews.map(function (review) {
-          debugger
           return (
             <article key={review.id} className="review group">
 

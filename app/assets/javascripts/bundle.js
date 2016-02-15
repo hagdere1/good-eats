@@ -51,22 +51,22 @@
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 
 	var ListsIndex = __webpack_require__(208);
-	var EdiblesIndex = __webpack_require__(246);
-	var Edible = __webpack_require__(248);
-	var EdibleShow = __webpack_require__(249);
+	var EdiblesIndex = __webpack_require__(247);
+	var Edible = __webpack_require__(249);
+	var EdibleShow = __webpack_require__(250);
 	var ListShow = __webpack_require__(242);
-	var ReviewIndex = __webpack_require__(250);
-	var Profile = __webpack_require__(252);
+	var ReviewIndex = __webpack_require__(251);
+	var Profile = __webpack_require__(253);
 
 	// React auth
-	var UsersIndex = __webpack_require__(253);
-	var UserShow = __webpack_require__(258);
-	var SessionForm = __webpack_require__(259);
-	var UserForm = __webpack_require__(260);
+	var UsersIndex = __webpack_require__(254);
+	var UserShow = __webpack_require__(259);
+	var SessionForm = __webpack_require__(260);
+	var UserForm = __webpack_require__(261);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
 
-	var App = __webpack_require__(265);
+	var App = __webpack_require__(266);
 
 	var routes = React.createElement(
 	  Route,
@@ -24366,7 +24366,7 @@
 	var ApiUtil = __webpack_require__(236);
 	var ListsIndexItem = __webpack_require__(241);
 	var ListShow = __webpack_require__(242);
-	var ListForm = __webpack_require__(245);
+	var ListForm = __webpack_require__(246);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -31729,7 +31729,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'list-items-table' },
-	      React.createElement(ItemsTable, { listId: this.props.params.id })
+	      React.createElement(ItemsTable, { listId: this.props.params.id, list: this.state.list })
 	    );
 	  }
 	});
@@ -31744,7 +31744,7 @@
 	var ApiUtil = __webpack_require__(236);
 	var ListStore = __webpack_require__(209);
 	var ReviewForm = __webpack_require__(244);
-	var DateEatenInput = __webpack_require__(268);
+	var DateEatenInput = __webpack_require__(245);
 
 	var ItemsTable = React.createClass({
 	  displayName: 'ItemsTable',
@@ -31823,11 +31823,6 @@
 	        ),
 	        React.createElement(
 	          'th',
-	          { className: 'item-heading-date-eaten' },
-	          'date eaten'
-	        ),
-	        React.createElement(
-	          'th',
 	          { className: 'item-heading-date-added' },
 	          'date added'
 	        ),
@@ -31849,20 +31844,6 @@
 	    }
 
 	    var tableBody = this.state.edibles.map(function (edible) {
-	      var dateEaten;
-	      if (this.state.dateEatenInputShowing) {
-	        dateEaten = React.createElement(
-	          'td',
-	          { className: 'list-item-date-eaten-input' },
-	          React.createElement(DateEatenInput, { listId: this.state.list.id, edibleId: edible.edible_id, listItem: edible, hideInputForm: this.hideInputForm })
-	        );
-	      } else {
-	        dateEaten = React.createElement(
-	          'td',
-	          { className: 'list-item-date-eaten', onClick: this.showDateEatenInput },
-	          edible.date_eaten ? edible.date_eaten : "(ADD)"
-	        );
-	      }
 
 	      return React.createElement(
 	        'tr',
@@ -31886,7 +31867,6 @@
 	          null,
 	          edible.category
 	        ),
-	        dateEaten,
 	        React.createElement(
 	          'td',
 	          null,
@@ -32038,6 +32018,65 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(236);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
+
+	var DateEatenInput = React.createClass({
+	  displayName: 'DateEatenInput',
+
+	  getInitialState: function () {
+	    return { edibleId: this.props.edibleId,
+	      listId: this.props.listId,
+	      dateEaten: this.props.listItem.date_eaten,
+	      listItem: this.props.listItem };
+	  },
+
+	  _onChange: function () {
+	    this.setState({ edibleId: this.props.edibleId,
+	      listId: this.props.listId,
+	      listItem: this.props.listItem,
+	      dateEaten: this.props.listItem.date_eaten });
+	  },
+
+	  handleChange: function (e) {
+	    this.setState({ dateEaten: e.target.value });
+	  },
+
+	  submit: function (e) {
+	    e.preventDefault();
+	    listItem = this.state.listItem;
+	    listItem.date_eaten = this.state.dateEaten;
+	    ApiUtil.updateListItem(listItem);
+	    this.props.hideInputForm();
+	  },
+
+	  componentDidMount: function () {
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	    SessionsApiUtil.fetchCurrentUser();
+	  },
+
+	  componentWillUnmount: function () {
+	    this.currentUserListener.remove();
+	  },
+
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.submit, className: 'form-date-eaten' },
+	      React.createElement('input', { type: 'text', onChange: this.handleChange, value: this.state.dateEaten, className: 'date-eaten-input' })
+	    );
+	  }
+
+	});
+
+	module.exports = DateEatenInput;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(236);
 
 	var ListForm = React.createClass({
 	  displayName: 'ListForm',
@@ -32076,13 +32115,13 @@
 	module.exports = ListForm;
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(247);
+	var EdibleStore = __webpack_require__(248);
 	var ApiUtil = __webpack_require__(236);
-	var Edible = __webpack_require__(248);
+	var Edible = __webpack_require__(249);
 
 	var EdiblesIndex = React.createClass({
 	  displayName: 'EdiblesIndex',
@@ -32129,7 +32168,7 @@
 	module.exports = EdiblesIndex;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
@@ -32179,7 +32218,7 @@
 	module.exports = EdibleStore;
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32353,11 +32392,11 @@
 	module.exports = Edible;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(247);
+	var EdibleStore = __webpack_require__(248);
 	var ApiUtil = __webpack_require__(236);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
@@ -32565,12 +32604,12 @@
 	module.exports = EdibleShow;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(236);
-	var ReviewStore = __webpack_require__(251);
+	var ReviewStore = __webpack_require__(252);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32609,7 +32648,6 @@
 	    var reviews;
 	    if (this.state.reviews) {
 	      reviews = this.state.reviews.map(function (review) {
-	        debugger;
 	        return React.createElement(
 	          'article',
 	          { key: review.id, className: 'review group' },
@@ -32674,7 +32712,7 @@
 	module.exports = ReviewIndex;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
@@ -32725,7 +32763,7 @@
 	module.exports = ReviewStore;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32956,7 +32994,7 @@
 	          'h2',
 	          null,
 	          ownerName,
-	          ' Recent Reviews'
+	          ' Reviews'
 	        ),
 	        React.createElement(
 	          'div',
@@ -32971,12 +33009,12 @@
 	module.exports = Profile;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(254);
-	var UsersApiUtil = __webpack_require__(256);
+	var UsersStore = __webpack_require__(255);
+	var UsersApiUtil = __webpack_require__(257);
 
 	var UsersIndex = React.createClass({
 	  displayName: 'UsersIndex',
@@ -33031,12 +33069,12 @@
 	module.exports = UsersIndex;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
 	var Dispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(255);
+	var UserConstants = __webpack_require__(256);
 
 	var _users = [];
 	var CHANGE_EVENT = "change";
@@ -33079,7 +33117,7 @@
 	module.exports = UsersStore;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports) {
 
 	var UserConstants = {
@@ -33090,10 +33128,10 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var UserActions = __webpack_require__(257);
+	var UserActions = __webpack_require__(258);
 	var CurrentUserActions = __webpack_require__(235);
 
 	var UsersApiUtil = {
@@ -33137,11 +33175,11 @@
 	module.exports = UsersApiUtil;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(255);
+	var UserConstants = __webpack_require__(256);
 
 	var UserActions = {
 	  receiveUsers: function (users) {
@@ -33162,12 +33200,12 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(254);
-	var UsersApiUtil = __webpack_require__(256);
+	var UsersStore = __webpack_require__(255);
+	var UsersApiUtil = __webpack_require__(257);
 
 	var UserShow = React.createClass({
 	  displayName: 'UserShow',
@@ -33402,7 +33440,7 @@
 	          'h2',
 	          null,
 	          ownerName,
-	          ' Recent Reviews'
+	          ' Reviews'
 	        ),
 	        React.createElement(
 	          'div',
@@ -33417,7 +33455,7 @@
 	module.exports = UserShow;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33492,13 +33530,13 @@
 	module.exports = SessionForm;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersApiUtil = __webpack_require__(256);
+	var UsersApiUtil = __webpack_require__(257);
 	var History = __webpack_require__(159).History;
-	var LinkedStateMixin = __webpack_require__(261);
+	var LinkedStateMixin = __webpack_require__(262);
 
 	var UserForm = React.createClass({
 	  displayName: 'UserForm',
@@ -33580,13 +33618,13 @@
 	module.exports = UserForm;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(262);
+	module.exports = __webpack_require__(263);
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33603,8 +33641,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(263);
-	var ReactStateSetters = __webpack_require__(264);
+	var ReactLink = __webpack_require__(264);
+	var ReactStateSetters = __webpack_require__(265);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -33627,7 +33665,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33701,7 +33739,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports) {
 
 	/**
@@ -33810,12 +33848,12 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Header = __webpack_require__(266);
-	var Footer = __webpack_require__(267);
+	var Header = __webpack_require__(267);
+	var Footer = __webpack_require__(268);
 	var SessionsApiUtil = __webpack_require__(234);
 	var CurrentUserStore = __webpack_require__(232);
 
@@ -33853,7 +33891,7 @@
 	module.exports = App;
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34029,7 +34067,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34079,65 +34117,6 @@
 	});
 
 	module.exports = Footer;
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(236);
-	var CurrentUserStore = __webpack_require__(232);
-	var SessionsApiUtil = __webpack_require__(234);
-
-	var DateEatenInput = React.createClass({
-	  displayName: 'DateEatenInput',
-
-	  getInitialState: function () {
-	    return { edibleId: this.props.edibleId,
-	      listId: this.props.listId,
-	      dateEaten: this.props.listItem.date_eaten,
-	      listItem: this.props.listItem };
-	  },
-
-	  _onChange: function () {
-	    this.setState({ edibleId: this.props.edibleId,
-	      listId: this.props.listId,
-	      listItem: this.props.listItem,
-	      dateEaten: this.props.listItem.date_eaten });
-	  },
-
-	  handleChange: function (e) {
-	    this.setState({ dateEaten: e.target.value });
-	  },
-
-	  submit: function (e) {
-	    e.preventDefault();
-	    listItem = this.state.listItem;
-	    listItem.date_eaten = this.state.dateEaten;
-	    ApiUtil.updateListItem(listItem);
-	    this.props.hideInputForm();
-	  },
-
-	  componentDidMount: function () {
-	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
-	    SessionsApiUtil.fetchCurrentUser();
-	  },
-
-	  componentWillUnmount: function () {
-	    this.currentUserListener.remove();
-	  },
-
-	  render: function () {
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this.submit, className: 'form-date-eaten' },
-	      React.createElement('input', { type: 'text', onChange: this.handleChange, value: this.state.dateEaten, className: 'date-eaten-input' })
-	    );
-	  }
-
-	});
-
-	module.exports = DateEatenInput;
 
 /***/ }
 /******/ ]);

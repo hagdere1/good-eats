@@ -33,7 +33,7 @@ var ListShow = React.createClass({
 
     return (
       <div className="list-items-table">
-        <ItemsTable listId={this.props.params.id} />
+        <ItemsTable listId={this.props.params.id} list={this.state.list}/>
       </div>
     );
 

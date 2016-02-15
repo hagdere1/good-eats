@@ -134,7 +134,7 @@ var UserShow = React.createClass({
         </div>
 
         <div className="profile-reviews">
-          <h2>{ownerName} Recent Reviews</h2>
+          <h2>{ownerName} Reviews</h2>
 
           <div>
             {reviews}
