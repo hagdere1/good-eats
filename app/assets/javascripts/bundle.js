@@ -31845,6 +31845,31 @@
 
 	    var tableBody = this.state.edibles.map(function (edible) {
 
+	      var reviewed = false;
+	      var reviews = edible.reviews;
+	      if (reviews.length > 0) {
+	        for (var i = 0; i < reviews.length; i++) {
+	          if (reviews[i].user_id === edible.list.user_id) {
+	            reviewed = true;
+	          }
+	        }
+	      }
+
+	      var reviewButton;
+	      if (reviewed === true) {
+	        reviewButton = React.createElement(
+	          'div',
+	          { className: 'list-table-button-reviewed' },
+	          'Reviewed'
+	        );
+	      } else {
+	        reviewButton = React.createElement(
+	          'div',
+	          { onClick: this.handleReviewClick.bind(this, edible), edible: edible, className: 'list-table-button-review' },
+	          'Review'
+	        );
+	      }
+
 	      return React.createElement(
 	        'tr',
 	        { className: 'item-detail-table-row', key: edible.id },
@@ -31875,11 +31900,7 @@
 	        React.createElement(
 	          'td',
 	          { className: 'list-table-buttons' },
-	          React.createElement(
-	            'button',
-	            { onClick: this.handleReviewClick.bind(this, edible), edible: edible, className: 'list-table-button-review' },
-	            'Review'
-	          ),
+	          reviewButton,
 	          React.createElement('br', null),
 	          React.createElement(
 	            'button',

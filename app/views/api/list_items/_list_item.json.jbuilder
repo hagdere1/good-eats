@@ -6,6 +6,7 @@ json.extract!(
 json.created_at list_item.created_at.strftime("%B %d, %Y")
 
 json.edible_id list_item.edible_id
+json.reviews list_item.edible.reviews
 json.name list_item.edible.name
 json.category list_item.edible.category
 json.image_url asset_path(list_item.edible.image_url)

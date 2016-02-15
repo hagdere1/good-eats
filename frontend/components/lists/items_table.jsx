@@ -85,6 +85,24 @@ var ItemsTable = React.createClass({
     var tableBody = (
       this.state.edibles.map(function (edible) {
 
+        var reviewed = false;
+        var reviews = edible.reviews;
+        if (reviews.length > 0) {
+          for (var i = 0; i < reviews.length; i++) {
+            if (reviews[i].user_id === edible.list.user_id) {
+              reviewed = true;
+            }
+          }
+        }
+
+        var reviewButton;
+        if (reviewed === true) {
+          reviewButton = <div className="list-table-button-reviewed">Reviewed</div>
+        }
+        else {
+          reviewButton = <div onClick={this.handleReviewClick.bind(this, edible)} edible={edible} className="list-table-button-review">Review</div>
+        }
+
         return (
           <tr className="item-detail-table-row" key={edible.id}>
             <td><img src={edible.image_url} className="item-detail-image"/></td>
@@ -92,7 +110,7 @@ var ItemsTable = React.createClass({
             <td>{edible.category}</td>
             <td>{edible.created_at}</td>
             <td className="list-table-buttons">
-              <button onClick={this.handleReviewClick.bind(this, edible)} edible={edible} className="list-table-button-review">Review</button><br/>
+              {reviewButton}<br/>
               <button id={edible.id} onClick={this.destroyListItem} className="list-table-button-delete">Delete</button>
             </td>
           </tr>

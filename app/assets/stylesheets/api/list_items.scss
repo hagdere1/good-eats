@@ -185,12 +185,20 @@ td.list-table-name a:hover {
   border: 1px solid #ccc;
 }
 
+.list-table-buttons {
+
+}
+
 button.list-table-button-delete:hover {
   cursor: pointer;
   text-decoration: underline;
 }
 
-button.list-table-button-review:hover {
+div.list-table-button-review:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+
+div.list-table-button-reviewed {
+  color: #463020;
 }
