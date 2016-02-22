@@ -24474,6 +24474,16 @@
 	  }
 	};
 
+	ListStore.addReview = function (review, listId) {
+	  var listItems = _lists[listId].list_items;
+	  for (var i = 0; i < listItems.length; i++) {
+	    if (listItems[i].edible_id === review.edible_id) {
+	      _lists[listId].list_items[i].reviews.push(review);
+	      break;
+	    }
+	  }
+	};
+
 	ListStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListConstants.LISTS_RECEIVED:
@@ -24490,6 +24500,10 @@
 	      break;
 	    case ListItemConstants.LIST_ITEM_DESTROYED:
 	      this.destroyListItem(payload.listItem);
+	      ListStore.__emitChange();
+	      break;
+	    case ReviewConstants.REVIEW_RECEIVED:
+	      this.addReview(payload.review, payload.listId);
 	      ListStore.__emitChange();
 	      break;
 	  }
@@ -31506,14 +31520,14 @@
 	    });
 	  },
 
-	  createReview: function (review, cb) {
+	  createReview: function (review, listId, cb) {
 	    $.ajax({
 	      url: "api/reviews",
 	      method: "POST",
 	      data: { review: review },
 	      success: function (reviewData) {
 	        console.log("You wrote a review!");
-	        ApiActions.receiveSingleReview(reviewData);
+	        ApiActions.receiveSingleReview(reviewData, listId);
 	        cb && cb();
 	      },
 	      error: function () {
@@ -31618,10 +31632,11 @@
 	    });
 	  },
 
-	  receiveSingleReview: function (review) {
+	  receiveSingleReview: function (review, listId) {
 	    AppDispatcher.dispatch({
 	      actionType: ReviewConstants.REVIEW_RECEIVED,
-	      review: review
+	      review: review,
+	      listId: listId
 	    });
 	  }
 	};
@@ -31789,13 +31804,19 @@
 	    this.setState(this.getListItems());
 	  },
 
+	  _onReview: function () {
+	    this.setState(this.getListItems());
+	  },
+
 	  componentDidMount: function () {
 	    this.listListener = ListStore.addListener(this._onChange);
+	    this.reviewListener = ReviewStore.addListener(this._onReview);
 	    ApiUtil.fetchSingleList(parseInt(this.props.listId));
 	  },
 
 	  componentWillUnmount: function () {
 	    this.listListener.remove();
+	    this.reviewListener.remove();
 	  },
 
 	  destroyListItem: function (event) {
@@ -31941,7 +31962,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(ReviewForm, { closeForm: this.closeReviewForm, reviewFormShowing: this.state.reviewFormShowing, edible: this.state.reviewEdible }),
+	      React.createElement(ReviewForm, { closeForm: this.closeReviewForm, reviewFormShowing: this.state.reviewFormShowing, edible: this.state.reviewEdible, listId: parseInt(this.props.listId) }),
 	      React.createElement(
 	        'table',
 	        { className: 'item-detail-table' },
@@ -31984,7 +32005,7 @@
 	    review.title = this.state.title;
 	    review.body = this.state.body;
 
-	    ApiUtil.createReview(review);
+	    ApiUtil.createReview(review, this.props.listId);
 	    this.props.closeForm();
 	  },
 
@@ -31998,6 +32019,12 @@
 
 	  handleBodyChange: function (e) {
 	    this.setState({ body: e.target.value });
+	  },
+
+	  handleCloseModal: function () {
+	    this.setState({ title: "",
+	      body: "" });
+	    this.props.closeForm();
 	  },
 
 	  render: function () {
@@ -32048,7 +32075,7 @@
 	          ),
 	          React.createElement(
 	            'mark',
-	            { onClick: this.props.closeForm },
+	            { onClick: this.handleCloseModal },
 	            '☓'
 	          )
 	        )

@@ -55,10 +55,11 @@ var ApiActions = {
     });
   },
 
-  receiveSingleReview: function (review) {
+  receiveSingleReview: function (review, listId) {
     AppDispatcher.dispatch({
       actionType: ReviewConstants.REVIEW_RECEIVED,
-      review: review
+      review: review,
+      listId: listId
     });
   },
 };

@@ -42,6 +42,16 @@ ListStore.destroyListItem = function (listItem) {
   }
 };
 
+ListStore.addReview = function (review, listId) {
+  var listItems = _lists[listId].list_items;
+  for (var i = 0; i < listItems.length; i++) {
+    if (listItems[i].edible_id === review.edible_id) {
+      _lists[listId].list_items[i].reviews.push(review);
+      break;
+    }
+  }
+};
+
 ListStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ListConstants.LISTS_RECEIVED:
@@ -58,6 +68,10 @@ ListStore.__onDispatch = function (payload) {
       break;
     case ListItemConstants.LIST_ITEM_DESTROYED:
       this.destroyListItem(payload.listItem);
+      ListStore.__emitChange();
+      break;
+    case ReviewConstants.REVIEW_RECEIVED:
+      this.addReview(payload.review, payload.listId);
       ListStore.__emitChange();
       break;
   }

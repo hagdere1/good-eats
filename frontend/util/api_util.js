@@ -100,14 +100,14 @@ ApiUtil = {
     });
   },
 
-  createReview: function (review, cb) {
+  createReview: function (review, listId, cb) {
     $.ajax({
       url: "api/reviews",
       method: "POST",
       data: {review: review},
       success: function (reviewData) {
         console.log("You wrote a review!");
-        ApiActions.receiveSingleReview(reviewData);
+        ApiActions.receiveSingleReview(reviewData, listId);
         cb && cb();
       },
       error: function () {

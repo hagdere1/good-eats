@@ -18,7 +18,7 @@ var ReviewForm = React.createClass({
     review.title = this.state.title;
     review.body = this.state.body;
 
-    ApiUtil.createReview(review);
+    ApiUtil.createReview(review, this.props.listId);
     this.props.closeForm();
   },
 
@@ -32,6 +32,12 @@ var ReviewForm = React.createClass({
 
   handleBodyChange: function (e) {
     this.setState({body: e.target.value});
+  },
+
+  handleCloseModal: function () {
+    this.setState({title: "",
+                   body: ""});
+    this.props.closeForm();
   },
 
   render: function() {
@@ -66,7 +72,7 @@ var ReviewForm = React.createClass({
               </div>
             </form>
 
-            <mark onClick={this.props.closeForm}>&#x2613;</mark>
+            <mark onClick={this.handleCloseModal}>&#x2613;</mark>
           </div>
         </div>
       );

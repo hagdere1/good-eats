@@ -22,14 +22,19 @@ var ItemsTable = React.createClass({
     this.setState(this.getListItems());
   },
 
+  _onReview: function () {
+    this.setState(this.getListItems());
+  },
 
   componentDidMount: function () {
     this.listListener = ListStore.addListener(this._onChange);
+    this.reviewListener = ReviewStore.addListener(this._onReview);
     ApiUtil.fetchSingleList(parseInt(this.props.listId));
   },
 
   componentWillUnmount: function () {
     this.listListener.remove();
+    this.reviewListener.remove();
   },
 
   destroyListItem: function (event) {
@@ -120,7 +125,7 @@ var ItemsTable = React.createClass({
 
     return (
       <div>
-        <ReviewForm closeForm={this.closeReviewForm} reviewFormShowing={this.state.reviewFormShowing} edible={this.state.reviewEdible}/>
+        <ReviewForm closeForm={this.closeReviewForm} reviewFormShowing={this.state.reviewFormShowing} edible={this.state.reviewEdible} listId={parseInt(this.props.listId)}/>
         <table className="item-detail-table">
           {header}
 
