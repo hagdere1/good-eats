@@ -89,6 +89,11 @@
   float: left;
 }
 
+.edible-list-item-button-selected:hover {
+  cursor: pointer;
+  background-color: #D9D9D9;
+}
+
 .button-checkmark {
   margin-right: 5px;
   color: #409D69;

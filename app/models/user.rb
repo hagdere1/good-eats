@@ -4,9 +4,9 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6, allow_nil: true }
   after_initialize :ensure_session_token
 
-  has_many :lists
+  has_many :lists, dependent: :destroy
   has_many :list_items, through: :lists
-  has_many :reviews
+  has_many :reviews, dependent: :destroy
 
   attr_reader :password
 

@@ -8,9 +8,10 @@ var UserForm = React.createClass({
 
   getInitialState: function () {
     return ({
-      username: "",
+      name: "",
       email: "",
       password: "",
+      image_url: "http://www.activprayer.com/media/profile_images/default.png"
     });
   },
 

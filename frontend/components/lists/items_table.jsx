@@ -34,7 +34,7 @@ var ItemsTable = React.createClass({
 
   destroyListItem: function (event) {
     event.preventDefault();
-    ApiUtil.destroyListItem(event.currentTarget.id);
+    ApiUtil.destroyListItem(event.currentTarget.id, this.setState({deletingList: true}));
   },
 
   handleReviewClick: function (edible, e) {
@@ -105,7 +105,7 @@ var ItemsTable = React.createClass({
 
         return (
           <tr className="item-detail-table-row" key={edible.id}>
-            <td><img src={edible.image_url} className="item-detail-image"/></td>
+            <td><a href={"#/edibles/" + edible.edible_id}><img src={edible.image_url} className="item-detail-image"/></a></td>
             <td className="list-table-name"><a href={"#/edibles/" + edible.edible_id}>{edible.name}</a></td>
             <td>{edible.category}</td>
             <td>{edible.created_at}</td>
