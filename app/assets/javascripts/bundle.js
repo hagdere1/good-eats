@@ -24464,6 +24464,16 @@
 	  delete _lists[id];
 	};
 
+	ListStore.destroyListItem = function (listItem) {
+	  var listItems = _lists[listItem.list_id].list_items;
+	  for (var i = 0; i < listItems.length; i++) {
+	    if (listItems[i].id === listItem.id) {
+	      _lists[listItem.list_id].list_items.splice(listItems[i], 1);
+	      break;
+	    }
+	  }
+	};
+
 	ListStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListConstants.LISTS_RECEIVED:
@@ -24476,6 +24486,10 @@
 	      break;
 	    case ListConstants.LIST_DESTROYED:
 	      this.destroyList(payload.id);
+	      ListStore.__emitChange();
+	      break;
+	    case ListItemConstants.LIST_ITEM_DESTROYED:
+	      this.destroyListItem(payload.listItem);
 	      ListStore.__emitChange();
 	      break;
 	  }
@@ -31451,8 +31465,9 @@
 	    $.ajax({
 	      url: "api/list_items/" + id,
 	      method: "DELETE",
-	      success: function () {
+	      success: function (listItem) {
 	        SessionsApiUtil.fetchCurrentUser();
+	        ApiActions.destroyListItem(listItem);
 	        console.log("Deleted list item!");
 	        cb && cb();
 	      },
@@ -31579,6 +31594,13 @@
 	    AppDispatcher.dispatch({
 	      actionType: ListConstants.LIST_RECEIVED,
 	      list: list
+	    });
+	  },
+
+	  destroyListItem: function (listItem) {
+	    AppDispatcher.dispatch({
+	      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
+	      listItem: listItem
 	    });
 	  },
 
@@ -31778,7 +31800,7 @@
 
 	  destroyListItem: function (event) {
 	    event.preventDefault();
-	    ApiUtil.destroyListItem(event.currentTarget.id, this.setState({ deletingList: true }));
+	    ApiUtil.destroyListItem(event.currentTarget.id);
 	  },
 
 	  handleReviewClick: function (edible, e) {

@@ -59,8 +59,9 @@ ApiUtil = {
     $.ajax({
       url: "api/list_items/" + id,
       method: "DELETE",
-      success: function () {
+      success: function (listItem) {
         SessionsApiUtil.fetchCurrentUser();
+        ApiActions.destroyListItem(listItem);
         console.log("Deleted list item!");
         cb && cb();
       },

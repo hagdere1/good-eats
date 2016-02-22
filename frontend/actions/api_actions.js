@@ -34,6 +34,13 @@ var ApiActions = {
     });
   },
 
+  destroyListItem: function (listItem) {
+    AppDispatcher.dispatch({
+      actionType: ListItemConstants.LIST_ITEM_DESTROYED,
+      listItem: listItem
+    });
+  },
+
   destroyList: function (id) {
     AppDispatcher.dispatch({
       actionType: ListConstants.LIST_DESTROYED,
