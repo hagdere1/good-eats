@@ -19,7 +19,6 @@ var SessionsApiUtil = {
       type: 'DELETE',
       dataType: 'json',
       success: function () {
-        console.log("logged out!");
         cb && cb()
         CurrentUserActions.receiveCurrentUser({});
       }
@@ -35,9 +34,6 @@ var SessionsApiUtil = {
         console.log("fetched current user!");
         CurrentUserActions.receiveCurrentUser(currentUser);
         cb && cb(currentUser);
-      },
-      error: function () {
-        console.log("Failed to get session");
       }
     });
   }

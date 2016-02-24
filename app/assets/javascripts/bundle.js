@@ -31362,7 +31362,6 @@
 	      type: 'DELETE',
 	      dataType: 'json',
 	      success: function () {
-	        console.log("logged out!");
 	        cb && cb();
 	        CurrentUserActions.receiveCurrentUser({});
 	      }
@@ -31378,9 +31377,6 @@
 	        console.log("fetched current user!");
 	        CurrentUserActions.receiveCurrentUser(currentUser);
 	        cb && cb(currentUser);
-	      },
-	      error: function () {
-	        console.log("Failed to get session");
 	      }
 	    });
 	  }
@@ -31454,7 +31450,6 @@
 	    $.ajax({
 	      url: "api/lists/" + id,
 	      success: function (list) {
-	        console.log("Successfully fetched your list!");
 	        ApiActions.receiveSingleList(list);
 	      }
 	    });
@@ -31468,9 +31463,6 @@
 	      success: function () {
 	        SessionsApiUtil.fetchCurrentUser();
 	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to create list item");
 	      }
 	    });
 	  },
@@ -31482,11 +31474,7 @@
 	      success: function (listItem) {
 	        SessionsApiUtil.fetchCurrentUser();
 	        ApiActions.destroyListItem(listItem);
-	        console.log("Deleted list item!");
 	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to delete list item");
 	      }
 	    });
 	  },
@@ -31498,11 +31486,7 @@
 	      data: { list_item: listItem },
 	      success: function (listItem) {
 	        SessionsApiUtil.fetchCurrentUser();
-	        console.log("Successfully updated list item!");
 	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to create list item.");
 	      }
 	    });
 	  },
@@ -31512,10 +31496,6 @@
 	      url: "/api/reviews/",
 	      success: function (reviews) {
 	        ApiActions.receiveAllReviews(reviews);
-	        console.log("Successfully retrieved reviews");
-	      },
-	      error: function () {
-	        console.log("Failed to retrieve reviews");
 	      }
 	    });
 	  },
@@ -31526,12 +31506,8 @@
 	      method: "POST",
 	      data: { review: review },
 	      success: function (reviewData) {
-	        console.log("You wrote a review!");
 	        ApiActions.receiveSingleReview(reviewData, listId);
 	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("We regret to inform you that your review submission has been denied.");
 	      }
 	    });
 	  },
@@ -31542,12 +31518,8 @@
 	      method: "POST",
 	      data: { list: list },
 	      success: function (listData) {
-	        console.log("You created a list!");
 	        ApiActions.receiveSingleList(listData);
 	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to create list");
 	      }
 	    });
 	  },
@@ -31558,11 +31530,7 @@
 	      method: "DELETE",
 	      success: function () {
 	        ApiActions.destroyList(id);
-	        console.log("Deleted list!");
 	        cb && cb();
-	      },
-	      error: function () {
-	        console.log("Failed to delete list.");
 	      }
 	    });
 	  }
