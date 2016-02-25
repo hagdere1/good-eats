@@ -77,6 +77,7 @@ var EdibleShow = React.createClass({
   },
 
   componentDidMount: function () {
+    window.scrollTo(0, 0);
     this.edibleListener = EdibleStore.addListener(this._onChange);
     this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
     SessionsApiUtil.fetchCurrentUser();

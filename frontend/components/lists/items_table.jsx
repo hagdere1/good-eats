@@ -2,7 +2,6 @@ var React = require('react');
 var ApiUtil = require('../../util/api_util');
 var ListStore = require('../../stores/list');
 var ReviewForm = require('./review_form');
-var DateEatenInput = require('./date_eaten_input');
 
 var ItemsTable = React.createClass({
   getInitialState: function () {
@@ -14,7 +13,6 @@ var ItemsTable = React.createClass({
     return { edibles: list.list_items,
              reviewFormShowing: false,
              reviewEdible: null,
-             dateEatenInputShowing: false,
              list: list};
   },
 
@@ -51,14 +49,6 @@ var ItemsTable = React.createClass({
   closeReviewForm: function () {
     this.setState({reviewFormShowing: false,
                    reviewEdible: null});
-  },
-
-  hideInputForm: function () {
-    this.setState({dateEatenInputShowing: false});
-  },
-
-  showDateEatenInput: function () {
-    this.setState({dateEatenInputShowing: true})
   },
 
   render: function () {

@@ -25,6 +25,7 @@ var UserShow = React.createClass({
   },
 
   componentDidMount: function() {
+    window.scrollTo(0, 0);
     this.listener = UsersStore.addListener(this._onChange);
     UsersApiUtil.fetchUser(this.props.params.id);
   },

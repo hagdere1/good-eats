@@ -17,6 +17,7 @@ var ListsIndex = React.createClass({
   },
 
   componentDidMount: function () {
+    window.scrollTo(0, 0);
     this.listListener = ListStore.addListener(this._onChange);
     ApiUtil.fetchAllLists();
   },
