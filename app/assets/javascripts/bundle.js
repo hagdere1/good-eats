@@ -24469,7 +24469,7 @@
 	  var listItems = _lists[listItem.list_id].list_items;
 	  for (var i = 0; i < listItems.length; i++) {
 	    if (listItems[i].id === listItem.id) {
-	      _lists[listItem.list_id].list_items.splice(listItems[i], 1);
+	      delete _lists[listItem.list_id].list_items[i];
 	      break;
 	    }
 	  }
