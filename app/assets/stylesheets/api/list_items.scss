@@ -6,6 +6,7 @@
   font-family: "Lato", Helvetica, Arial, sans-serif;
   padding-bottom: 20px;
   margin-bottom: 10px;
+  height: 100%;
   border-bottom: 1px solid #EBE8D5;
 }
 
@@ -92,7 +93,7 @@ td.list-index-item-title:hover {
   border-left: 1px solid #EBE8D5;
   float: right;
   width: 753px;
-  height: 900px;
+  height: auto;
 }
 
 .item-detail-image {
