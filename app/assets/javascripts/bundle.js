@@ -31965,6 +31965,7 @@
 	    review.body = this.state.body;
 
 	    ApiUtil.createReview(review, this.props.listId);
+	    this.setState({ title: "", body: "" });
 	    this.props.closeForm();
 	  },
 
