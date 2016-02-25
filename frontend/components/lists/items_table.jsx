@@ -38,6 +38,8 @@ var ItemsTable = React.createClass({
   destroyListItem: function (event) {
     event.preventDefault();
     ApiUtil.destroyListItem(event.currentTarget.id);
+    ApiUtil.fetchSingleList(parseInt(this.props.listId));
+    this.setState(this.getListItems());
   },
 
   handleReviewClick: function (edible, e) {

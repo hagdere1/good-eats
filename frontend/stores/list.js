@@ -35,7 +35,7 @@ ListStore.destroyList = function (id) {
 ListStore.destroyListItem = function (listItem) {
   var listItems = _lists[listItem.list_id].list_items;
   for (var i = 0; i < listItems.length; i++) {
-    if (listItems[i].id === listItem.id) {
+    if (_lists[listItem.list_id].list_items[i].id === listItem.id) {
       delete _lists[listItem.list_id].list_items[i];
       break;
     }
@@ -77,5 +77,5 @@ ListStore.__onDispatch = function (payload) {
   }
 };
 
-window.ListStore = ListStore;
+// window.ListStore = ListStore;
 module.exports = ListStore;
