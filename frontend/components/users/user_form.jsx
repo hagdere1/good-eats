@@ -53,8 +53,7 @@ var UserForm = React.createClass({
             <img className="auth-image" src={window.goodeatsAssets.auth_photo_lobster}/>
           </form>
 
-
-          <form onSubmit={ this.submit }>
+          <form className="hidden-form" onSubmit={ this.submit }>
             <input type="hidden" name="email" value="harry@aol.com" />
             <input type="hidden" name="password" value="123456" />
             <button className="auth-form-button">Sign in as Guest</button>

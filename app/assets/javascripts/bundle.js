@@ -33648,7 +33648,7 @@
 	        ),
 	        React.createElement(
 	          'form',
-	          { onSubmit: this.submit },
+	          { className: 'hidden-form', onSubmit: this.submit },
 	          React.createElement('input', { type: 'hidden', name: 'email', value: 'harry@aol.com' }),
 	          React.createElement('input', { type: 'hidden', name: 'password', value: '123456' }),
 	          React.createElement(
