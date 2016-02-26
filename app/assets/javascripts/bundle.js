@@ -33520,6 +33520,7 @@
 	var UsersApiUtil = __webpack_require__(257);
 	var History = __webpack_require__(159).History;
 	var LinkedStateMixin = __webpack_require__(262);
+	var SessionsApiUtil = __webpack_require__(234);
 
 	var UserForm = React.createClass({
 	  displayName: 'UserForm',
@@ -33540,6 +33541,15 @@
 	    var params = { user: this.state };
 
 	    UsersApiUtil.createUser(params, function () {
+	      this.history.pushState({}, "/");
+	    }.bind(this));
+	  },
+
+	  signInAsGuest: function (e) {
+	    e.preventDefault();
+
+	    var credentials = $(e.currentTarget).serializeJSON();
+	    SessionsApiUtil.login(credentials, function () {
 	      this.history.pushState({}, "/");
 	    }.bind(this));
 	  },
@@ -33585,7 +33595,7 @@
 	        ),
 	        React.createElement(
 	          'form',
-	          { className: 'hidden-form', onSubmit: this.submit },
+	          { className: 'hidden-form', onSubmit: this.signInAsGuest },
 	          React.createElement('input', { type: 'hidden', name: 'email', value: 'harry@aol.com' }),
 	          React.createElement('input', { type: 'hidden', name: 'password', value: '123456' }),
 	          React.createElement(

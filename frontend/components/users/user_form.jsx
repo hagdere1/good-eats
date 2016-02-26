@@ -2,6 +2,7 @@ var React = require('react');
 var UsersApiUtil = require('./../../util/users_api_util');
 var History = require('react-router').History;
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var SessionsApiUtil = require('./../../util/sessions_api_util');
 
 var UserForm = React.createClass({
   mixins: [History, LinkedStateMixin],
@@ -20,6 +21,15 @@ var UserForm = React.createClass({
     var params = { user: this.state };
 
     UsersApiUtil.createUser(params, function () {
+      this.history.pushState({}, "/");
+    }.bind(this));
+  },
+
+  signInAsGuest: function (e) {
+    e.preventDefault();
+
+    var credentials = $(e.currentTarget).serializeJSON();
+    SessionsApiUtil.login(credentials, function () {
       this.history.pushState({}, "/");
     }.bind(this));
   },
@@ -53,7 +63,7 @@ var UserForm = React.createClass({
             <img className="auth-image" src={window.goodeatsAssets.auth_photo_lobster}/>
           </form>
 
-          <form className="hidden-form" onSubmit={ this.submit }>
+          <form className="hidden-form" onSubmit={ this.signInAsGuest }>
             <input type="hidden" name="email" value="harry@aol.com" />
             <input type="hidden" name="password" value="123456" />
             <button className="auth-form-button">Sign in as Guest</button>
