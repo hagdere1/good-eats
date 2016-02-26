@@ -33490,7 +33490,7 @@
 	              'Sign in'
 	            )
 	          ),
-	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_new_session })
+	          React.createElement('img', { className: 'auth-image-new-session', src: window.goodeatsAssets.auth_photo_new_session })
 	        ),
 	        React.createElement(
 	          'form',
@@ -33562,7 +33562,7 @@
 	        { className: 'auth-form' },
 	        React.createElement(
 	          'form',
-	          { onSubmit: this.onSubmit },
+	          { className: 'sign-up-form', onSubmit: this.onSubmit },
 	          React.createElement(
 	            'fieldset',
 	            { className: 'auth-form-fieldset group' },
@@ -33590,7 +33590,7 @@
 	              'Sign up'
 	            )
 	          ),
-	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_new_user })
+	          React.createElement('img', { className: 'auth-image-new-user', src: window.goodeatsAssets.auth_photo_new_user })
 	        ),
 	        React.createElement(
 	          'form',

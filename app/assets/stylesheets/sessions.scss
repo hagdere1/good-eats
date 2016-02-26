@@ -71,6 +71,10 @@
   margin-top: 25px;
 }
 
+.sign-up-form {
+  height: 255px;
+}
+
 .auth-form label {
   font-size: 14px;
 }
@@ -88,7 +92,13 @@
   float: left;
 }
 
-.auth-image {
+.auth-image-new-user {
+  float: right;
+  width: 200px;
+  height: 200px;
+}
+
+.auth-image-new-session {
   float: right;
   width: 200px;
   height: 200px;
@@ -114,11 +124,15 @@
   padding: 10px 20px 10px 20px;
   font-weight: bold;
   border-radius: 4px;
-  background-color: white;
+  background-color: #F4F1EA;
+}
+
+.auth-form-button:hover {
+  cursor: pointer;
 }
 
 .hidden-form {
-  display: block;
+  // display: block;
 }
 
 .auth-form-agreement {
