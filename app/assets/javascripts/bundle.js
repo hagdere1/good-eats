@@ -51,22 +51,22 @@
 	var IndexRoute = __webpack_require__(159).IndexRoute;
 
 	var ListsIndex = __webpack_require__(208);
-	var EdiblesIndex = __webpack_require__(247);
-	var Edible = __webpack_require__(249);
-	var EdibleShow = __webpack_require__(250);
+	var EdiblesIndex = __webpack_require__(246);
+	var Edible = __webpack_require__(248);
+	var EdibleShow = __webpack_require__(249);
 	var ListShow = __webpack_require__(242);
-	var ReviewIndex = __webpack_require__(251);
-	var Profile = __webpack_require__(253);
+	var ReviewIndex = __webpack_require__(250);
+	var Profile = __webpack_require__(252);
 
 	// React auth
-	var UsersIndex = __webpack_require__(254);
-	var UserShow = __webpack_require__(259);
-	var SessionForm = __webpack_require__(260);
-	var UserForm = __webpack_require__(261);
+	var UsersIndex = __webpack_require__(253);
+	var UserShow = __webpack_require__(258);
+	var SessionForm = __webpack_require__(259);
+	var UserForm = __webpack_require__(260);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
 
-	var App = __webpack_require__(266);
+	var App = __webpack_require__(265);
 
 	var routes = React.createElement(
 	  Route,
@@ -24366,7 +24366,7 @@
 	var ApiUtil = __webpack_require__(236);
 	var ListsIndexItem = __webpack_require__(241);
 	var ListShow = __webpack_require__(242);
-	var ListForm = __webpack_require__(246);
+	var ListForm = __webpack_require__(245);
 
 	var ListsIndex = React.createClass({
 	  displayName: 'ListsIndex',
@@ -32050,8 +32050,7 @@
 	module.exports = ReviewForm;
 
 /***/ },
-/* 245 */,
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32094,13 +32093,13 @@
 	module.exports = ListForm;
 
 /***/ },
-/* 247 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(248);
+	var EdibleStore = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(236);
-	var Edible = __webpack_require__(249);
+	var Edible = __webpack_require__(248);
 
 	var EdiblesIndex = React.createClass({
 	  displayName: 'EdiblesIndex',
@@ -32147,7 +32146,7 @@
 	module.exports = EdiblesIndex;
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
@@ -32197,7 +32196,7 @@
 	module.exports = EdibleStore;
 
 /***/ },
-/* 249 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32372,11 +32371,11 @@
 	module.exports = Edible;
 
 /***/ },
-/* 250 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EdibleStore = __webpack_require__(248);
+	var EdibleStore = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(236);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
@@ -32586,12 +32585,12 @@
 	module.exports = EdibleShow;
 
 /***/ },
-/* 251 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(236);
-	var ReviewStore = __webpack_require__(252);
+	var ReviewStore = __webpack_require__(251);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32694,7 +32693,7 @@
 	module.exports = ReviewIndex;
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
@@ -32745,7 +32744,7 @@
 	module.exports = ReviewStore;
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32991,12 +32990,12 @@
 	module.exports = Profile;
 
 /***/ },
-/* 254 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(255);
-	var UsersApiUtil = __webpack_require__(257);
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
 
 	var UsersIndex = React.createClass({
 	  displayName: 'UsersIndex',
@@ -33051,12 +33050,12 @@
 	module.exports = UsersIndex;
 
 /***/ },
-/* 255 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
 	var Dispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(256);
+	var UserConstants = __webpack_require__(255);
 
 	var _users = [];
 	var CHANGE_EVENT = "change";
@@ -33099,7 +33098,7 @@
 	module.exports = UsersStore;
 
 /***/ },
-/* 256 */
+/* 255 */
 /***/ function(module, exports) {
 
 	var UserConstants = {
@@ -33110,10 +33109,10 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 257 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var UserActions = __webpack_require__(258);
+	var UserActions = __webpack_require__(257);
 	var CurrentUserActions = __webpack_require__(235);
 
 	var UsersApiUtil = {
@@ -33157,11 +33156,11 @@
 	module.exports = UsersApiUtil;
 
 /***/ },
-/* 258 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(256);
+	var UserConstants = __webpack_require__(255);
 
 	var UserActions = {
 	  receiveUsers: function (users) {
@@ -33182,12 +33181,12 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 259 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(255);
-	var UsersApiUtil = __webpack_require__(257);
+	var UsersStore = __webpack_require__(254);
+	var UsersApiUtil = __webpack_require__(256);
 
 	var UserShow = React.createClass({
 	  displayName: 'UserShow',
@@ -33438,7 +33437,7 @@
 	module.exports = UserShow;
 
 /***/ },
-/* 260 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33491,7 +33490,7 @@
 	              'Sign in'
 	            )
 	          ),
-	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_burger })
+	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_new_session })
 	        ),
 	        React.createElement(
 	          'form',
@@ -33513,13 +33512,13 @@
 	module.exports = SessionForm;
 
 /***/ },
-/* 261 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersApiUtil = __webpack_require__(257);
+	var UsersApiUtil = __webpack_require__(256);
 	var History = __webpack_require__(159).History;
-	var LinkedStateMixin = __webpack_require__(262);
+	var LinkedStateMixin = __webpack_require__(261);
 	var SessionsApiUtil = __webpack_require__(234);
 
 	var UserForm = React.createClass({
@@ -33591,7 +33590,7 @@
 	              'Sign up'
 	            )
 	          ),
-	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_lobster })
+	          React.createElement('img', { className: 'auth-image', src: window.goodeatsAssets.auth_photo_new_user })
 	        ),
 	        React.createElement(
 	          'form',
@@ -33612,13 +33611,13 @@
 	module.exports = UserForm;
 
 /***/ },
-/* 262 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(263);
+	module.exports = __webpack_require__(262);
 
 /***/ },
-/* 263 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33635,8 +33634,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(264);
-	var ReactStateSetters = __webpack_require__(265);
+	var ReactLink = __webpack_require__(263);
+	var ReactStateSetters = __webpack_require__(264);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -33659,7 +33658,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 264 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33733,7 +33732,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 265 */
+/* 264 */
 /***/ function(module, exports) {
 
 	/**
@@ -33842,12 +33841,12 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 266 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Header = __webpack_require__(267);
-	var Footer = __webpack_require__(268);
+	var Header = __webpack_require__(266);
+	var Footer = __webpack_require__(267);
 	var SessionsApiUtil = __webpack_require__(234);
 	var CurrentUserStore = __webpack_require__(232);
 
@@ -33885,7 +33884,7 @@
 	module.exports = App;
 
 /***/ },
-/* 267 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -34061,7 +34060,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 268 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

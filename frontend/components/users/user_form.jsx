@@ -60,7 +60,7 @@ var UserForm = React.createClass({
               <button className="auth-form-button">Sign up</button>
             </fieldset>
 
-            <img className="auth-image" src={window.goodeatsAssets.auth_photo_lobster}/>
+            <img className="auth-image" src={window.goodeatsAssets.auth_photo_new_user}/>
           </form>
 
           <form className="hidden-form" onSubmit={ this.signInAsGuest }>
