@@ -13,7 +13,8 @@ var EdibleShow = React.createClass({
 
   getInitialValues: function () {
     this.currentUser = CurrentUserStore.currentUser();
-    var currentList;
+    var currentListId;
+    var currentListTitle;
     var currentListItem;
     var userItems = this.currentUser.list_items;
     var userHasListItem = false;
@@ -21,19 +22,22 @@ var EdibleShow = React.createClass({
     for (i = 0; i < userItems.length; i++) {
       if (userItems[i].edible_id == this.props.params.id) {
         userHasListItem = true;
-        currentList = userItems[i].list;
+        currentListId = userItems[i].list_id;
+        currentListTitle = userItems[i].list_title;
         currentListItem = userItems[i];
       }
     }
 
     if (!userHasListItem) {
-      currentList = this.currentUser.lists[0];
+      currentListId = this.currentUser.lists[0].id;
+      currentListTitle = this.currentUser.lists[0].title;
       currentListItem = null;
     }
 
     return {edible: EdibleStore.find(parseInt(this.props.params.id)),
             lists: this.currentUser.lists,
-            currentList: currentList,
+            currentListId: currentListId,
+            currentListTitle: currentListTitle,
             currentListItem: currentListItem,
             userHasListItem: userHasListItem};
   },
@@ -43,7 +47,7 @@ var EdibleShow = React.createClass({
     var listItem = {};
 
     if (!this.state.userHasListItem) {
-      listItem.list_id = this.state.currentList.id;
+      listItem.list_id = this.state.currentListId;
       listItem.edible_id = parseInt(this.props.params.id);
       ApiUtil.createListItem(listItem, this.setState({userHasListItem: true}));
     }
@@ -107,7 +111,7 @@ var EdibleShow = React.createClass({
 
     if (this.state.userHasListItem) {
       for (i = 0; i < this.currentUser.lists.length; i++) {
-        if (this.currentUser.lists[i].id != this.state.currentList.id) {
+        if (this.currentUser.lists[i].id != this.state.currentListId) {
           var list = this.currentUser.lists[i];
           lists.push(<li key={list.id} onClick={this.updateListItem.bind(this, list)}>{list.title}</li>);
         }
@@ -125,7 +129,7 @@ var EdibleShow = React.createClass({
       buttonContent = (
         <div>
           <span className="button-checkmark">&#x2713;</span>
-          <span>{this.state.currentList.title}</span>
+          <span>{this.state.currentListTitle}</span>
         </div>
       )
     }

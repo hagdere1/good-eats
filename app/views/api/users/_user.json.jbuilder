@@ -4,7 +4,9 @@ json.reviews user.reviews
 
 json.list_items do
   json.array!(user.list_items) do |list_item|
-    json.partial!('api/list_items/list_item', list_item: list_item)
+    json.list_title list_item.list.title
+    json.list_id list_item.list_id
+    json.edible_id list_item.edible_id
   end
 end
 
