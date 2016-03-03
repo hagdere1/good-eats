@@ -26,7 +26,6 @@ var Profile = React.createClass({
     ApiUtil.fetchAllLists();
     SessionsApiUtil.fetchCurrentUser();
     ApiUtil.fetchAllReviews();
-    debugger
   },
 
   componentWillUnmount: function () {
@@ -41,7 +40,7 @@ var Profile = React.createClass({
     var ediblesEaten;
     var numReviews;
     if (this.state.currentUser && this.state.reviews) {
-      numEdiblesEaten = this.state.currentUser.lists[1].list_items.length;
+      numEdiblesEaten = this.state.currentUser.lists[1].num_list_items;
       numReviews = this.state.reviews.length;
     }
 
@@ -52,7 +51,7 @@ var Profile = React.createClass({
         return (
           <li key={list.id} className="profile-list">
             <a href={"#/lists/" + list.id}>
-              {list.title} ({list.list_items.length})
+              {list.title} ({list.num_list_items})
             </a>
           </li>
         );

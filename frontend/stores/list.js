@@ -52,6 +52,16 @@ ListStore.addReview = function (review, listId) {
   }
 };
 
+ListStore.findByUserId = function (id) {
+  var lists = [];
+  this.all().forEach(function (list) {
+    if (list.user_id === id) {
+      lists.push(list);
+    }
+  });
+  return lists;
+};
+
 ListStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ListConstants.LISTS_RECEIVED:

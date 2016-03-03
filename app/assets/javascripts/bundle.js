@@ -24484,6 +24484,16 @@
 	  }
 	};
 
+	ListStore.findByUserId = function (id) {
+	  var lists = [];
+	  this.all().forEach(function (list) {
+	    if (list.user_id === id) {
+	      lists.push(list);
+	    }
+	  });
+	  return lists;
+	};
+
 	ListStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ListConstants.LISTS_RECEIVED:
@@ -32730,7 +32740,7 @@
 
 	ReviewStore.findByUserId = function (id) {
 	  var reviews = [];
-	  debugger;
+
 	  this.all().forEach(function (review) {
 	    if (review.user_id === id) {
 	      reviews.push(review);
@@ -32790,7 +32800,6 @@
 	    ApiUtil.fetchAllLists();
 	    SessionsApiUtil.fetchCurrentUser();
 	    ApiUtil.fetchAllReviews();
-	    debugger;
 	  },
 
 	  componentWillUnmount: function () {
@@ -32805,7 +32814,7 @@
 	    var ediblesEaten;
 	    var numReviews;
 	    if (this.state.currentUser && this.state.reviews) {
-	      numEdiblesEaten = this.state.currentUser.lists[1].list_items.length;
+	      numEdiblesEaten = this.state.currentUser.lists[1].num_list_items;
 	      numReviews = this.state.reviews.length;
 	    }
 
@@ -32820,7 +32829,7 @@
 	          { href: "#/lists/" + list.id },
 	          list.title,
 	          ' (',
-	          list.list_items.length,
+	          list.num_list_items,
 	          ')'
 	        )
 	      );
@@ -33244,7 +33253,6 @@
 	    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
 	    UsersApiUtil.fetchUser(this.props.params.id);
 	    ApiUtil.fetchAllReviews();
-	    debugger;
 	  },
 
 	  componentWillUnmount: function () {
@@ -33268,7 +33276,7 @@
 	    var currentDate;
 
 	    if (this.state.user && this.state.reviews) {
-	      numEdiblesEaten = this.state.user.lists[1].list_items.length;
+	      numEdiblesEaten = this.state.user.lists[1].num_list_items;
 	      numReviews = this.state.reviews.length;
 	      ownerName = this.state.user.name + "'s";
 
@@ -33278,7 +33286,7 @@
 	          { key: list.id, className: 'profile-list' },
 	          list.title,
 	          ' (',
-	          list.list_items.length,
+	          list.num_list_items,
 	          ')'
 	        );
 	      });

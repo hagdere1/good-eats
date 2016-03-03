@@ -37,7 +37,6 @@ var UserShow = React.createClass({
     this.reviewListener = ReviewStore.addListener(this._onReviewChange);
     UsersApiUtil.fetchUser(this.props.params.id);
     ApiUtil.fetchAllReviews();
-    debugger
   },
 
   componentWillUnmount: function() {
@@ -63,7 +62,7 @@ var UserShow = React.createClass({
     var currentDate;
 
     if (this.state.user && this.state.reviews) {
-      numEdiblesEaten = this.state.user.lists[1].list_items.length;
+      numEdiblesEaten = this.state.user.lists[1].num_list_items;
       numReviews = this.state.reviews.length;
       ownerName = this.state.user.name + "'s";
 
@@ -71,7 +70,7 @@ var UserShow = React.createClass({
         this.state.user.lists.map(function (list) {
           return (
             <li key={list.id} className="profile-list">
-              {list.title} ({list.list_items.length})
+              {list.title} ({list.num_list_items})
             </li>
           );
         })

@@ -10,8 +10,9 @@ end
 
 json.lists do
   json.array!(user.lists) do |list|
-    json.partial!('api/lists/list', list: list)
-    json.list_items list.list_items
+    json.id list.id
+    json.title list.title
+    json.num_list_items list.list_items.length
   end
 end
 

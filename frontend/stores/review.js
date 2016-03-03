@@ -31,7 +31,7 @@ ReviewStore.find = function (id) {
 
 ReviewStore.findByUserId = function (id) {
   var reviews = [];
-  debugger
+
   this.all().forEach(function (review) {
     if (review.user_id === id) {
       reviews.push(review);
