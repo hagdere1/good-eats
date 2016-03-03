@@ -76,7 +76,6 @@ var Edible = React.createClass({
 
   componentDidMount: function () {
     this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
-    ApiUtil.fetchAllLists();
     SessionsApiUtil.fetchCurrentUser();
   },
 
