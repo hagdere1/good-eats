@@ -29,6 +29,18 @@ ReviewStore.find = function (id) {
   return _reviews[id];
 };
 
+ReviewStore.findByUserId = function (id) {
+  var reviews = [];
+  debugger
+  this.all().forEach(function (review) {
+    if (review.user_id === id) {
+      reviews.push(review);
+    }
+  });
+
+  return reviews;
+};
+
 ReviewStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ReviewConstants.REVIEWS_RECEIVED:

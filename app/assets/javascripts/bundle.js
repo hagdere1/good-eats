@@ -24390,7 +24390,6 @@
 	  },
 
 	  render: function () {
-
 	    return React.createElement(
 	      'div',
 	      { className: 'lists-index group' },
@@ -31497,6 +31496,8 @@
 	      url: "/api/reviews/",
 	      success: function (reviews) {
 	        ApiActions.receiveAllReviews(reviews);
+	        console.log("successfully retrieved reviews");
+	        console.log(reviews.length);
 	      }
 	    });
 	  },
@@ -32727,6 +32728,18 @@
 	  return _reviews[id];
 	};
 
+	ReviewStore.findByUserId = function (id) {
+	  var reviews = [];
+	  debugger;
+	  this.all().forEach(function (review) {
+	    if (review.user_id === id) {
+	      reviews.push(review);
+	    }
+	  });
+
+	  return reviews;
+	};
+
 	ReviewStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ReviewConstants.REVIEWS_RECEIVED:
@@ -32750,21 +32763,25 @@
 	var React = __webpack_require__(1);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
+	var ReviewStore = __webpack_require__(251);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
 
 	  getInitialState: function () {
 	    var currentUser = CurrentUserStore.currentUser();
+	    var reviews = ReviewStore.findByUserId(currentUser.id);
+
 	    return { currentUser: currentUser,
-	      reviews: currentUser.reviews,
+	      reviews: reviews,
 	      lists: currentUser.lists };
 	  },
 
 	  _onChange: function () {
 	    var currentUser = CurrentUserStore.currentUser();
+	    var reviews = ReviewStore.findByUserId(currentUser.id);
 	    this.setState({ currentUser: currentUser,
-	      reviews: currentUser.reviews,
+	      reviews: reviews,
 	      lists: currentUser.lists });
 	  },
 
@@ -32772,6 +32789,8 @@
 	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
 	    ApiUtil.fetchAllLists();
 	    SessionsApiUtil.fetchCurrentUser();
+	    ApiUtil.fetchAllReviews();
+	    debugger;
 	  },
 
 	  componentWillUnmount: function () {
@@ -32779,15 +32798,15 @@
 	  },
 
 	  render: function () {
-	    if (this.state.currentUser === "undefined") {
+	    if (this.state.currentUser === "undefined" || this.state.reviews === "undefined") {
 	      return React.createElement('div', null);
 	    }
 
 	    var ediblesEaten;
 	    var numReviews;
-	    if (this.state.currentUser) {
+	    if (this.state.currentUser && this.state.reviews) {
 	      numEdiblesEaten = this.state.currentUser.lists[1].list_items.length;
-	      numReviews = this.state.currentUser.reviews.length;
+	      numReviews = this.state.reviews.length;
 	    }
 
 	    var ownerName = this.state.currentUser.name + "'s";
@@ -32807,7 +32826,7 @@
 	      );
 	    });
 
-	    var reviews = this.state.currentUser.reviews.reverse().map(function (review) {
+	    var reviews = this.state.reviews.reverse().map(function (review) {
 	      return React.createElement(
 	        'div',
 	        { key: review.id, className: 'review' },
@@ -32826,8 +32845,8 @@
 	            ' ',
 	            React.createElement(
 	              'a',
-	              { className: 'profile-edible-link', href: "#/edibles/" + review.edible.id },
-	              review.edible.name
+	              { className: 'profile-edible-link', href: "#/edibles/" + review.edible_id },
+	              review.edible_name
 	            ),
 	            ':'
 	          ),
@@ -33187,6 +33206,7 @@
 	var React = __webpack_require__(1);
 	var UsersStore = __webpack_require__(254);
 	var UsersApiUtil = __webpack_require__(256);
+	var ApiUtil = __webpack_require__(236);
 
 	var UserShow = React.createClass({
 	  displayName: 'UserShow',
@@ -33201,9 +33221,11 @@
 
 	  getStateFromStore: function () {
 	    var user = UsersStore.findUserById(parseInt(this.props.params.id));
+	    var reviews = ReviewStore.findByUserId(user.id);
+	    debugger;
 	    return {
 	      user: user,
-	      reviews: user.reviews,
+	      reviews: reviews,
 	      lists: user.lists
 	    };
 	  },
@@ -33212,14 +33234,22 @@
 	    this.setState(this.getStateFromStore());
 	  },
 
+	  _onReviewChange: function () {
+	    this.setState(this.getStateFromStore());
+	  },
+
 	  componentDidMount: function () {
 	    window.scrollTo(0, 0);
-	    this.listener = UsersStore.addListener(this._onChange);
+	    this.userListener = UsersStore.addListener(this._onChange);
+	    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
 	    UsersApiUtil.fetchUser(this.props.params.id);
+	    ApiUtil.fetchAllReviews();
+	    debugger;
 	  },
 
 	  componentWillUnmount: function () {
-	    this.listener.remove();
+	    this.userListener.remove();
+	    this.reviewListener.remove();
 	  },
 
 	  render: function () {
@@ -33237,9 +33267,9 @@
 	    var profilePicture;
 	    var currentDate;
 
-	    if (this.state.user) {
+	    if (this.state.user && this.state.reviews) {
 	      numEdiblesEaten = this.state.user.lists[1].list_items.length;
-	      numReviews = this.state.user.reviews.length;
+	      numReviews = this.state.reviews.length;
 	      ownerName = this.state.user.name + "'s";
 
 	      lists = this.state.user.lists.map(function (list) {
@@ -33253,7 +33283,7 @@
 	        );
 	      });
 
-	      reviews = this.state.user.reviews.reverse().map(function (review) {
+	      reviews = this.state.reviews.reverse().map(function (review) {
 	        return React.createElement(
 	          'div',
 	          { key: review.id, className: 'review' },
@@ -33272,8 +33302,8 @@
 	              ' ',
 	              React.createElement(
 	                'a',
-	                { className: 'profile-edible-link', href: "#/edibles/" + review.edible.id },
-	                review.edible.name
+	                { className: 'profile-edible-link', href: "#/edibles/" + review.edible_id },
+	                review.edible_name
 	              ),
 	              ':'
 	            ),

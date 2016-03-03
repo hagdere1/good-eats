@@ -1,19 +1,23 @@
 var React = require('react');
 var CurrentUserStore = require('./../../stores/current_user_store');
 var SessionsApiUtil = require('./../../util/sessions_api_util');
+var ReviewStore = require('./../../stores/review');
 
 var Profile = React.createClass({
   getInitialState: function () {
     var currentUser = CurrentUserStore.currentUser();
+    var reviews = ReviewStore.findByUserId(currentUser.id);
+
     return {currentUser: currentUser,
-            reviews: currentUser.reviews,
+            reviews: reviews,
             lists: currentUser.lists};
   },
 
   _onChange: function () {
     var currentUser = CurrentUserStore.currentUser();
+    var reviews = ReviewStore.findByUserId(currentUser.id);
     this.setState({currentUser: currentUser,
-                   reviews: currentUser.reviews,
+                   reviews: reviews,
                    lists: currentUser.lists});
   },
 
@@ -21,6 +25,8 @@ var Profile = React.createClass({
     this.currentUserListener = CurrentUserStore.addListener(this._onChange);
     ApiUtil.fetchAllLists();
     SessionsApiUtil.fetchCurrentUser();
+    ApiUtil.fetchAllReviews();
+    debugger
   },
 
   componentWillUnmount: function () {
@@ -28,15 +34,15 @@ var Profile = React.createClass({
   },
 
   render: function () {
-    if (this.state.currentUser === "undefined") {
+    if (this.state.currentUser === "undefined" || this.state.reviews === "undefined") {
       return <div></div>;
     }
 
     var ediblesEaten;
     var numReviews;
-    if (this.state.currentUser) {
+    if (this.state.currentUser && this.state.reviews) {
       numEdiblesEaten = this.state.currentUser.lists[1].list_items.length;
-      numReviews = this.state.currentUser.reviews.length;
+      numReviews = this.state.reviews.length;
     }
 
     var ownerName = this.state.currentUser.name + "'s";
@@ -54,11 +60,11 @@ var Profile = React.createClass({
     );
 
     var reviews = (
-      this.state.currentUser.reviews.reverse().map(function (review) {
+      this.state.reviews.reverse().map(function (review) {
         return (
           <div key={review.id} className="review">
             <div className="review-name-date group">
-              <p className="review-name"><span className="profile-review-name">{review.user} reviewed</span> <a className="profile-edible-link" href={"#/edibles/" + review.edible.id}>{review.edible.name}</a>:</p>
+              <p className="review-name"><span className="profile-review-name">{review.user} reviewed</span> <a className="profile-edible-link" href={"#/edibles/" + review.edible_id}>{review.edible_name}</a>:</p>
               <p className="review-date">{review.created_at}</p>
             </div>
 

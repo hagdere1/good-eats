@@ -1,6 +1,7 @@
 var React = require('react');
 var UsersStore = require('../../stores/users_store');
 var UsersApiUtil = require('../../util/users_api_util');
+var ApiUtil = require('../../util/api_util');
 
 var UserShow = React.createClass({
   getInitialState: function() {
@@ -13,25 +14,35 @@ var UserShow = React.createClass({
 
   getStateFromStore: function () {
     var user = UsersStore.findUserById(parseInt(this.props.params.id))
+    var reviews = ReviewStore.findByUserId(user.id);
+    debugger
     return {
       user: user,
-      reviews: user.reviews,
+      reviews: reviews,
       lists: user.lists
     };
   },
 
-  _onChange: function() {
+  _onChange: function () {
+    this.setState(this.getStateFromStore());
+  },
+
+  _onReviewChange: function () {
     this.setState(this.getStateFromStore());
   },
 
   componentDidMount: function() {
     window.scrollTo(0, 0);
-    this.listener = UsersStore.addListener(this._onChange);
+    this.userListener = UsersStore.addListener(this._onChange);
+    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
     UsersApiUtil.fetchUser(this.props.params.id);
+    ApiUtil.fetchAllReviews();
+    debugger
   },
 
   componentWillUnmount: function() {
-    this.listener.remove();
+    this.userListener.remove();
+    this.reviewListener.remove();
   },
 
   render: function() {
@@ -51,9 +62,9 @@ var UserShow = React.createClass({
     var profilePicture;
     var currentDate;
 
-    if (this.state.user) {
+    if (this.state.user && this.state.reviews) {
       numEdiblesEaten = this.state.user.lists[1].list_items.length;
-      numReviews = this.state.user.reviews.length;
+      numReviews = this.state.reviews.length;
       ownerName = this.state.user.name + "'s";
 
       lists = (
@@ -67,11 +78,11 @@ var UserShow = React.createClass({
       );
 
       reviews = (
-        this.state.user.reviews.reverse().map(function (review) {
+        this.state.reviews.reverse().map(function (review) {
           return (
             <div key={review.id} className="review">
               <div className="review-name-date group">
-                <p className="review-name"><span className="profile-review-name">{review.user} reviewed</span> <a className="profile-edible-link" href={"#/edibles/" + review.edible.id}>{review.edible.name}</a>:</p>
+                <p className="review-name"><span className="profile-review-name">{review.user} reviewed</span> <a className="profile-edible-link" href={"#/edibles/" + review.edible_id}>{review.edible_name}</a>:</p>
                 <p className="review-date">{review.created_at}</p>
               </div>
 

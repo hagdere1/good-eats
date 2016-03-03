@@ -51,6 +51,10 @@
   cursor: pointer;
 }
 
+td.list-index-item-title-selected {
+  font-weight: bold;
+}
+
 td.list-index-item-title:hover {
   text-decoration: underline;
 }
