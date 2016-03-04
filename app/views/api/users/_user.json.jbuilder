@@ -6,6 +6,7 @@ json.list_items do
   json.array!(user.list_items) do |list_item|
     json.list_title list_item.list.title
     json.list_id list_item.list_id
+    json.id list_item.id
     json.edible_id list_item.edible_id
   end
 end
