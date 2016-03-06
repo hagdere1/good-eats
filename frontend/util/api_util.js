@@ -80,8 +80,6 @@ ApiUtil = {
       url: "/api/reviews/",
       success: function (reviews) {
         ApiActions.receiveAllReviews(reviews);
-        console.log("successfully retrieved reviews");
-        console.log(reviews.length);
       }
     });
   },

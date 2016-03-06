@@ -21,11 +21,20 @@ var Profile = React.createClass({
                    lists: currentUser.lists});
   },
 
+  _onReviewChange: function () {
+    var currentUser = CurrentUserStore.currentUser();
+    var reviews = ReviewStore.findByUserId(currentUser.id);
+    this.setState({currentUser: currentUser,
+                   reviews: reviews,
+                   lists: currentUser.lists});
+  },
+
   componentDidMount: function () {
     this.currentUserListener = CurrentUserStore.addListener(this._onChange);
     ApiUtil.fetchAllLists();
     SessionsApiUtil.fetchCurrentUser();
     ApiUtil.fetchAllReviews();
+    this.reviewListener = ReviewStore.addListener(this._onReviewChange);
   },
 
   componentWillUnmount: function () {
