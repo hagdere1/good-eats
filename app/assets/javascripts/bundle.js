@@ -32312,7 +32312,6 @@
 	  componentDidMount: function () {
 	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
 	    this.listListener = ListStore.addListener(this._onChange);
-	    ApiUtil.fetchAllLists();
 	  },
 
 	  componentWillUnmount: function () {
