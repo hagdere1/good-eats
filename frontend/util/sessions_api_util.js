@@ -33,6 +33,7 @@ var SessionsApiUtil = {
       success: function (currentUser) {
         CurrentUserActions.receiveCurrentUser(currentUser);
         cb && cb(currentUser);
+        console.log("Fetched current user");
       }
     });
   }

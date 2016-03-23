@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var ApiUtil = require('./../../util/api_util');
 var CurrentUserStore = require('./../../stores/current_user_store');
 var SessionsApiUtil = require('./../../util/sessions_api_util');
+var ListStore = require('./../../stores/list');
 
 var Edible = React.createClass({
 
@@ -11,7 +12,7 @@ var Edible = React.createClass({
   },
 
   getInitialValues: function () {
-    this.currentUser = CurrentUserStore.currentUser();
+    this.currentUser = this.props.currentUser;
     var currentListId;
     var currentListTitle;
     var currentListItem;
@@ -73,14 +74,9 @@ var Edible = React.createClass({
     this.setState(state);
   },
 
-  _onCurrentUserChange: function () {
-    var state = this.getInitialValues();
-    this.setState(state);
-  },
-
   componentDidMount: function () {
-    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
-    SessionsApiUtil.fetchCurrentUser();
+    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+    this.listListener = ListStore.addListener(this._onChange);
     ApiUtil.fetchAllLists();
   },
 
@@ -92,7 +88,7 @@ var Edible = React.createClass({
 
     var lists = [];
 
-    if (this.state.userHasListItem) {
+    if (this.state.userHasListItem && this.currentUser) {
       for (i = 0; i < this.currentUser.lists.length; i++) {
         if (this.currentUser.lists[i].id != this.state.currentListId) {
           var list = this.currentUser.lists[i];

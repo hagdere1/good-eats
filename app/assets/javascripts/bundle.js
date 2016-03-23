@@ -31400,6 +31400,7 @@
 	      success: function (currentUser) {
 	        CurrentUserActions.receiveCurrentUser(currentUser);
 	        cb && cb(currentUser);
+	        console.log("Fetched current user");
 	      }
 	    });
 	  }
@@ -32122,31 +32123,42 @@
 	var EdibleStore = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(236);
 	var Edible = __webpack_require__(248);
+	var SessionsApiUtil = __webpack_require__(234);
+	var CurrentUserStore = __webpack_require__(232);
 
 	var EdiblesIndex = React.createClass({
 	  displayName: 'EdiblesIndex',
 
 	  getInitialState: function () {
-	    return { edibles: EdibleStore.all() };
+	    return { edibles: EdibleStore.all(),
+	      currentUser: CurrentUserStore.currentUser() };
 	  },
 
 	  _onChange: function () {
 	    this.setState({ edibles: EdibleStore.all() });
 	  },
 
+	  _onCurrentUserChange: function () {
+	    this.setState({ currentUser: CurrentUserStore.currentUser() });
+	  },
+
 	  componentDidMount: function () {
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
+	    SessionsApiUtil.fetchCurrentUser();
 	    ApiUtil.fetchAllEdibles();
 	  },
 
 	  componentWillUnmount: function () {
 	    this.edibleListener.remove();
+	    this.currentUserListener.remove();
 	  },
 
 	  render: function () {
+
 	    var indexItems = this.state.edibles.map(function (edible) {
-	      return React.createElement(Edible, { key: edible.id, edible: edible });
-	    });
+	      return React.createElement(Edible, { key: edible.id, edible: edible, currentUser: this.state.currentUser });
+	    }.bind(this));
 
 	    return React.createElement(
 	      'div',
@@ -32226,6 +32238,7 @@
 	var ApiUtil = __webpack_require__(236);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
+	var ListStore = __webpack_require__(209);
 
 	var Edible = React.createClass({
 	  displayName: 'Edible',
@@ -32236,7 +32249,7 @@
 	  },
 
 	  getInitialValues: function () {
-	    this.currentUser = CurrentUserStore.currentUser();
+	    this.currentUser = this.props.currentUser;
 	    var currentListId;
 	    var currentListTitle;
 	    var currentListItem;
@@ -32297,14 +32310,9 @@
 	    this.setState(state);
 	  },
 
-	  _onCurrentUserChange: function () {
-	    var state = this.getInitialValues();
-	    this.setState(state);
-	  },
-
 	  componentDidMount: function () {
-	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
-	    SessionsApiUtil.fetchCurrentUser();
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	    this.listListener = ListStore.addListener(this._onChange);
 	    ApiUtil.fetchAllLists();
 	  },
 
@@ -32316,7 +32324,7 @@
 
 	    var lists = [];
 
-	    if (this.state.userHasListItem) {
+	    if (this.state.userHasListItem && this.currentUser) {
 	      for (i = 0; i < this.currentUser.lists.length; i++) {
 	        if (this.currentUser.lists[i].id != this.state.currentListId) {
 	          var list = this.currentUser.lists[i];
