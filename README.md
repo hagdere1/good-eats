@@ -3,7 +3,7 @@
 [Visit]
 [Visit]: <http://good-eats.net>
 
-![GoodEats](screenshots/edible_show_page.png "GoodEats")
+[![GoodEats](screenshots/edible_show_page.png "GoodEats")](http://good-eats.net/)
 
 ## Description
 
