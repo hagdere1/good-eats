@@ -41,14 +41,14 @@ var Header = React.createClass({
           <nav className="root-header-nav group">
 
             <h1 className="root-header-logo group">
-              <a href="/">
+              <a href="#/">
                 <div className="root-header-logo-good">good</div>
                 <div className="root-header-logo-eats">eats</div>
               </a>
             </h1>
 
             <ul className="root-header-list group">
-              <li><a href="/">Explore</a></li>
+              <li><a href="#/">Explore</a></li>
               <li><a href="#/lists/">My Lists</a></li>
             </ul>
 
@@ -68,7 +68,7 @@ var Header = React.createClass({
           <nav className="root-header-nav group">
 
             <h1 className="root-header-logo group">
-              <a href="/">
+              <a href="#/">
                 <div className="root-header-logo-good">good</div>
                 <div className="root-header-logo-eats">eats</div>
               </a>

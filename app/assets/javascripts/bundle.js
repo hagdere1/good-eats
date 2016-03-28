@@ -34010,7 +34010,7 @@
 	            { className: 'root-header-logo group' },
 	            React.createElement(
 	              'a',
-	              { href: '/' },
+	              { href: '#/' },
 	              React.createElement(
 	                'div',
 	                { className: 'root-header-logo-good' },
@@ -34031,7 +34031,7 @@
 	              null,
 	              React.createElement(
 	                'a',
-	                { href: '/' },
+	                { href: '#/' },
 	                'Explore'
 	              )
 	            ),
@@ -34088,7 +34088,7 @@
 	            { className: 'root-header-logo group' },
 	            React.createElement(
 	              'a',
-	              { href: '/' },
+	              { href: '#/' },
 	              React.createElement(
 	                'div',
 	                { className: 'root-header-logo-good' },
