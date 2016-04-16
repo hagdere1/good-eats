@@ -33,7 +33,6 @@ ListStore.destroyList = function (id) {
 };
 
 ListStore.destroyListItem = function (listItem) {
-
   var listItems = _lists[listItem.list_id].list_items;
   for (var i = 0; i < listItems.length; i++) {
     if (_lists[listItem.list_id].list_items[i].id === listItem.id) {

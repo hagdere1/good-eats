@@ -51,9 +51,9 @@ ApiUtil = {
     });
   },
 
-  destroyListItem: function (id, cb) {
+  destroyListItem: function (listItem, cb) {
     $.ajax({
-      url: "api/list_items/" + id,
+      url: "api/list_items/" + listItem.id,
       method: "DELETE",
       success: function (listItem) {
         SessionsApiUtil.fetchCurrentUser();

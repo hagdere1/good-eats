@@ -7,19 +7,17 @@ var UserShow = React.createClass({
   getInitialState: function() {
     return {
       user: null,
-      reviews: [],
-      lists: []
+      reviews: []
     };
   },
 
   getStateFromStore: function () {
     var user = UsersStore.findUserById(parseInt(this.props.params.id))
     var reviews = ReviewStore.findByUserId(user.id);
-    debugger
+
     return {
       user: user,
       reviews: reviews,
-      lists: user.lists
     };
   },
 

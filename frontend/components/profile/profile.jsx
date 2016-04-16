@@ -9,24 +9,21 @@ var Profile = React.createClass({
     var reviews = ReviewStore.findByUserId(currentUser.id);
 
     return {currentUser: currentUser,
-            reviews: reviews,
-            lists: currentUser.lists};
+            reviews: reviews };
   },
 
   _onChange: function () {
     var currentUser = CurrentUserStore.currentUser();
     var reviews = ReviewStore.findByUserId(currentUser.id);
     this.setState({currentUser: currentUser,
-                   reviews: reviews,
-                   lists: currentUser.lists});
+                   reviews: reviews });
   },
 
   _onReviewChange: function () {
     var currentUser = CurrentUserStore.currentUser();
     var reviews = ReviewStore.findByUserId(currentUser.id);
     this.setState({currentUser: currentUser,
-                   reviews: reviews,
-                   lists: currentUser.lists});
+                   reviews: reviews });
   },
 
   componentDidMount: function () {
@@ -39,6 +36,7 @@ var Profile = React.createClass({
 
   componentWillUnmount: function () {
     this.currentUserListener.remove();
+    this.reviewListener.remove();
   },
 
   render: function () {

@@ -5,7 +5,10 @@ var ReviewForm = require('./review_form');
 
 var ItemsTable = React.createClass({
   getInitialState: function () {
-    return this.getListItems();
+    return { edibles: [],
+             reviewFormShowing: false,
+             reviewEdible: null,
+             list: null};
   },
 
   getListItems: function () {
@@ -37,7 +40,7 @@ var ItemsTable = React.createClass({
 
   destroyListItem: function (event) {
     event.preventDefault();
-    ApiUtil.destroyListItem(event.currentTarget.id);
+    ApiUtil.destroyListItem(event.currentTarget);
     ApiUtil.fetchSingleList(parseInt(this.props.listId));
     this.setState(this.getListItems());
   },

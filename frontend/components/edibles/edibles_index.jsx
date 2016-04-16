@@ -7,8 +7,8 @@ var CurrentUserStore = require('./../../stores/current_user_store');
 
 var EdiblesIndex = React.createClass({
   getInitialState: function () {
-    return { edibles: EdibleStore.all(),
-             currentUser: CurrentUserStore.currentUser() };
+    return { edibles: [],
+             currentUser: null };
   },
 
   _onChange: function () {
