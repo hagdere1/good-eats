@@ -54,7 +54,9 @@ var Header = React.createClass({
 
             <ul className="root-header-icons group">
               <li><a href="#/profile"><i className="fa fa-user fa-1.5x"></i></a></li>
-              <li>Logged in as {this.state.currentUser.name}</li>
+              <li>Logged in as <a href="#/profile" className="root-header-user-name">
+                {this.state.currentUser.name}</a>
+              </li>
               <li><button className="sign-out-button" onClick={this.logout}>Sign out</button></li>
             </ul>
           </nav>

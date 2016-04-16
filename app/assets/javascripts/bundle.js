@@ -33791,7 +33791,11 @@
 	              'li',
 	              null,
 	              'Logged in as ',
-	              this.state.currentUser.name
+	              React.createElement(
+	                'a',
+	                { href: '#/profile', className: 'root-header-user-name' },
+	                this.state.currentUser.name
+	              )
 	            ),
 	            React.createElement(
 	              'li',
