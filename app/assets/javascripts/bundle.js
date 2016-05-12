@@ -53,20 +53,20 @@
 	var ListsIndex = __webpack_require__(208);
 	var EdiblesIndex = __webpack_require__(246);
 	var Edible = __webpack_require__(248);
-	var EdibleShow = __webpack_require__(249);
+	var EdibleShow = __webpack_require__(250);
 	var ListShow = __webpack_require__(242);
-	var ReviewIndex = __webpack_require__(250);
-	var Profile = __webpack_require__(252);
+	var ReviewIndex = __webpack_require__(251);
+	var Profile = __webpack_require__(253);
 
 	// React auth
-	var UsersIndex = __webpack_require__(253);
-	var UserShow = __webpack_require__(258);
-	var SessionForm = __webpack_require__(259);
-	var UserForm = __webpack_require__(260);
+	var UsersIndex = __webpack_require__(254);
+	var UserShow = __webpack_require__(259);
+	var SessionForm = __webpack_require__(260);
+	var UserForm = __webpack_require__(261);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
 
-	var App = __webpack_require__(265);
+	var App = __webpack_require__(266);
 
 	var routes = React.createElement(
 	  Route,
@@ -31686,6 +31686,7 @@
 	  destroyList: function (event) {
 	    event.preventDefault();
 	    ApiUtil.destroyList(this.props.list.id);
+	    this.history.pushState(null, '/lists/');
 	  },
 
 	  render: function () {
@@ -32236,7 +32237,7 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(236);
-	var Button = __webpack_require__(268);
+	var Button = __webpack_require__(249);
 
 	var Edible = React.createClass({
 	  displayName: 'Edible',
@@ -32269,9 +32270,157 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
+	var ListStore = __webpack_require__(209);
+	var ApiUtil = __webpack_require__(236);
+
+	var Button = React.createClass({
+	  displayName: 'Button',
+
+	  getInitialState: function () {
+	    return { currentUser: null,
+	      currentListItem: null };
+	  },
+
+	  componentDidMount: function () {
+	    SessionsApiUtil.fetchCurrentUser();
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
+	    this.listListener = ListStore.addListener(this._onChange);
+	  },
+
+	  componentWillUnmount: function () {
+	    this.currentUserListener.remove();
+	    this.listListener.remove();
+	  },
+
+	  _onChange: function () {
+	    this.setState(this.getButtonState());
+	  },
+
+	  getButtonState: function () {
+	    var currentUser = CurrentUserStore.currentUser();
+	    var listItems = currentUser.list_items;
+	    var currentListItem = null;
+
+	    listItems.forEach(function (listItem) {
+	      if (listItem.edible_id === this.props.edibleId) {
+	        currentListItem = listItem;
+	      }
+	    }.bind(this));
+
+	    return { currentUser: CurrentUserStore.currentUser(),
+	      currentListItem: currentListItem };
+	  },
+
+	  handleButtonClick: function () {
+	    if (this.state.currentListItem) {
+	      this.removeEdible();
+	    } else {
+	      this.addEdible();
+	    }
+	  },
+
+	  removeEdible: function () {
+	    ApiUtil.fetchSingleList(this.state.currentListItem.list_id);
+	    ApiUtil.destroyListItem(this.state.currentListItem);
+	  },
+
+	  addEdible: function (list) {
+	    listItem = {};
+	    listItem.edible_id = this.props.edibleId;
+	    if (list) {
+	      listItem.list_id = list.id;
+	    } else {
+	      listItem.list_id = this.state.currentUser.lists[0].id;
+	    }
+	    ApiUtil.createListItem(listItem);
+	  },
+
+	  changeList: function (newList) {
+	    var listItem = this.state.currentListItem;
+	    listItem.list_id = newList.id;
+	    ApiUtil.updateListItem(listItem);
+	  },
+
+	  render: function () {
+	    var buttonClass;
+	    var buttonContent;
+	    if (this.state.currentListItem) {
+	      buttonClass = "edible-list-item-button-selected";
+	      buttonContent = React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'span',
+	          { className: 'button-checkmark' },
+	          '✓'
+	        ),
+	        React.createElement(
+	          'span',
+	          null,
+	          this.state.currentListItem.list_title
+	        )
+	      );
+	    } else {
+	      buttonClass = "edible-list-item-button";
+	      buttonContent = "Want to Try";
+	    }
+
+	    var lists = [];
+	    if (this.state.currentUser && this.state.currentListItem) {
+	      for (var i = 0; i < this.state.currentUser.lists.length; i++) {
+	        if (this.state.currentListItem.list_id != this.state.currentUser.lists[i].id) {
+	          var list = this.state.currentUser.lists[i];
+	          lists.push(React.createElement(
+	            'li',
+	            { key: list.id, onClick: this.changeList.bind(this, list) },
+	            list.title
+	          ));
+	        }
+	      }
+	    } else if (this.state.currentUser) {
+	      lists = this.state.currentUser.lists.map(function (list) {
+	        return React.createElement(
+	          'li',
+	          { key: list.id, onClick: this.addEdible.bind(this, list) },
+	          list.title
+	        );
+	      }.bind(this));
+	    }
+
+	    return React.createElement(
+	      'div',
+	      { className: 'edible-show-buttons group' },
+	      React.createElement(
+	        'div',
+	        { className: buttonClass, onClick: this.handleButtonClick },
+	        buttonContent
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'edible-list-item-dropdown' },
+	        '▼',
+	        React.createElement(
+	          'ul',
+	          { className: 'edible-dropdown-lists' },
+	          lists
+	        )
+	      )
+	    );
+	  }
+	});
+
+	module.exports = Button;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(236);
-	var Button = __webpack_require__(268);
+	var Button = __webpack_require__(249);
 
 	var EdibleShow = React.createClass({
 	  displayName: 'EdibleShow',
@@ -32355,12 +32504,12 @@
 	module.exports = EdibleShow;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(236);
-	var ReviewStore = __webpack_require__(251);
+	var ReviewStore = __webpack_require__(252);
 
 	var ReviewIndex = React.createClass({
 	  displayName: 'ReviewIndex',
@@ -32463,7 +32612,7 @@
 	module.exports = ReviewIndex;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
@@ -32526,13 +32675,13 @@
 	module.exports = ReviewStore;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
-	var ReviewStore = __webpack_require__(251);
+	var ReviewStore = __webpack_require__(252);
 
 	var Profile = React.createClass({
 	  displayName: 'Profile',
@@ -32784,12 +32933,12 @@
 	module.exports = Profile;
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(254);
-	var UsersApiUtil = __webpack_require__(256);
+	var UsersStore = __webpack_require__(255);
+	var UsersApiUtil = __webpack_require__(257);
 
 	var UsersIndex = React.createClass({
 	  displayName: 'UsersIndex',
@@ -32844,12 +32993,12 @@
 	module.exports = UsersIndex;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(210).Store;
 	var Dispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(255);
+	var UserConstants = __webpack_require__(256);
 
 	var _users = [];
 	var CHANGE_EVENT = "change";
@@ -32892,7 +33041,7 @@
 	module.exports = UsersStore;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports) {
 
 	var UserConstants = {
@@ -32903,10 +33052,10 @@
 	module.exports = UserConstants;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var UserActions = __webpack_require__(257);
+	var UserActions = __webpack_require__(258);
 	var CurrentUserActions = __webpack_require__(235);
 
 	var UsersApiUtil = {
@@ -32950,11 +33099,11 @@
 	module.exports = UsersApiUtil;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Dispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(255);
+	var UserConstants = __webpack_require__(256);
 
 	var UserActions = {
 	  receiveUsers: function (users) {
@@ -32975,12 +33124,12 @@
 	module.exports = UserActions;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersStore = __webpack_require__(254);
-	var UsersApiUtil = __webpack_require__(256);
+	var UsersStore = __webpack_require__(255);
+	var UsersApiUtil = __webpack_require__(257);
 	var ApiUtil = __webpack_require__(236);
 
 	var UserShow = React.createClass({
@@ -33239,7 +33388,7 @@
 	module.exports = UserShow;
 
 /***/ },
-/* 259 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33314,13 +33463,13 @@
 	module.exports = SessionForm;
 
 /***/ },
-/* 260 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UsersApiUtil = __webpack_require__(256);
+	var UsersApiUtil = __webpack_require__(257);
 	var History = __webpack_require__(159).History;
-	var LinkedStateMixin = __webpack_require__(261);
+	var LinkedStateMixin = __webpack_require__(262);
 	var SessionsApiUtil = __webpack_require__(234);
 
 	var UserForm = React.createClass({
@@ -33413,13 +33562,13 @@
 	module.exports = UserForm;
 
 /***/ },
-/* 261 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(262);
+	module.exports = __webpack_require__(263);
 
 /***/ },
-/* 262 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33436,8 +33585,8 @@
 
 	'use strict';
 
-	var ReactLink = __webpack_require__(263);
-	var ReactStateSetters = __webpack_require__(264);
+	var ReactLink = __webpack_require__(264);
+	var ReactStateSetters = __webpack_require__(265);
 
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -33460,7 +33609,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -33534,7 +33683,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 264 */
+/* 265 */
 /***/ function(module, exports) {
 
 	/**
@@ -33643,12 +33792,12 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 265 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var Header = __webpack_require__(266);
-	var Footer = __webpack_require__(267);
+	var Header = __webpack_require__(267);
+	var Footer = __webpack_require__(268);
 	var SessionsApiUtil = __webpack_require__(234);
 	var CurrentUserStore = __webpack_require__(232);
 
@@ -33686,7 +33835,7 @@
 	module.exports = App;
 
 /***/ },
-/* 266 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33866,7 +34015,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 267 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33916,154 +34065,6 @@
 	});
 
 	module.exports = Footer;
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var CurrentUserStore = __webpack_require__(232);
-	var SessionsApiUtil = __webpack_require__(234);
-	var ListStore = __webpack_require__(209);
-	var ApiUtil = __webpack_require__(236);
-
-	var Button = React.createClass({
-	  displayName: 'Button',
-
-	  getInitialState: function () {
-	    return { currentUser: null,
-	      currentListItem: null };
-	  },
-
-	  componentDidMount: function () {
-	    SessionsApiUtil.fetchCurrentUser();
-	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
-	    this.listListener = ListStore.addListener(this._onChange);
-	  },
-
-	  componentWillUnmount: function () {
-	    this.currentUserListener.remove();
-	    this.listListener.remove();
-	  },
-
-	  _onChange: function () {
-	    this.setState(this.getButtonState());
-	  },
-
-	  getButtonState: function () {
-	    var currentUser = CurrentUserStore.currentUser();
-	    var listItems = currentUser.list_items;
-	    var currentListItem = null;
-
-	    listItems.forEach(function (listItem) {
-	      if (listItem.edible_id === this.props.edibleId) {
-	        currentListItem = listItem;
-	      }
-	    }.bind(this));
-
-	    return { currentUser: CurrentUserStore.currentUser(),
-	      currentListItem: currentListItem };
-	  },
-
-	  handleButtonClick: function () {
-	    if (this.state.currentListItem) {
-	      this.removeEdible();
-	    } else {
-	      this.addEdible();
-	    }
-	  },
-
-	  removeEdible: function () {
-	    ApiUtil.fetchSingleList(this.state.currentListItem.list_id);
-	    ApiUtil.destroyListItem(this.state.currentListItem);
-	  },
-
-	  addEdible: function (list) {
-	    listItem = {};
-	    listItem.edible_id = this.props.edibleId;
-	    if (list) {
-	      listItem.list_id = list.id;
-	    } else {
-	      listItem.list_id = this.state.currentUser.lists[0].id;
-	    }
-	    ApiUtil.createListItem(listItem);
-	  },
-
-	  changeList: function (newList) {
-	    var listItem = this.state.currentListItem;
-	    listItem.list_id = newList.id;
-	    ApiUtil.updateListItem(listItem);
-	  },
-
-	  render: function () {
-	    var buttonClass;
-	    var buttonContent;
-	    if (this.state.currentListItem) {
-	      buttonClass = "edible-list-item-button-selected";
-	      buttonContent = React.createElement(
-	        'div',
-	        null,
-	        React.createElement(
-	          'span',
-	          { className: 'button-checkmark' },
-	          '✓'
-	        ),
-	        React.createElement(
-	          'span',
-	          null,
-	          this.state.currentListItem.list_title
-	        )
-	      );
-	    } else {
-	      buttonClass = "edible-list-item-button";
-	      buttonContent = "Want to Try";
-	    }
-
-	    var lists = [];
-	    if (this.state.currentUser && this.state.currentListItem) {
-	      for (var i = 0; i < this.state.currentUser.lists.length; i++) {
-	        if (this.state.currentListItem.list_id != this.state.currentUser.lists[i].id) {
-	          var list = this.state.currentUser.lists[i];
-	          lists.push(React.createElement(
-	            'li',
-	            { key: list.id, onClick: this.changeList.bind(this, list) },
-	            list.title
-	          ));
-	        }
-	      }
-	    } else if (this.state.currentUser) {
-	      lists = this.state.currentUser.lists.map(function (list) {
-	        return React.createElement(
-	          'li',
-	          { key: list.id, onClick: this.addEdible.bind(this, list) },
-	          list.title
-	        );
-	      }.bind(this));
-	    }
-
-	    return React.createElement(
-	      'div',
-	      { className: 'edible-show-buttons group' },
-	      React.createElement(
-	        'div',
-	        { className: buttonClass, onClick: this.handleButtonClick },
-	        buttonContent
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'edible-list-item-dropdown' },
-	        '▼',
-	        React.createElement(
-	          'ul',
-	          { className: 'edible-dropdown-lists' },
-	          lists
-	        )
-	      )
-	    );
-	  }
-	});
-
-	module.exports = Button;
 
 /***/ }
 /******/ ]);

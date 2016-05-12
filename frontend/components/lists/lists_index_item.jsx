@@ -11,6 +11,7 @@ var ListsIndexItem = React.createClass({
   destroyList: function (event) {
     event.preventDefault();
     ApiUtil.destroyList(this.props.list.id);
+    this.history.pushState(null, '/lists/');
   },
 
   render: function () {
