@@ -24372,7 +24372,8 @@
 	  displayName: 'ListsIndex',
 
 	  getInitialState: function () {
-	    return { lists: ListStore.all() };
+	    return { lists: ListStore.all(),
+	      focused: null };
 	  },
 
 	  _onChange: function () {
@@ -24389,7 +24390,13 @@
 	    this.listListener.remove();
 	  },
 
+	  selectList: function (index) {
+	    this.setState({ focused: index });
+	  },
+
 	  render: function () {
+	    var that = this;
+
 	    return React.createElement(
 	      'div',
 	      { className: 'lists-index group' },
@@ -24412,8 +24419,16 @@
 	          React.createElement(
 	            'tbody',
 	            null,
-	            this.state.lists.map(function (list) {
-	              return React.createElement(ListsIndexItem, { key: list.id, list: list });
+	            this.state.lists.map(function (list, idx) {
+	              var style = "list-index-item-title";
+	              if (idx === that.state.focused) {
+	                style = "list-index-item-title-selected";
+	              }
+	              return React.createElement(ListsIndexItem, { className: style,
+	                key: list.id,
+	                list: list,
+	                selectList: that.selectList,
+	                index: idx });
 	            })
 	          )
 	        ),
@@ -31679,6 +31694,11 @@
 
 	  mixins: [History],
 
+	  handleClick: function (index) {
+	    this.props.selectList(this.props.index);
+	    this.showList();
+	  },
+
 	  showList: function () {
 	    this.history.pushState(null, '/lists/' + this.props.list.id, {});
 	  },
@@ -31706,7 +31726,7 @@
 	      { className: 'lists-index-item' },
 	      React.createElement(
 	        'td',
-	        { className: 'list-index-item-title', onClick: this.showList },
+	        { className: this.props.className, onClick: this.handleClick },
 	        this.props.list.title
 	      ),
 	      deleteButton

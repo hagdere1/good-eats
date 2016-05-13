@@ -9,7 +9,8 @@ var ListForm = require('./list_form');
 
 var ListsIndex = React.createClass({
   getInitialState: function () {
-    return { lists: ListStore.all()};
+    return { lists: ListStore.all(),
+             focused: null };
   },
 
   _onChange: function () {
@@ -26,19 +27,31 @@ var ListsIndex = React.createClass({
     this.listListener.remove();
   },
 
+  selectList: function (index) {
+    this.setState({ focused: index });
+  },
+
   render: function () {
+    var that = this;
+
     return (
-
       <div className="lists-index group">
-
         <h1 className="heading-main">My Edibles</h1>
 
         <div className="lists-index-nav">
           <h3 className="heading-sub-main">Lists</h3>
           <table className="lists-index">
             <tbody>
-              {this.state.lists.map(function (list) {
-                return <ListsIndexItem key={list.id} list={list} />;
+              {this.state.lists.map(function (list, idx) {
+                var style = "list-index-item-title";
+                if (idx === that.state.focused) {
+                  style = "list-index-item-title-selected";
+                }
+                return <ListsIndexItem className={style}
+                                       key={list.id}
+                                       list={list}
+                                       selectList={that.selectList}
+                                       index={idx} />;
               })}
             </tbody>
           </table>

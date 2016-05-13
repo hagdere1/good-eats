@@ -4,6 +4,11 @@ var History = require('react-router').History;
 var ListsIndexItem = React.createClass({
   mixins: [History],
 
+  handleClick: function (index) {
+    this.props.selectList(this.props.index);
+    this.showList();
+  },
+
   showList: function () {
     this.history.pushState(null, '/lists/' + this.props.list.id, {});
   },
@@ -25,7 +30,7 @@ var ListsIndexItem = React.createClass({
 
     return (
       <tr className="lists-index-item">
-        <td className="list-index-item-title" onClick={this.showList}>{this.props.list.title}</td>
+        <td className={this.props.className} onClick={this.handleClick}>{this.props.list.title}</td>
         {deleteButton}
       </tr>
     );
