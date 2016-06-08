@@ -16,7 +16,6 @@ var SessionForm = React.createClass({
 
 
   render: function() {
-
     return (
       <div className="auth-body">
 

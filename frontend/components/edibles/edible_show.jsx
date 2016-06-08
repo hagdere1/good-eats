@@ -1,6 +1,8 @@
 var React = require('react');
 var EdibleStore = require('./../../stores/edible');
 var ApiUtil = require('./../../util/api_util');
+var CurrentUserStore = require('./../../stores/current_user_store');
+var SessionsApiUtil = require('./../../util/sessions_api_util');
 var Button = require('./button.jsx');
 
 var EdibleShow = React.createClass({
@@ -16,6 +18,7 @@ var EdibleShow = React.createClass({
   componentDidMount: function () {
     window.scrollTo(0, 0);
     this.edibleListener = EdibleStore.addListener(this._onChange);
+    SessionsApiUtil.fetchCurrentUser();
     ApiUtil.fetchSingleEdible(this.props.params.id);
   },
 
@@ -31,7 +34,7 @@ var EdibleShow = React.createClass({
         edibleDescription;
 
     if (this.state.edible) {
-      button = <Button edibleId={this.state.edible.id} />;
+      button = <Button edibleId={this.state.edible.id} currentUser={CurrentUserStore.currentUser()} />;
       edibleImage = <img className="edible-show-image" src={this.state.edible.image_url} />;
       edibleName = <h1 className="edible-show-name">{this.state.edible.name}</h1>;
       edibleCategory = <h2 className="edible-show-category">{this.state.edible.category}</h2>;

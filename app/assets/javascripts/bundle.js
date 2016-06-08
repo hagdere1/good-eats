@@ -32177,7 +32177,6 @@
 	  },
 
 	  render: function () {
-
 	    var indexItems = this.state.edibles.map(function (edible) {
 	      return React.createElement(Edible, { key: edible.id, edible: edible, currentUser: this.state.currentUser });
 	    }.bind(this));
@@ -32262,7 +32261,6 @@
 	var Edible = React.createClass({
 	  displayName: 'Edible',
 
-
 	  render: function () {
 	    var url = "#/edibles/" + this.props.edible.id;
 	    return React.createElement(
@@ -32278,7 +32276,7 @@
 	        ),
 	        React.createElement('img', { className: 'edible-list-item-image', src: this.props.edible.image_url })
 	      ),
-	      React.createElement(Button, { edibleId: this.props.edible.id })
+	      React.createElement(Button, { edibleId: this.props.edible.id, currentUser: this.props.currentUser })
 	    );
 	  }
 	});
@@ -32299,28 +32297,25 @@
 	  displayName: 'Button',
 
 	  getInitialState: function () {
-	    return { currentUser: null,
-	      currentListItem: null };
+	    return { currentListItem: null };
+	  },
+
+	  componentWillUpdate: function (nextProps) {
+	    return nextProps.currentUser !== this.props.currentUser;
 	  },
 
 	  componentDidMount: function () {
-	    SessionsApiUtil.fetchCurrentUser();
-	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
 	    this.listListener = ListStore.addListener(this._onChange);
+	    this.currentUserListener = CurrentUserStore.addListener(this._onChange);
 	  },
 
 	  componentWillUnmount: function () {
-	    this.currentUserListener.remove();
 	    this.listListener.remove();
+	    this.currentUserListener.remove();
 	  },
 
 	  _onChange: function () {
-	    this.setState(this.getButtonState());
-	  },
-
-	  getButtonState: function () {
-	    var currentUser = CurrentUserStore.currentUser();
-	    var listItems = currentUser.list_items;
+	    var listItems = this.props.currentUser.list_items;
 	    var currentListItem = null;
 
 	    listItems.forEach(function (listItem) {
@@ -32329,8 +32324,7 @@
 	      }
 	    }.bind(this));
 
-	    return { currentUser: CurrentUserStore.currentUser(),
-	      currentListItem: currentListItem };
+	    this.setState({ currentListItem: currentListItem });
 	  },
 
 	  handleButtonClick: function () {
@@ -32352,7 +32346,7 @@
 	    if (list) {
 	      listItem.list_id = list.id;
 	    } else {
-	      listItem.list_id = this.state.currentUser.lists[0].id;
+	      listItem.list_id = this.props.currentUser.lists[0].id;
 	    }
 	    ApiUtil.createListItem(listItem);
 	  },
@@ -32388,10 +32382,10 @@
 	    }
 
 	    var lists = [];
-	    if (this.state.currentUser && this.state.currentListItem) {
-	      for (var i = 0; i < this.state.currentUser.lists.length; i++) {
-	        if (this.state.currentListItem.list_id != this.state.currentUser.lists[i].id) {
-	          var list = this.state.currentUser.lists[i];
+	    if (this.state.currentListItem) {
+	      for (var i = 0; i < this.props.currentUser.lists.length; i++) {
+	        if (this.state.currentListItem.list_id != this.props.currentUser.lists[i].id) {
+	          var list = this.props.currentUser.lists[i];
 	          lists.push(React.createElement(
 	            'li',
 	            { key: list.id, onClick: this.changeList.bind(this, list) },
@@ -32399,8 +32393,8 @@
 	          ));
 	        }
 	      }
-	    } else if (this.state.currentUser) {
-	      lists = this.state.currentUser.lists.map(function (list) {
+	    } else {
+	      lists = this.props.currentUser.lists.map(function (list) {
 	        return React.createElement(
 	          'li',
 	          { key: list.id, onClick: this.addEdible.bind(this, list) },
@@ -32440,6 +32434,8 @@
 	var React = __webpack_require__(1);
 	var EdibleStore = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(236);
+	var CurrentUserStore = __webpack_require__(232);
+	var SessionsApiUtil = __webpack_require__(234);
 	var Button = __webpack_require__(249);
 
 	var EdibleShow = React.createClass({
@@ -32457,6 +32453,7 @@
 	  componentDidMount: function () {
 	    window.scrollTo(0, 0);
 	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    SessionsApiUtil.fetchCurrentUser();
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
 	  },
 
@@ -32468,7 +32465,7 @@
 	    var button, edibleImage, edibleName, edibleCategory, edibleDescription;
 
 	    if (this.state.edible) {
-	      button = React.createElement(Button, { edibleId: this.state.edible.id });
+	      button = React.createElement(Button, { edibleId: this.state.edible.id, currentUser: CurrentUserStore.currentUser() });
 	      edibleImage = React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url });
 	      edibleName = React.createElement(
 	        'h1',
@@ -33430,7 +33427,6 @@
 	  },
 
 	  render: function () {
-
 	    return React.createElement(
 	      'div',
 	      { className: 'auth-body' },

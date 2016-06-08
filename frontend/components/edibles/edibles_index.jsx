@@ -32,7 +32,6 @@ var EdiblesIndex = React.createClass({
   },
 
   render: function () {
-
     var indexItems = (
       this.state.edibles.map(function (edible) {
         return <Edible key={edible.id} edible={edible} currentUser={this.state.currentUser}/>;
