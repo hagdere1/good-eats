@@ -32297,11 +32297,13 @@
 	  displayName: 'Button',
 
 	  getInitialState: function () {
-	    return { currentListItem: null };
+	    return { currentListItem: this.getCurrentListItem(),
+	      currentUser: this.props.currentUser };
 	  },
 
-	  componentWillUpdate: function (nextProps) {
-	    return nextProps.currentUser !== this.props.currentUser;
+	  componentWillReceiveProps: function (nextProps) {
+	    this.setState({ currentUser: nextProps.currentUser });
+	    this.forceUpdate();
 	  },
 
 	  componentDidMount: function () {
@@ -32315,6 +32317,11 @@
 	  },
 
 	  _onChange: function () {
+	    this.setState({ currentListItem: this.getCurrentListItem(),
+	      currentUser: this.props.currentUser });
+	  },
+
+	  getCurrentListItem: function () {
 	    var listItems = this.props.currentUser.list_items;
 	    var currentListItem = null;
 
@@ -32324,7 +32331,7 @@
 	      }
 	    }.bind(this));
 
-	    this.setState({ currentListItem: currentListItem });
+	    return currentListItem;
 	  },
 
 	  handleButtonClick: function () {
@@ -32346,7 +32353,7 @@
 	    if (list) {
 	      listItem.list_id = list.id;
 	    } else {
-	      listItem.list_id = this.props.currentUser.lists[0].id;
+	      listItem.list_id = this.state.currentUser.lists[0].id;
 	    }
 	    ApiUtil.createListItem(listItem);
 	  },
@@ -32383,9 +32390,9 @@
 
 	    var lists = [];
 	    if (this.state.currentListItem) {
-	      for (var i = 0; i < this.props.currentUser.lists.length; i++) {
-	        if (this.state.currentListItem.list_id != this.props.currentUser.lists[i].id) {
-	          var list = this.props.currentUser.lists[i];
+	      for (var i = 0; i < this.state.currentUser.lists.length; i++) {
+	        if (this.state.currentListItem.list_id != this.state.currentUser.lists[i].id) {
+	          var list = this.state.currentUser.lists[i];
 	          lists.push(React.createElement(
 	            'li',
 	            { key: list.id, onClick: this.changeList.bind(this, list) },
@@ -32394,7 +32401,7 @@
 	        }
 	      }
 	    } else {
-	      lists = this.props.currentUser.lists.map(function (list) {
+	      lists = this.state.currentUser.lists.map(function (list) {
 	        return React.createElement(
 	          'li',
 	          { key: list.id, onClick: this.addEdible.bind(this, list) },
@@ -32436,6 +32443,7 @@
 	var ApiUtil = __webpack_require__(236);
 	var CurrentUserStore = __webpack_require__(232);
 	var SessionsApiUtil = __webpack_require__(234);
+	var ListStore = __webpack_require__(209);
 	var Button = __webpack_require__(249);
 
 	var EdibleShow = React.createClass({
@@ -32443,29 +32451,36 @@
 
 
 	  getInitialState: function () {
-	    return { edible: null };
+	    return { edible: null,
+	      currentUser: null };
 	  },
 
-	  _onChange: function () {
+	  _onEdibleChange: function () {
 	    this.setState({ edible: EdibleStore.find(parseInt(this.props.params.id)) });
+	  },
+
+	  _onCurrentUserChange: function () {
+	    this.setState({ currentUser: CurrentUserStore.currentUser() });
 	  },
 
 	  componentDidMount: function () {
 	    window.scrollTo(0, 0);
-	    this.edibleListener = EdibleStore.addListener(this._onChange);
+	    this.edibleListener = EdibleStore.addListener(this._onEdibleChange);
+	    this.currentUserListener = CurrentUserStore.addListener(this._onCurrentUserChange);
 	    SessionsApiUtil.fetchCurrentUser();
 	    ApiUtil.fetchSingleEdible(this.props.params.id);
 	  },
 
 	  componentWillUnmount: function () {
 	    this.edibleListener.remove();
+	    this.currentUserListener.remove();
 	  },
 
 	  render: function () {
 	    var button, edibleImage, edibleName, edibleCategory, edibleDescription;
 
 	    if (this.state.edible) {
-	      button = React.createElement(Button, { edibleId: this.state.edible.id, currentUser: CurrentUserStore.currentUser() });
+	      button = React.createElement(Button, { edibleId: this.state.edible.id, currentUser: this.state.currentUser });
 	      edibleImage = React.createElement('img', { className: 'edible-show-image', src: this.state.edible.image_url });
 	      edibleName = React.createElement(
 	        'h1',

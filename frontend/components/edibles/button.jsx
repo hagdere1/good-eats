@@ -6,11 +6,13 @@ var ApiUtil = require('./../../util/api_util');
 
 var Button = React.createClass({
   getInitialState: function () {
-    return { currentListItem: null };
+    return { currentListItem: this.getCurrentListItem(),
+             currentUser: this.props.currentUser };
   },
 
-  componentWillUpdate: function(nextProps) {
-    return nextProps.currentUser !== this.props.currentUser;
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({ currentUser: nextProps.currentUser });
+    this.forceUpdate();
   },
 
   componentDidMount: function () {
@@ -24,6 +26,11 @@ var Button = React.createClass({
   },
 
   _onChange: function () {
+    this.setState({ currentListItem: this.getCurrentListItem(),
+                    currentUser: this.props.currentUser });
+  },
+
+  getCurrentListItem: function () {
     var listItems = this.props.currentUser.list_items;
     var currentListItem = null;
 
@@ -33,7 +40,7 @@ var Button = React.createClass({
       }
     }.bind(this));
 
-    this.setState({ currentListItem: currentListItem });
+    return currentListItem;
   },
 
   handleButtonClick: function () {
@@ -57,7 +64,7 @@ var Button = React.createClass({
       listItem.list_id = list.id;
     }
     else {
-      listItem.list_id = this.props.currentUser.lists[0].id;
+      listItem.list_id = this.state.currentUser.lists[0].id;
     }
     ApiUtil.createListItem(listItem);
   },
@@ -87,15 +94,15 @@ var Button = React.createClass({
 
     var lists = [];
     if (this.state.currentListItem) {
-      for (var i = 0; i < this.props.currentUser.lists.length; i++) {
-        if (this.state.currentListItem.list_id != this.props.currentUser.lists[i].id) {
-          var list = this.props.currentUser.lists[i];
+      for (var i = 0; i < this.state.currentUser.lists.length; i++) {
+        if (this.state.currentListItem.list_id != this.state.currentUser.lists[i].id) {
+          var list = this.state.currentUser.lists[i];
           lists.push(<li key={list.id} onClick={this.changeList.bind(this, list)}>{list.title}</li>);
         }
       }
     }
     else {
-      lists = this.props.currentUser.lists.map(function (list) {
+      lists = this.state.currentUser.lists.map(function (list) {
         return <li key={list.id} onClick={this.addEdible.bind(this, list)}>{list.title}</li>
       }.bind(this));
     }
