@@ -32322,14 +32322,16 @@
 	  },
 
 	  getCurrentListItem: function () {
-	    var listItems = this.props.currentUser.list_items;
 	    var currentListItem = null;
 
-	    listItems.forEach(function (listItem) {
-	      if (listItem.edible_id === this.props.edibleId) {
-	        currentListItem = listItem;
-	      }
-	    }.bind(this));
+	    if (this.props.currentUser) {
+	      var listItems = this.props.currentUser.list_items;
+	      listItems.forEach(function (listItem) {
+	        if (listItem.edible_id === this.props.edibleId) {
+	          currentListItem = listItem;
+	        }
+	      }.bind(this));
+	    }
 
 	    return currentListItem;
 	  },
@@ -32400,7 +32402,7 @@
 	          ));
 	        }
 	      }
-	    } else {
+	    } else if (this.state.currentUser) {
 	      lists = this.state.currentUser.lists.map(function (list) {
 	        return React.createElement(
 	          'li',

@@ -31,14 +31,16 @@ var Button = React.createClass({
   },
 
   getCurrentListItem: function () {
-    var listItems = this.props.currentUser.list_items;
     var currentListItem = null;
 
-    listItems.forEach(function (listItem) {
-      if (listItem.edible_id === this.props.edibleId) {
-        currentListItem = listItem;
-      }
-    }.bind(this));
+    if (this.props.currentUser) {
+      var listItems = this.props.currentUser.list_items;
+      listItems.forEach(function (listItem) {
+        if (listItem.edible_id === this.props.edibleId) {
+          currentListItem = listItem;
+        }
+      }.bind(this));
+    }
 
     return currentListItem;
   },
@@ -101,7 +103,7 @@ var Button = React.createClass({
         }
       }
     }
-    else {
+    else if (this.state.currentUser) {
       lists = this.state.currentUser.lists.map(function (list) {
         return <li key={list.id} onClick={this.addEdible.bind(this, list)}>{list.title}</li>
       }.bind(this));
