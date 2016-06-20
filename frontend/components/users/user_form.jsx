@@ -44,12 +44,12 @@ var UserForm = React.createClass({
             <fieldset className="auth-form-fieldset group">
               <label>
                 Name
-                <input type="text" placeholder="Name" valueLink={this.linkState("name")}/>
+                <input type="text" valueLink={this.linkState("name")}/>
               </label>
 
               <label>
                 Email Address
-                <input type="text" placeholder="you@yours.com" valueLink={this.linkState("email")}/>
+                <input type="text" valueLink={this.linkState("email")}/>
               </label>
 
               <label>

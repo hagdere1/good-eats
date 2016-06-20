@@ -33460,7 +33460,7 @@
 	              'label',
 	              null,
 	              'Email Address',
-	              React.createElement('input', { type: 'text', name: 'email', placeholder: 'you@yours.com' })
+	              React.createElement('input', { type: 'text', name: 'email' })
 	            ),
 	            React.createElement(
 	              'label',
@@ -33554,13 +33554,13 @@
 	              'label',
 	              null,
 	              'Name',
-	              React.createElement('input', { type: 'text', placeholder: 'Name', valueLink: this.linkState("name") })
+	              React.createElement('input', { type: 'text', valueLink: this.linkState("name") })
 	            ),
 	            React.createElement(
 	              'label',
 	              null,
 	              'Email Address',
-	              React.createElement('input', { type: 'text', placeholder: 'you@yours.com', valueLink: this.linkState("email") })
+	              React.createElement('input', { type: 'text', valueLink: this.linkState("email") })
 	            ),
 	            React.createElement(
 	              'label',

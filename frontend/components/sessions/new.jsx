@@ -24,7 +24,7 @@ var SessionForm = React.createClass({
             <fieldset className="auth-form-fieldset group">
               <label>
                 Email Address
-                <input type="text" name="email" placeholder="you@yours.com"/>
+                <input type="text" name="email" />
               </label>
 
               <label>
